@@ -1,4 +1,4 @@
-# all-in-one-social-media
+# All-in-one-social-media
 All-in-one social media dashboard
 
 This all-in-one social media dashboard will provide an overview for different social media applications.
