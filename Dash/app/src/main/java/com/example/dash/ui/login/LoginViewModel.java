@@ -29,9 +29,9 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password) {
+    public void login(String email, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        Result<LoggedInUser> result = loginRepository.login(email, password);
 
         if (result instanceof Result.Success) {
             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
@@ -41,9 +41,9 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void loginDataChanged(String username, String password) {
-        if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
+    public void loginDataChanged(String email, String password) {
+        if (!isEmailValid(email)) {
+            loginFormState.setValue(new LoginFormState(R.string.prompt_email, null));
         } else if (!isPasswordValid(password)) {
             loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
         } else {
@@ -51,15 +51,15 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        if (username == null) {
+    // A placeholder email validation check
+    private boolean isEmailValid(String email) {
+        if (email == null) {
             return false;
         }
-        if (username.contains("@")) {
-            return Patterns.EMAIL_ADDRESS.matcher(username).matches();
+        if (email.contains("@")) {
+            return Patterns.EMAIL_ADDRESS.matcher(email).matches();
         } else {
-            return !username.trim().isEmpty();
+            return !email.trim().isEmpty();
         }
     }
 
