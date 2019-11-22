@@ -28,31 +28,6 @@ public class LoginDataSource {
 
         try {
             // TODO: handle loggedInUser authentication
-
-//            Connection conn = null;
-//            Log.w("Test", "test");
-//            try {
-//                String driver = "net.sourceforge.jtds.jdbc.driver";
-//                Class.forName(driver).newInstance();
-//                Log.w("Test", "test");
-//                String connString = "jtds:jdbc:sqlserver://dash-sec.database.windows.net:1433;database=Dash;user=Dash@dash-sec;password=Appel-123" +
-//                        ";encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
-//                String username = "Dash";
-//                String password1 = "Appel-123";
-//                conn = DriverManager.getConnection(connString, username, password1);
-//                Log.w("Connection", "open");
-//                Statement stmt = conn.createStatement();
-//                ResultSet reset = stmt.executeQuery("Select * from Users");
-//
-//                while(reset.next()){
-//                    Log.w("Data:",reset.getString(3));
-//                }
-//                conn.close();
-//
-//            } catch (Exception e) {
-//                Log.w("Error ", e.getMessage());
-//            }
-
             class User {
                 String email;
                 String pass;
@@ -78,7 +53,7 @@ public class LoginDataSource {
             user.put("E-mail", "marynkaspers20 @gmail.com");
             user.put("Password", "1234567890");
 
-//            User user = new User("Maryn", "appel");
+//          User user = new User("Maryn", "appel");
 
             Log.w("Message", "made user");
 
