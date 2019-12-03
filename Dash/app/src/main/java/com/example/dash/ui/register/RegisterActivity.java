@@ -19,7 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.example.dash.R;
 import com.google.firebase.auth.FirebaseUser;
-import androidx.annotation.NonNull;
+import androidx.annotation.*;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -38,26 +38,23 @@ public class RegisterActivity extends AppCompatActivity {
 
         initializeUI();
 
-        regBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TEST", "TESTTESTTEST");
+        regBtn.setOnClickListener(view -> {
                 if (passwordTV.getText().toString().equals(passwordTV2.getText().toString())) {
                     registerNewUser();
-                    Log.d("create", "created");
+                    Log.d("Success", "Registered");
                 } else {
-                    Log.d("Failed", "no user");
+                    Log.d("Failed", "Password doesn't match");
+                    Toast.makeText(getApplicationContext(), "Password doesn't match", Toast.LENGTH_LONG).show();
+                    return;
                 }
             }
-        });
+        );
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        loginBtn.setOnClickListener(view -> {
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
-        });
+        );
     }
 
     private void registerNewUser() {
@@ -77,9 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Log.d("Message", "Succesful");
                             Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_LONG).show();
@@ -94,13 +89,11 @@ public class RegisterActivity extends AppCompatActivity {
                             progressBar.setVisibility(View.GONE);
                         }
                     }
-                })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Fail", e.getMessage());
+                )
+        .addOnFailureListener(exception -> {
+                Log.d("Fail", exception.getMessage());
             }
-        });
+        );
     }
 
     private void initializeUI() {
