@@ -1,115 +1,137 @@
 package com.example.dash.ui.login;
 
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-import com.example.dash.ui.dashboard.DashboardActivity;
-import com.example.dash.ui.register.RegisterActivity;
-import com.google.firebase.auth.FirebaseAuth;
+
 import com.example.dash.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText emailTV, passwordTV;
-    private Button loginBtn;
-    private Button registerBtn;
-    private ProgressBar progressBar;
-    private FirebaseAuth mAuth;
-
-    long startTime;
+    private LoginViewModel loginViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
+                .get(LoginViewModel.class);
 
-        overridePendingTransition(R.anim.slidein, R.anim.slideout);
+        final EditText emailEditText = findViewById(R.id.email);
+        final EditText passwordEditText = findViewById(R.id.password);
+        final Button loginButton = findViewById(R.id.login);
+        final Button registerButton = findViewById(R.id.register);
+        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        initializeUI();
-
-        loginBtn.setOnClickListener(view -> {
-                loginUserAccount();
-        });
-
-        registerBtn.setOnClickListener(view -> {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-        });
-    }
-
-    private void loginUserAccount() {
-        startTime = System.currentTimeMillis();
-        progressBar.setVisibility(View.VISIBLE);
-
-        String email, password;
-        email = emailTV.getText().toString();
-        password = passwordTV.getText().toString();
-
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(), "Please enter email...", Toast.LENGTH_LONG).show();
-            Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
-            emailTV.startAnimation(animShake);
-            progressBar.setVisibility(View.GONE);
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(getApplicationContext(), "Please enter password!", Toast.LENGTH_LONG).show();
-            Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
-            passwordTV.startAnimation(animShake);
-            progressBar.setVisibility(View.GONE);
-            return;
-        }
-        
-        hideButtons();
-
-        mAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.d("Login", "Successful");
-                    progressBar.setVisibility(View.GONE);
-
-                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                    startActivity(intent);
-                    Log.d("Duration", String.format("%d", (System.currentTimeMillis() - startTime) / 1000));
-                } else {
-                    showButtons();
-                    Log.d("Login", "Failed");
-                    Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
-                    Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
-                    loginBtn.startAnimation(animShake);
-                    progressBar.setVisibility(View.GONE);
+        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+            @Override
+            public void onChanged(@Nullable LoginFormState loginFormState) {
+                if (loginFormState == null) {
+                    return;
                 }
+                loginButton.setEnabled(loginFormState.isDataValid());
+                if (loginFormState.getUsernameError() != null) {
+                    emailEditText.setError(getString(loginFormState.getUsernameError()));
+                }
+                if (loginFormState.getPasswordError() != null) {
+                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                }
+            }
+        });
+
+        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+            @Override
+            public void onChanged(@Nullable LoginResult loginResult) {
+                if (loginResult == null) {
+                    return;
+                }
+                loadingProgressBar.setVisibility(View.GONE);
+                if (loginResult.getError() != null) {
+                    showLoginFailed(loginResult.getError());
+                }
+                if (loginResult.getSuccess() != null) {
+                    updateUiWithUser(loginResult.getSuccess());
+                }
+                setResult(Activity.RESULT_OK);
+
+                //Complete and destroy login activity once successful
+                finish();
+            }
+        });
+
+        TextWatcher afterTextChangedListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                loginViewModel.loginDataChanged(emailEditText.getText().toString(),
+                        passwordEditText.getText().toString());
+            }
+        };
+        emailEditText.addTextChangedListener(afterTextChangedListener);
+        passwordEditText.addTextChangedListener(afterTextChangedListener);
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    loginViewModel.login(emailEditText.getText().toString(),
+                            passwordEditText.getText().toString());
+                }
+                return false;
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                loginViewModel.login(emailEditText.getText().toString(),
+                        passwordEditText.getText().toString());
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setContentView(R.layout.activity_register);
+            }
         });
     }
 
-    private void initializeUI() {
-        emailTV = findViewById(R.id.email);
-        passwordTV = findViewById(R.id.password);
-        registerBtn = findViewById(R.id.register);
-        loginBtn = findViewById(R.id.login);
-        progressBar = findViewById(R.id.loading);
+    private void updateUiWithUser(LoggedInUserView model) {
+        String welcome = getString(R.string.welcome) + model.getDisplayName();
+        // TODO : initiate successful logged in experience
+        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
-    private void hideButtons(){
-        loginBtn.setVisibility(View.GONE);
-        registerBtn.setVisibility(View.GONE);
-    }
-
-    private void showButtons(){
-        loginBtn.setVisibility(View.VISIBLE);
-        registerBtn.setVisibility(View.VISIBLE);
+    private void showLoginFailed(@StringRes Integer errorString) {
+        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 }
