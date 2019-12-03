@@ -18,5 +18,10 @@
     <string name="dash_logo">Dash Logo</string>
     <string name="action_logout">Sign out</string>
     <string name="action_register">Register</string>
+    <string name="dash">Dash</string>
+    <string name="reddit">Reddit</string>
+    <string name="twitter">Twitter</string>
+    <string name="settings">Settings</string>
+    <string name="signout">Sign Out</string>
 
 </resources>
