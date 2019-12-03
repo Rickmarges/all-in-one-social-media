@@ -34,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        overridePendingTransition(R.anim.slidein, R.anim.slideout);
+
         mAuth = FirebaseAuth.getInstance();
 
         initializeUI();
@@ -65,12 +67,14 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(getApplicationContext(), "Please enter password!", Toast.LENGTH_LONG).show();
-            Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.vshake);
+            Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
             passwordTV.startAnimation(animShake);
             progressBar.setVisibility(View.GONE);
             return;
         }
+        
         hideButtons();
+
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
