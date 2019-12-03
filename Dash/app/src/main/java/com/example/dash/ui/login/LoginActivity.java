@@ -40,14 +40,12 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(view -> {
                 Log.d("Login", "Trying");
                 loginUserAccount();
-            }
-        );
+        });
 
         registerBtn.setOnClickListener(view -> {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-            }
-        );
+        });
     }
 
     private void loginUserAccount() {
