@@ -16,6 +16,7 @@
     <string name="e_mail">E-Mail</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="password">Password</string>
+    <string name="dash_logo">Dash Logo</string>
     <string name="action_logout">Logout</string>
 
 </resources>
