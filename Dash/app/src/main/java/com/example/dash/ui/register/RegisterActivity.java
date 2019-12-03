@@ -27,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        overridePendingTransition(R.anim.slidein, R.anim.slideout);
 
         mAuth = FirebaseAuth.getInstance();
 

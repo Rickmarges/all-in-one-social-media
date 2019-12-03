@@ -33,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        overridePendingTransition(R.anim.slidein, R.anim.slideout);
+
         mAuth = FirebaseAuth.getInstance();
 
         initializeUI();
