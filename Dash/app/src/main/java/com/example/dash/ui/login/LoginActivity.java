@@ -34,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         initializeUI();
 
         loginBtn.setOnClickListener(view -> {
-                Log.d("Login", "Trying");
                 loginUserAccount();
         });
 
@@ -65,14 +64,12 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.d("Login", "Successful");
                         progressBar.setVisibility(View.GONE);
 
                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                         startActivity(intent);
                     }
                     else {
-                        Log.d("Login", "Failed");
                         Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                     }

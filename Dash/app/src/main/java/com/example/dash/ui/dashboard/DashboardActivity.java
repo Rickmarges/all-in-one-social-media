@@ -3,7 +3,6 @@ package com.example.dash.ui.dashboard;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 
 import com.example.dash.R;
@@ -12,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class DashboardActivity extends AppCompatActivity {
-    private Button logoutBtn;
+    private Button signOutBtn;
     private FirebaseUser user;
 
     @Override
@@ -28,7 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        logoutBtn.setOnClickListener(view -> {
+        signOutBtn.setOnClickListener(view -> {
             user = null;
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
@@ -37,6 +36,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initializeUI(){
-        logoutBtn = findViewById(R.id.logout);
+        signOutBtn = findViewById(R.id.signOut);
     }
 }
