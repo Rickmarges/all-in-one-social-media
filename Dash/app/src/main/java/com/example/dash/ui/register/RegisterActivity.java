@@ -91,6 +91,6 @@ public class RegisterActivity extends AppCompatActivity {
         passwordTV2 = findViewById(R.id.passwordconfirm);
         regBtn = findViewById(R.id.register);
         loginBtn = findViewById(R.id.login_navigation);
-        progressBar = findViewById(R.id.loading);
+        progressBar = findViewById(R.id.loading_register);
     }
 }
