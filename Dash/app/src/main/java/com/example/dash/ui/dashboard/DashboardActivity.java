@@ -17,6 +17,16 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialize();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        initialize();
+    }
+
+    private void initialize(){
         setContentView(R.layout.activity_dashboard);
 
         initializeUI();

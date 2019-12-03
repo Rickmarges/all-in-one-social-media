@@ -1,5 +1,7 @@
 package com.example.dash.ui.login;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,11 +14,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.dash.ui.dashboard.DashboardActivity;
 import com.example.dash.ui.register.RegisterActivity;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.example.dash.R;
 
@@ -27,6 +26,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button registerBtn;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
+
+    long startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUserAccount() {
+        startTime = System.currentTimeMillis();
         progressBar.setVisibility(View.VISIBLE);
 
         String email, password;
@@ -68,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             return;
         }
-
+        hideButtons();
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -77,7 +79,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                     startActivity(intent);
+                    Log.d("Duration", String.format("%d", (System.currentTimeMillis() - startTime) / 1000));
                 } else {
+                    showButtons();
                     Log.d("Login", "Failed");
                     Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
                     Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
@@ -93,5 +97,15 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn = findViewById(R.id.register);
         loginBtn = findViewById(R.id.login);
         progressBar = findViewById(R.id.loading);
+    }
+
+    private void hideButtons(){
+        loginBtn.setVisibility(View.GONE);
+        registerBtn.setVisibility(View.GONE);
+    }
+
+    private void showButtons(){
+        loginBtn.setVisibility(View.VISIBLE);
+        registerBtn.setVisibility(View.VISIBLE);
     }
 }
