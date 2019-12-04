@@ -1,11 +1,9 @@
 package com.example.dash.ui.login;
 
-import android.app.ActivityManager;
-import android.content.Context;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -26,8 +24,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button registerBtn;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
-
-    long startTime;
+    private int backCounter;
+    private long startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +36,37 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        backCounter = 0;
+
         initializeUI();
 
-        loginBtn.setOnClickListener(view -> {
-                loginUserAccount();
-        });
+        loginBtn.setOnClickListener(view -> loginUserAccount());
 
         registerBtn.setOnClickListener(view -> {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
         });
     }
 
+    @Override
+    public void onBackPressed(){
+        if (backCounter < 1 || (System.currentTimeMillis() - startTime) / 1000 > 3) {
+            startTime = System.currentTimeMillis();
+            Toast.makeText(getApplicationContext(), "Press again to exit", Toast.LENGTH_SHORT).show();
+            backCounter++;
+        } else {
+            backCounter = 0;
+            finishAffinity();
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        backCounter = 0;
+    }
+
     private void loginUserAccount() {
-        startTime = System.currentTimeMillis();
         progressBar.setVisibility(View.VISIBLE);
 
         String email, password;
@@ -59,13 +74,15 @@ public class LoginActivity extends AppCompatActivity {
         password = passwordTV.getText().toString();
 
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(), "Please enter email...", Toast.LENGTH_LONG).show();
+            emailTV.setError("Required");
+            //Toast.makeText(getApplicationContext(), "Please enter email...", Toast.LENGTH_LONG).show();
             Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
             emailTV.startAnimation(animShake);
             progressBar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(password)) {
+            passwordTV.setError("Required");
             Toast.makeText(getApplicationContext(), "Please enter password!", Toast.LENGTH_LONG).show();
             Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
             passwordTV.startAnimation(animShake);
@@ -77,22 +94,24 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
+                progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    Log.d("Login", "Successful");
-                    progressBar.setVisibility(View.GONE);
-
-                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                    startActivity(intent);
-                    Log.d("Duration", String.format("%d", (System.currentTimeMillis() - startTime) / 1000));
+                    if (mAuth.getCurrentUser().isEmailVerified()) {
+                        Intent intent = new Intent(this, DashboardActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Email is not verified", Toast.LENGTH_LONG).show();
+                        mAuth.signOut();
+                        showButtons();
+                    }
                 } else {
                     showButtons();
-                    Log.d("Login", "Failed");
                     Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
                     Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
                     loginBtn.startAnimation(animShake);
-                    progressBar.setVisibility(View.GONE);
                 }
-        });
+            }
+        );
     }
 
     private void initializeUI() {
