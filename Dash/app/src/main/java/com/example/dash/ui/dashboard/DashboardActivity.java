@@ -1,20 +1,17 @@
 package com.example.dash.ui.dashboard;
 
-import android.content.Context;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dash.R;
+import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
+import com.example.dash.ui.settings.SettingsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -27,6 +24,8 @@ public class DashboardActivity extends AppCompatActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.slideleft, R.anim.slideright);
+
         initialize();
         setupSpinner();
     }
@@ -63,19 +62,40 @@ public class DashboardActivity extends AppCompatActivity{
     }
 
     private void setupSpinner(){
+        spinner.setSelected(false);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                if (position == 2){
-                    signOut();
+                switch(position) {
+                    case 0:
+                        settings();
+                        break;
+                    case 1:
+                        account();
+                        break;
+                    case 2:
+                        signOut();
+                        break;
                 }
-            } // to close the onItemSelected
+            }
+
+            // to close the onItemSelected
             public void onNothingSelected(AdapterView<?> parent)
             {
 
             }
         });
+    }
+
+    private void settings(){
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void account(){
+        Intent intent = new Intent(this, AccountActivity.class);
+        startActivity(intent);
     }
 
     private void signOut(){

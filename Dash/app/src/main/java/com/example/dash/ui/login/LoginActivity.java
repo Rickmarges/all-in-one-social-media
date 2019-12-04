@@ -1,6 +1,5 @@
 package com.example.dash.ui.login;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -32,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        overridePendingTransition(R.anim.slidein, R.anim.slideout);
+        overridePendingTransition(R.anim.slideleft, R.anim.slideright);
 
         mAuth = FirebaseAuth.getInstance();
 

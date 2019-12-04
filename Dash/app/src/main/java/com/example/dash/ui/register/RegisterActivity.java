@@ -1,6 +1,5 @@
 package com.example.dash.ui.register;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        overridePendingTransition(R.anim.slidein, R.anim.slideout);
+        overridePendingTransition(R.anim.slideleft, R.anim.slideright);
 
         mAuth = FirebaseAuth.getInstance();
 

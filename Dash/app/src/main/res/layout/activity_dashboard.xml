@@ -10,7 +10,18 @@
         android:background="#263238"
         android:backgroundTint="#263238">
 
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:entries="@array/menu"
+            android:popupTheme="@style/Base.CardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tablayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="48dp"
@@ -21,30 +32,33 @@
             app:tabTextColor="@color/colorPrimary">
 
             <com.google.android.material.tabs.TabItem
+                android:id="@+id/dash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dash" />
 
             <com.google.android.material.tabs.TabItem
+                android:id="@+id/reddit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/reddit" />
 
             <com.google.android.material.tabs.TabItem
+                android:id="@+id/twitter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/twitter" />
         </com.google.android.material.tabs.TabLayout>
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:entries="@array/menu"
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
