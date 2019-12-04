@@ -53,10 +53,8 @@
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="38dp"
-            android:layout_height="23dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="10dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:backgroundTint="@color/colorPrimaryDark"
             android:entries="@android:array/emailAddressTypes"
             app:layout_constraintEnd_toEndOf="parent"
