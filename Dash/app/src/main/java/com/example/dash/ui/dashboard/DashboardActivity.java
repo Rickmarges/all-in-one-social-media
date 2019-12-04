@@ -1,5 +1,6 @@
 package com.example.dash.ui.dashboard;
 
+import android.content.Context;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,8 +18,7 @@ import com.example.dash.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class DashboardActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
-    private Button signOutBtn;
+public class DashboardActivity extends AppCompatActivity{
     private Spinner spinner;
     private FirebaseUser user;
     private int backCounter;
@@ -60,43 +60,32 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-
-//        signOutBtn.setOnClickListener(view -> {
-//            user = null;
-//            FirebaseAuth.getInstance().signOut();
-//            Intent intent = new Intent(this, LoginActivity.class);
-//            startActivity(intent);
-//        });
     }
 
     private void setupSpinner(){
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.menu, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                if (position == 2){
+                    signOut();
+                }
+            } // to close the onItemSelected
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(position == 2){
-            user = null;
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
+    private void signOut(){
+        user = null;
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private void initializeUI(){
-        signOutBtn = findViewById(R.id.signOut);
         spinner =  findViewById(R.id.spinner);
     }
 
