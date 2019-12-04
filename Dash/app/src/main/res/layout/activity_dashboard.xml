@@ -58,7 +58,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
             android:backgroundTint="@color/colorPrimaryDark"
-            android:entries="@android:array/emailAddressTypes"
+            android:entries="@array/menu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
