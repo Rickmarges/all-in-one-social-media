@@ -31,7 +31,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.slideleft, R.anim.slideright);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
         initialize();
 
