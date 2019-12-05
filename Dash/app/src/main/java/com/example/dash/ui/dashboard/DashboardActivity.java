@@ -37,7 +37,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         menuBtn.setOnClickListener(view -> {
             PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn);
-            popupMenu.getMenuInflater().inflate(R.layout.menu, popupMenu.getMenu());
+            popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
 
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
@@ -55,6 +55,7 @@ public class DashboardActivity extends AppCompatActivity {
                 }
                 return true;
             });
+            popupMenu.show();
         });
     }
 
