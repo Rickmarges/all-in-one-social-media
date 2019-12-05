@@ -7,14 +7,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b2975bc-27f5-435f-8a46-a4ba8ae7fadb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/res/anim/slide_in_right.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/anim/slide_out_right.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/ViewPagerAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/dash.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/reddit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/twitter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/dash_fragment.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/reddit_fragment.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/twitter_fragment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/register/RegisterActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/register/RegisterActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/anim/slide_in_left.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/anim/slide_in_left.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/anim/slide_out_left.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/anim/slide_out_left.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_dashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_dashboard.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/../.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -40,11 +42,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="53" column="28" selection-start-line="53" selection-start-column="28" selection-end-line="53" selection-end-column="28" />
+            <state relative-caret-position="256">
+              <caret line="113" column="45" selection-start-line="113" selection-start-column="45" selection-end-line="113" selection-end-column="45" />
               <folding>
-                <element signature="e#1830#1831#0" expanded="true" />
-                <element signature="e#3175#3176#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#1925#1926#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -63,7 +65,7 @@
         <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-29/android/widget/AdapterView.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="227">
-              <caret line="423" column="60" lean-forward="true" selection-start-line="423" selection-start-column="60" selection-end-line="423" selection-end-column="60" />
+              <caret line="423" column="60" selection-start-line="423" selection-start-column="60" selection-end-line="423" selection-end-column="60" />
             </state>
           </provider>
         </entry>
@@ -547,7 +549,7 @@
     <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-29/android/widget/AdapterView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="227">
-          <caret line="423" column="60" lean-forward="true" selection-start-line="423" selection-start-column="60" selection-end-line="423" selection-end-column="60" />
+          <caret line="423" column="60" selection-start-line="423" selection-start-column="60" selection-end-line="423" selection-end-column="60" />
         </state>
       </provider>
     </entry>
@@ -560,11 +562,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="53" column="28" selection-start-line="53" selection-start-column="28" selection-end-line="53" selection-end-column="28" />
+        <state relative-caret-position="256">
+          <caret line="113" column="45" selection-start-line="113" selection-start-column="45" selection-end-line="113" selection-end-column="45" />
           <folding>
-            <element signature="e#1830#1831#0" expanded="true" />
-            <element signature="e#3175#3176#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1925#1926#0" expanded="true" />
           </folding>
         </state>
       </provider>
