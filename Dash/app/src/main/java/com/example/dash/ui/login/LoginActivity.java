@@ -30,8 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        overridePendingTransition(R.anim.slideleft, R.anim.slideright);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
         mAuth = FirebaseAuth.getInstance();
 
