@@ -89,10 +89,6 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void setupSpinner() {
-
-    }
-
     private void settings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
@@ -112,7 +108,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void initializeUI() {
         menuBtn = findViewById(R.id.menubtn);
-        
+
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
 
