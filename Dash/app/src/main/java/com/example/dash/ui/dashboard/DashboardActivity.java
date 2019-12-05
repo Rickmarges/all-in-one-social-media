@@ -40,14 +40,14 @@ public class DashboardActivity extends AppCompatActivity {
             popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
 
             popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case 0:
+                switch (item.getTitle().toString()) {
+                    case "Settings":
                         settings();
                         break;
-                    case 1:
+                    case "Account":
                         account();
                         break;
-                    case 2:
+                    case "Sign Out":
                         signOut();
                         break;
                     default:
