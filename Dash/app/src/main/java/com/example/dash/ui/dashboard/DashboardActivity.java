@@ -2,6 +2,8 @@ package com.example.dash.ui.dashboard;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import com.example.dash.R;
 import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
 import com.example.dash.ui.settings.SettingsActivity;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,6 +31,12 @@ public class DashboardActivity extends AppCompatActivity{
 
         initialize();
         setupSpinner();
+
+        ViewPager viewPager = findViewById(R.id.pager);
+        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+
+        TabLayout tabLayout = findViewById(R.id.tablayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
