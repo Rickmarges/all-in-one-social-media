@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,13 +11,14 @@
         android:background="#263238"
         android:backgroundTint="#263238">
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+        <Button
+            android:id="@+id/menubtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/ic_more_vert_24px"
             android:backgroundTint="@color/colorPrimaryDark"
-            android:entries="@array/menu"
-            android:popupTheme="@style/Base.CardView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,7 +61,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </ScrollView>
+        </androidx.viewpager.widget.ViewPager>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
