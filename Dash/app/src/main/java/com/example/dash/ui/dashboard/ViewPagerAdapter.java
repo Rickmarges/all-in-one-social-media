@@ -7,12 +7,14 @@ import androidx.fragment.app.FragmentPagerAdapter;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private Fragment[] childFragments;
+
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
-        childFragments = new Fragment[] {
-            new Dash(), //0
-            new Reddit(), //1
-            new Twitter() //2
+        childFragments = new Fragment[]{
+                new Dash(),     //0
+                new Reddit(),   //1
+                new Twitter(),  //2
+                new Trends()    //3
         };
     }
 

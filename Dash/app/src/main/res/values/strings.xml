@@ -29,5 +29,6 @@
     <string name="account">Account</string>
     <string name="sign_out">Sign Out</string>
     <string name="trends">Trends</string>
+    <string name="test">test</string>
 
 </resources>
