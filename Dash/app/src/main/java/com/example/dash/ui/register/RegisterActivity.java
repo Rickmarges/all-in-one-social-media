@@ -3,7 +3,6 @@ package com.example.dash.ui.register;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,25 +26,35 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        overridePendingTransition(R.anim.slidein, R.anim.slideout);
+        overridePendingTransition(R.anim.slideleft, R.anim.slideright);
 
         mAuth = FirebaseAuth.getInstance();
 
         initializeUI();
 
         regBtn.setOnClickListener(view -> {
-                if (passwordTV.getText().toString().equals(passwordTV2.getText().toString())) {
-                    registerNewUser();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Password doesn't match", Toast.LENGTH_LONG).show();
-                    return;
-                }
+            if (passwordTV.getText().toString().equals(passwordTV2.getText().toString())) {
+                registerNewUser();
+            } else {
+                Toast.makeText(getApplicationContext(), "Password doesn't match", Toast.LENGTH_LONG).show();
+                return;
             }
-        );
+        });
 
         loginBtn.setOnClickListener(view -> {
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    public void sendEmailVerification(){
+        mAuth.getCurrentUser().sendEmailVerification()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    Toast.makeText(getApplicationContext(), "Verification sent",  Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Failed to send verification", Toast.LENGTH_LONG).show();
+                }
             }
         );
     }
@@ -58,12 +67,20 @@ public class RegisterActivity extends AppCompatActivity {
         password = passwordTV.getText().toString();
 
         if (TextUtils.isEmpty(email)) {
+            emailTV.setError("Required");
             Toast.makeText(getApplicationContext(), "Please enter email...", Toast.LENGTH_LONG).show();
             progressBar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(password)) {
+            passwordTV.setError("Required");
             Toast.makeText(getApplicationContext(), "Please enter password!", Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            passwordTV2.setError("Required");
+            Toast.makeText(getApplicationContext(), "Please confirm password!", Toast.LENGTH_LONG).show();
             progressBar.setVisibility(View.GONE);
             return;
         }
@@ -71,10 +88,9 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
-
-                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    sendEmailVerification();
+                    Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                 }
                 else {
@@ -91,6 +107,6 @@ public class RegisterActivity extends AppCompatActivity {
         passwordTV2 = findViewById(R.id.passwordconfirm);
         regBtn = findViewById(R.id.register);
         loginBtn = findViewById(R.id.login_navigation);
-        progressBar = findViewById(R.id.loading);
+        progressBar = findViewById(R.id.loading_register);
     }
 }
