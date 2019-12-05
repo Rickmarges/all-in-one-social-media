@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -36,7 +38,11 @@ public class RegisterActivity extends AppCompatActivity {
             if (passwordTV.getText().toString().equals(passwordTV2.getText().toString())) {
                 registerNewUser();
             } else {
-                Toast.makeText(getApplicationContext(), "Password doesn't match", Toast.LENGTH_LONG).show();
+                Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
+                passwordTV.setError("Doesn't match");
+                passwordTV2.setError("Doesn't match");
+                passwordTV.startAnimation(animShake);
+                passwordTV2.startAnimation(animShake);
                 return;
             }
         });
@@ -68,19 +74,22 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email)) {
             emailTV.setError("Required");
-            Toast.makeText(getApplicationContext(), "Please enter email...", Toast.LENGTH_LONG).show();
+            Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
+            emailTV.startAnimation(animShake);
             progressBar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(password)) {
             passwordTV.setError("Required");
-            Toast.makeText(getApplicationContext(), "Please enter password!", Toast.LENGTH_LONG).show();
+            Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
+            passwordTV.startAnimation(animShake);
             progressBar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(password)) {
             passwordTV2.setError("Required");
-            Toast.makeText(getApplicationContext(), "Please confirm password!", Toast.LENGTH_LONG).show();
+            Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
+            passwordTV2.startAnimation(animShake);
             progressBar.setVisibility(View.GONE);
             return;
         }
@@ -95,6 +104,8 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Registration failed! Please try again later", Toast.LENGTH_LONG).show();
+                    Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
+                    regBtn.startAnimation(animShake);
                     progressBar.setVisibility(View.GONE);
                 }
             }
