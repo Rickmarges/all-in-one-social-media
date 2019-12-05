@@ -10,14 +10,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.dash.R;
 
-public class dash extends Fragment {
+public class Trends extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
-        View rootView = inflater.inflate(R.layout.dash_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.trends_fragment, container, false);
 
         return rootView;
     }

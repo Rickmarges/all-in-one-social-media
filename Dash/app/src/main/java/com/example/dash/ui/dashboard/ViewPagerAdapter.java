@@ -10,9 +10,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
         childFragments = new Fragment[] {
-                new dash(), //0
-                new reddit(), //1
-                new twitter() //2
+            new Dash(), //0
+            new Reddit(), //1
+            new Twitter() //2
         };
     }
 
