@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.dash.R;
 
-public class twitter extends Fragment {
+public class Twitter extends Fragment {
 
     @Nullable
     @Override
