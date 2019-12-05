@@ -73,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email)) {
             emailTV.setError("Required");
-            //Toast.makeText(getApplicationContext(), "Please enter email...", Toast.LENGTH_LONG).show();
             Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
             emailTV.startAnimation(animShake);
             progressBar.setVisibility(View.GONE);
@@ -81,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(password)) {
             passwordTV.setError("Required");
-            Toast.makeText(getApplicationContext(), "Please enter password!", Toast.LENGTH_LONG).show();
             Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
             passwordTV.startAnimation(animShake);
             progressBar.setVisibility(View.GONE);
