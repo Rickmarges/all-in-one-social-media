@@ -19,6 +19,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static android.view.Gravity.CENTER;
+import static android.view.Gravity.FILL_HORIZONTAL;
+import static android.view.Gravity.RIGHT;
+import static android.view.Gravity.applyDisplay;
+
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
@@ -84,7 +89,8 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void popupMenu(){
-        PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn);
+        PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn, FILL_HORIZONTAL);
+        menuBtn.setOnTouchListener(popupMenu.getDragToOpenListener());
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(item -> {
