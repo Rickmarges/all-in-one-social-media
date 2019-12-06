@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,13 @@ public class Dash extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.dash_fragment, container, false);
+
+        LinearLayout dashLL = new LinearLayout(getContext());
+
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageResource(R.drawable.ic_add_circle_24px);
+
+        dashLL.addView(imageView);
 
         return rootView;
     }
