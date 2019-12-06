@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.dash.R;
 
-public class Trends extends Fragment {
+public class TrendsFragment extends Fragment {
 
     @Nullable
     @Override

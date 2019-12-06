@@ -11,10 +11,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         childFragments = new Fragment[]{
-                new Dash(),     //0
-                new Reddit(),   //1
-                new Twitter(),  //2
-                new Trends()    //3
+                new DashFragment(),     //0
+                new RedditFragment(),   //1
+                new TwitterFragment(),  //2
+                new TrendsFragment()    //3
         };
     }
 
@@ -31,6 +31,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         String title = getItem(position).getClass().getName();
-        return title.subSequence(title.lastIndexOf(".") + 1, title.length());
+        return title.subSequence(title.lastIndexOf(".") + 1, title.length() - 8);
     }
 }

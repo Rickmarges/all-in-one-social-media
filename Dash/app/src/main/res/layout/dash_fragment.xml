@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.dashboard.Dash">
+    tools:context=".ui.dashboard.DashFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
@@ -18,47 +18,14 @@
             android:scrollbarThumbVertical="@color/colorPrimaryDark"
             android:scrollbarTrackVertical="@color/colorBackgroundSecondary">
 
-            <LinearLayout
-                android:id="@+id/dashlinlayout"
+            <ImageButton
+                android:id="@+id/addBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:contentDescription="@string/test"
-                    android:src="@drawable/common_google_signin_btn_icon_dark_normal" />
-
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:contentDescription="@string/test"
-                    android:src="@drawable/common_google_signin_btn_icon_dark_normal" />
-
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:contentDescription="@string/test"
-                    android:src="@drawable/common_google_signin_btn_icon_dark_normal" />
-
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:contentDescription="@string/test"
-                    android:src="@drawable/common_google_signin_btn_icon_dark_normal" />
-
-                <ImageView
-                    android:id="@+id/imageView6"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:contentDescription="@string/test"
-                    android:src="@drawable/common_google_signin_btn_icon_dark_normal" />
-            </LinearLayout>
+                android:layout_gravity="center"
+                android:backgroundTint="@color/colorBackgroundPrimary"
+                android:src="@drawable/ic_add_circle_24px"
+                android:tint="@color/colorPrimaryDark" />
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

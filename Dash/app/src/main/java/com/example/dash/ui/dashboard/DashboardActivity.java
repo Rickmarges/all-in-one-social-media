@@ -7,10 +7,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import com.example.dash.R;
 import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
@@ -32,28 +32,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         initialize();
 
-        menuBtn.setOnClickListener(view -> {
-            PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn);
-            popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
-
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getTitle().toString()) {
-                    case "Settings":
-                        settings();
-                        break;
-                    case "Account":
-                        account();
-                        break;
-                    case "Sign Out":
-                        signOut();
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            });
-            popupMenu.show();
-        });
+        menuBtn.setOnClickListener(view -> popupMenu());
     }
 
     @Override
@@ -102,6 +81,29 @@ public class DashboardActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    private void popupMenu(){
+        PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn);
+        popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getTitle().toString()) {
+                case "Settings":
+                    settings();
+                    break;
+                case "Account":
+                    account();
+                    break;
+                case "Sign Out":
+                    signOut();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        });
+        popupMenu.show();
     }
 
     private void initializeUI() {
