@@ -100,8 +100,8 @@
     <ProgressBar
         android:id="@+id/loading"
         style="?android:attr/progressBarStyle"
-        android:layout_width="230dp"
-        android:layout_height="230dp"
+        android:layout_width="265dp"
+        android:layout_height="265dp"
         android:indeterminate="true"
         android:indeterminateTint="@color/colorPrimaryDark"
         android:indeterminateTintMode="src_in"
