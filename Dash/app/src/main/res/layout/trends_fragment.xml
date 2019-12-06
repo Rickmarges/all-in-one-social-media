@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.dashboard.DashFragment">
+    tools:context=".ui.dashboard.TrendsFragment">
 
     <ScrollView
-        android:id="@+id/twitterscroll"
+        android:id="@+id/trendsscroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/twitterlinlayout"
+            android:id="@+id/trendslinlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

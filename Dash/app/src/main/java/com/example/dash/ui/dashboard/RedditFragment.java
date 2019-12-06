@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.dash.R;
 
-public class reddit extends Fragment {
+public class RedditFragment extends Fragment {
 
     @Nullable
     @Override
