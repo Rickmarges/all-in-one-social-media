@@ -9,7 +9,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     private Fragment[] childFragments;
 
     public ViewPagerAdapter(FragmentManager fm) {
-        super(fm);
+        super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         childFragments = new Fragment[]{
                 new Dash(),     //0
                 new Reddit(),   //1
