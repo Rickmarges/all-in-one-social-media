@@ -20,11 +20,12 @@
 
             <ImageButton
                 android:id="@+id/addBtn"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/colorBackgroundPrimary"
                 android:src="@drawable/ic_add_circle_24px"
+                android:foreground="@drawable/rounded_add_btn"
                 android:tint="@color/colorPrimaryDark" />
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
