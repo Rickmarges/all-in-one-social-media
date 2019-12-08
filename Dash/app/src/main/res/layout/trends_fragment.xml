@@ -5,17 +5,23 @@
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.TrendsFragment">
 
-    <ScrollView
-        android:id="@+id/trendsscroll"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/trendsRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/trendslinlayout"
+        <ScrollView
+            android:id="@+id/trendsscroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-        </LinearLayout>
-    </ScrollView>
+            <WebView
+                android:id="@+id/wvTrends"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </FrameLayout>

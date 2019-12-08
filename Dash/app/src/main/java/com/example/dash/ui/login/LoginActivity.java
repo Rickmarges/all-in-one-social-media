@@ -10,11 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.dash.R;
 import com.example.dash.ui.dashboard.DashboardActivity;
 import com.example.dash.ui.register.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.example.dash.R;
 
 public class LoginActivity extends AppCompatActivity {
 

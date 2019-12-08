@@ -1,16 +1,15 @@
 package com.example.dash.ui.dashboard;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 import com.example.dash.R;
 import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
@@ -19,10 +18,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static android.view.Gravity.CENTER;
 import static android.view.Gravity.FILL_HORIZONTAL;
-import static android.view.Gravity.RIGHT;
-import static android.view.Gravity.applyDisplay;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
