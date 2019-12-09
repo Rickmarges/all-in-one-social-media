@@ -1,6 +1,7 @@
 package com.example.dash.ui.dashboard;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,7 +19,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static android.view.Gravity.FILL_HORIZONTAL;
+import static android.view.Gravity.END;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
@@ -85,9 +86,12 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void popupMenu(){
-        PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn, FILL_HORIZONTAL);
-        menuBtn.setOnTouchListener(popupMenu.getDragToOpenListener());
+        PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn);
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popupMenu.setForceShowIcon(true);
+        }
 
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getTitle().toString()) {
@@ -105,6 +109,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
             return true;
         });
+        menuBtn.setOnTouchListener(popupMenu.getDragToOpenListener());
         popupMenu.show();
     }
 
