@@ -13,14 +13,9 @@ import net.dean.jraw.oauth.OAuthHelper;
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
 public class RedditAPI {
-    UserAgent userAgent = new UserAgent("bot", "com.example.dash", Version.get(), "aimiroan");
-    Credentials credentials = Credentials.script("aimiroan", "", "EVhT39ISlEL1EQ", "cUb6j5hCjkMVx7aa34ZpLsNgN5c");
+    public static void main(String[] args) {
 
-    NetworkAdapter networkAdapter = new OkHttpNetworkAdapter(userAgent);
-    final StatefulAuthHelper helper =
-            OAuthHelper.interactive(networkAdapter, credentials);
-
-    String authUrl = helper.getAuthorizationUrl(true, true, "read");
+    }
 
     //final WebView browser = new WebView();
 }
