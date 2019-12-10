@@ -5,22 +5,25 @@
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.DashFragment">
 
-    <WebView
-        android:id="@+id/webview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
-    <ScrollView
-        android:id="@+id/redditscroll"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/redditRefresh"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/redditlinlayout"
+        <ScrollView
+            android:id="@+id/redditscroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-        </LinearLayout>
-    </ScrollView>
+            <WebView
+                android:id="@+id/wvRddt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </FrameLayout>

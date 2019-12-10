@@ -1,16 +1,16 @@
 package com.example.dash.ui.dashboard;
 
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 import com.example.dash.R;
 import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
@@ -18,6 +18,8 @@ import com.example.dash.ui.settings.SettingsActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import static android.view.Gravity.END;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
@@ -87,6 +89,10 @@ public class DashboardActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn);
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popupMenu.setForceShowIcon(true);
+        }
+
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getTitle().toString()) {
                 case "Settings":
@@ -103,6 +109,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
             return true;
         });
+        menuBtn.setOnTouchListener(popupMenu.getDragToOpenListener());
         popupMenu.show();
     }
 

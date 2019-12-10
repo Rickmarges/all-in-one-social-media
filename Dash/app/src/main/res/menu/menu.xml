@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/settings"
+        android:icon="@drawable/ic_build_24px"
         android:title="@string/settings" />
     <item
         android:id="@+id/account"
-        android:title="@string/account"/>
+        android:icon="@drawable/ic_person_24px"
+        android:title="@string/account" />
     <item
         android:id="@+id/signout"
-        android:title="@string/sign_out"/>
+        android:icon="@drawable/ic_power_settings_new_24px"
+        android:title="@string/sign_out" />
 </menu>

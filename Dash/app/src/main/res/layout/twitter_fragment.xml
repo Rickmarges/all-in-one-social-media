@@ -5,17 +5,23 @@
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.DashFragment">
 
-    <ScrollView
-        android:id="@+id/twitterscroll"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/twitterRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/twitterlinlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+<!--        <ScrollView-->
+<!--            android:id="@+id/twitterscroll"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
 
-        </LinearLayout>
-    </ScrollView>
+            <WebView
+                android:id="@+id/wvTwttr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+<!--        </ScrollView>-->
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </FrameLayout>

@@ -10,11 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.dash.R;
 import com.example.dash.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.example.dash.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -51,6 +52,13 @@ public class RegisterActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     public void sendEmailVerification(){

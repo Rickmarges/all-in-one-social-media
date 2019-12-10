@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearlayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,10 +16,8 @@
 
         <Button
             android:id="@+id/menubtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@drawable/ic_more_vert_24px"
             android:backgroundTint="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="parent"

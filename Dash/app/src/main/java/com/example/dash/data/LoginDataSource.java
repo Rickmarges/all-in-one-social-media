@@ -1,19 +1,8 @@
 package com.example.dash.data;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
 import com.example.dash.data.model.LoggedInUser;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import java.io.IOException;
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
