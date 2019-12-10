@@ -1,8 +1,11 @@
 package com.example.dash.ui.account;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +16,7 @@ public class AccountActivity extends AppCompatActivity {
 
     protected FirebaseAuth mAuth;
     protected TextView emailAccount;
+    protected ImageButton imageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,12 @@ public class AccountActivity extends AppCompatActivity {
         init();
         mAuth = FirebaseAuth.getInstance();
         emailAccount.setText(mAuth.getCurrentUser().getEmail());
+        imageButton.findViewById(R.id.addredditbtn);
+
+        imageButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, AddRedditAccount.class);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -33,6 +43,7 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     public void init() {
+        imageButton = findViewById(R.id.addredditbtn);
         emailAccount = findViewById(R.id.emailAccount);
     }
 }

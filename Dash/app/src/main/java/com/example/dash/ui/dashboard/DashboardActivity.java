@@ -3,7 +3,9 @@ package com.example.dash.ui.dashboard;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -19,11 +21,15 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import net.dean.jraw.RedditClient;
+import net.dean.jraw.oauth.OAuthHelper;
+
 import static android.view.Gravity.END;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
+    private FrameLayout redditf;
     private int backCounter;
     private long startTime;
 
@@ -118,6 +124,7 @@ public class DashboardActivity extends AppCompatActivity {
         myLayout.requestFocus();
 
         menuBtn = findViewById(R.id.menubtn);
+        redditf = findViewById(R.id.redditFragment);
 
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
@@ -125,5 +132,4 @@ public class DashboardActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
     }
-
 }
