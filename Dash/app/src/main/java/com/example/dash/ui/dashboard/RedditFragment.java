@@ -21,8 +21,7 @@ import net.dean.jraw.models.Account;
 import net.dean.jraw.oauth.Credentials;
 import net.dean.jraw.oauth.OAuthHelper;
 import net.dean.jraw.oauth.StatefulAuthHelper;
-
-public class reddit extends Fragment {
+public class RedditFragment extends Fragment {
 
     UserAgent userAgent = new UserAgent("bot", "com.example.dash", Version.get(), "aimiroan");
     Credentials credentials = Credentials.script("aimiroan", "", "EVhT39ISlEL1EQ", "cUb6j5hCjkMVx7aa34ZpLsNgN5c");
