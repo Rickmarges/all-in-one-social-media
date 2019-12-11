@@ -19,8 +19,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static android.view.Gravity.END;
-
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
@@ -40,6 +38,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        checkLoggedIn();
     }
 
     @Override
@@ -60,7 +59,9 @@ public class DashboardActivity extends AppCompatActivity {
         backCounter = 0;
 
         initializeUI();
+    }
 
+    private void checkLoggedIn(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(this, LoginActivity.class);

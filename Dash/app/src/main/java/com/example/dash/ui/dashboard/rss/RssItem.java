@@ -1,4 +1,4 @@
-package com.example.dash.ui.dashboard.RSS;
+package com.example.dash.ui.dashboard.rss;
 
 import android.graphics.Bitmap;
 

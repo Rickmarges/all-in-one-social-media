@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 } else {
                     showButtons();
-                    Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Login failed! Please try again", Toast.LENGTH_LONG).show();
                     Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
                     loginBtn.startAnimation(animShake);
                 }

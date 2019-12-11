@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.dash.R;
 import com.example.dash.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 public class RegisterActivity extends AppCompatActivity {
 

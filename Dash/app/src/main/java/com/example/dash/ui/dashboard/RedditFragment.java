@@ -53,7 +53,6 @@ public class RedditFragment extends Fragment {
 
 
     public class MyWebViewClient extends WebViewClient {
-
         @Override
         public void onPageFinished(WebView view, String url) {
             swipeLayout.setRefreshing(false);

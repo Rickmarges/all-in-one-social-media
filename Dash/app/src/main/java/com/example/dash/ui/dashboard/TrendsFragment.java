@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -23,14 +24,12 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
-import com.example.dash.ui.dashboard.RSS.*;
+import com.example.dash.ui.dashboard.rss.RssItem;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -40,11 +39,15 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 @SuppressLint("SetJavaScriptEnabled")
 public class TrendsFragment extends Fragment {
 
     protected SwipeRefreshLayout swipeLayout;
-    protected String currentUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=NL";
+    protected String countryCode = "US";
+    protected String trendsUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
 
     @Nullable
     @Override
@@ -61,22 +64,26 @@ public class TrendsFragment extends Fragment {
         swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
-        updateRss();
-
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateRss();
     }
 
     public class RssParser extends AsyncTask<String, Void, List<RssItem>> {
         @Override
         public List<RssItem> doInBackground(String... params) {
-            List<RssItem> rssItems = new ArrayList<>();
+            List<RssItem> rssItems;
             Node node;
             NodeList nodes;
             try {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
 
-                URL url = new URL(currentUrl);
+                URL url = new URL(trendsUrl + countryCode);
                 Document document = builder.parse(url.openStream());
                 document.getDocumentElement().normalize();
 
@@ -86,40 +93,7 @@ public class TrendsFragment extends Fragment {
                 node = root.getFirstChild().getNextSibling();
                 nodes = node.getChildNodes();
 
-                for (int i = 0; i < nodes.getLength(); i++) {
-                    NodeList itemNodes;
-                    if (nodes.item(i).getNodeName().equals("item")) {
-                        RssItem rssItem = new RssItem();
-                        itemNodes = nodes.item(i).getChildNodes();
-
-                        for (int j = 0; j < itemNodes.getLength(); j++) {
-                            Node tempNode = itemNodes.item(j);
-                            if (tempNode.getNodeName().equals("title")) {
-                                rssItem.setTitle(tempNode.getFirstChild().getNodeValue());
-                            }
-                            if (tempNode.getNodeName().equals("ht:picture")) {
-                                rssItem.setImage(getImageBitmap(tempNode.getFirstChild().getNodeValue()));
-                            }
-                            if (tempNode.getNodeName().equals("ht:news_item")) {
-                                Node newsNode = tempNode.getFirstChild();
-                                while (newsNode.getNextSibling() != null) {
-                                    if (newsNode.getNodeName().equals("ht:news_item_title") && rssItem.getDescription().equals("")) {
-                                        String description = newsNode.getFirstChild().getNodeValue();
-                                        if (description.contains("&#39;")) {
-                                            description = description.replace("&#39;", "'");
-                                        }
-                                        rssItem.setDescription(description);
-                                    }
-                                    if (newsNode.getNodeName().equals("ht:news_item_url") && rssItem.getLink().equals("")) {
-                                        rssItem.setLink(newsNode.getFirstChild().getNodeValue());
-                                    }
-                                    newsNode = newsNode.getNextSibling();
-                                }
-                            }
-                        }
-                        rssItems.add(rssItem);
-                    }
-                }
+                rssItems = createRssItems(nodes);
             } catch (Exception e) {
                 rssItems = null;
             }
@@ -128,60 +102,11 @@ public class TrendsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<RssItem> rssItems) {
-            LinearLayout linearLayout = getActivity().findViewById(R.id.trendsLayout);
-            if (linearLayout.getChildCount() > 0) {
-                linearLayout.removeAllViews();
-            }
-            for (RssItem rssItem : rssItems) {
-                RelativeLayout cardLayout = new RelativeLayout(getContext());
-                CardView cardView = new CardView(getContext());
-                TextView textViewTitle = new TextView(getContext());
-                TextView textViewDesc = new TextView(getContext());
-                ImageView imageView = new ImageView(getContext());
-
-                textViewTitle.setText(rssItem.getTitle());
-                textViewTitle.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                textViewTitle.setPadding(15, 5, 220, 5);
-                textViewTitle.setTextSize(20);
-
-                String description = rssItem.getDescription();
-
-                textViewDesc.setText(description.substring(0, 1).toUpperCase() + description.substring(1));
-                textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
-                textViewDesc.setPadding(15, 5, 220, 10);
-                textViewDesc.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                textViewDesc.setGravity(Gravity.BOTTOM);
-
-                RelativeLayout.LayoutParams imageParams;
-                imageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                imageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                imageView.setImageBitmap(rssItem.getImage());
-                imageView.setLayoutParams(imageParams);
-                imageView.setMinimumHeight(200);
-                imageView.setMinimumWidth(200);
-
-                cardView.setCardBackgroundColor(getResources().getColor(R.color.colorBackgroundSecondary, null));
-                cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                cardView.setUseCompatPadding(true);
-                cardView.setCardElevation(7);
-                cardView.setRadius(15);
-                cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
-                cardView.setClickable(true);
-                cardView.setOnClickListener(view -> {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(rssItem.getLink()));
-                    startActivity(browserIntent);
-                });
-
-                CardView.LayoutParams layoutParams = (CardView.LayoutParams)
-                        cardView.getLayoutParams();
-                layoutParams.height = 220;
-                layoutParams.bottomMargin = 10;
-
-                cardLayout.addView(textViewTitle);
-                cardLayout.addView(textViewDesc);
-                cardLayout.addView(imageView);
-                cardView.addView(cardLayout);
-                linearLayout.addView(cardView);
+            try {
+                createCardUI(rssItems);
+            } catch (Exception e){
+                Log.d("TEST", e.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(), "Unable to update Google Trends", Toast.LENGTH_LONG).show();
             }
             swipeLayout.setRefreshing(false);
         }
@@ -189,7 +114,7 @@ public class TrendsFragment extends Fragment {
 
     private void updateRss() {
         try {
-            new RssParser().execute(currentUrl);
+            new RssParser().execute(trendsUrl + countryCode);
         } catch (Exception e) {
             Log.w(getContext().toString(), "Unable to get RSS items");
         }
@@ -210,5 +135,112 @@ public class TrendsFragment extends Fragment {
             Log.e("Error", "Error getting bitmap", e);
         }
         return bitmap;
+    }
+
+    private List<RssItem> createRssItems(NodeList nodes){
+        List<RssItem> rssItems = new ArrayList<>();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            NodeList itemNodes;
+            if (nodes.item(i).getNodeName().equals("item")) {
+                RssItem rssItem = new RssItem();
+                itemNodes = nodes.item(i).getChildNodes();
+
+                for (int j = 0; j < itemNodes.getLength(); j++) {
+                    Node tempNode = itemNodes.item(j);
+                    if (tempNode.getNodeName().equals("title")) {
+                        rssItem.setTitle(tempNode.getFirstChild().getNodeValue());
+                    }
+                    if (tempNode.getNodeName().equals("ht:picture")) {
+                        rssItem.setImage(getImageBitmap(tempNode.getFirstChild().getNodeValue()));
+                    }
+                    if (tempNode.getNodeName().equals("ht:news_item")) {
+                        Node newsNode = tempNode.getFirstChild();
+                        while (newsNode.getNextSibling() != null) {
+                            if (newsNode.getNodeName().equals("ht:news_item_title") && rssItem.getDescription().equals("")) {
+                                String description = newsNode.getFirstChild().getNodeValue();
+                                if (description.contains("&#39;")) {
+                                    description = description.replace("&#39;", "'");
+                                }
+                                if (description.contains("&amp;")) {
+                                    description = description.replace("&amp;", "&");
+                                }
+                                rssItem.setDescription(description);
+                            }
+                            if (newsNode.getNodeName().equals("ht:news_item_url") && rssItem.getLink().equals("")) {
+                                rssItem.setLink(newsNode.getFirstChild().getNodeValue());
+                            }
+                            newsNode = newsNode.getNextSibling();
+                        }
+                    }
+                }
+                rssItems.add(rssItem);
+            }
+        }
+        return rssItems;
+    }
+
+
+    /**
+     * Creates the UI based on CardView from a list of RssItems/nodes.
+     *
+     * @param rssItems The list of RssItems which will be parsed into CardViews.
+     *
+     */
+    private void createCardUI(List<RssItem> rssItems){
+        LinearLayout linearLayout = getActivity().findViewById(R.id.trendsLayout);
+        if (linearLayout.getChildCount() > 0) {
+            linearLayout.removeAllViews();
+        }
+        for (RssItem rssItem : rssItems) {
+            RelativeLayout cardLayout = new RelativeLayout(getContext());
+            CardView cardView = new CardView(getContext());
+            TextView textViewTitle = new TextView(getContext());
+            TextView textViewDesc = new TextView(getContext());
+            ImageView imageView = new ImageView(getContext());
+
+            textViewTitle.setText(rssItem.getTitle());
+            textViewTitle.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+            textViewTitle.setPadding(15, 5, 220, 5);
+            textViewTitle.setTextSize(20);
+
+            String description = rssItem.getDescription();
+
+            textViewDesc.setText(description.substring(0, 1).toUpperCase() + description.substring(1));
+            textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
+            textViewDesc.setPadding(15, 5, 220, 10);
+            textViewDesc.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            textViewDesc.setGravity(Gravity.BOTTOM);
+
+            RelativeLayout.LayoutParams imageParams;
+            imageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            imageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            imageView.setImageBitmap(rssItem.getImage());
+            imageView.setLayoutParams(imageParams);
+            imageView.setMinimumHeight(200);
+            imageView.setMinimumWidth(200);
+
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.colorBackgroundSecondary, null));
+            cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            cardView.setUseCompatPadding(true);
+            cardView.setCardElevation(7);
+            cardView.setRadius(15);
+            cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
+            cardView.setClickable(true);
+            cardView.setOnClickListener(view -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(rssItem.getLink()));
+                startActivity(browserIntent);
+            });
+
+            CardView.LayoutParams layoutParams = (CardView.LayoutParams)
+                    cardView.getLayoutParams();
+            layoutParams.height = 220;
+            layoutParams.bottomMargin = 10;
+
+            cardLayout.addView(textViewTitle);
+            cardLayout.addView(textViewDesc);
+            cardLayout.addView(imageView);
+            cardView.addView(cardLayout);
+            linearLayout.addView(cardView);
+        }
     }
 }
