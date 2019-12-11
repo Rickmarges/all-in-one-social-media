@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,7 +29,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -149,8 +147,8 @@ public class TrendsFragment extends Fragment {
                 String description = rssItem.getDescription();
 
                 textViewDesc.setText(description.substring(0, 1).toUpperCase() + description.substring(1));
-                textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                textViewDesc.setPadding(15, 5, 220, 5);
+                textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
+                textViewDesc.setPadding(15, 5, 220, 10);
                 textViewDesc.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 textViewDesc.setGravity(Gravity.BOTTOM);
 
@@ -162,10 +160,11 @@ public class TrendsFragment extends Fragment {
                 imageView.setMinimumHeight(200);
                 imageView.setMinimumWidth(200);
 
-                cardView.setCardBackgroundColor(getResources().getColor(R.color.colorBackgroundPrimary, null));
+                cardView.setCardBackgroundColor(getResources().getColor(R.color.colorBackgroundSecondary, null));
                 cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 cardView.setUseCompatPadding(true);
                 cardView.setCardElevation(7);
+                cardView.setRadius(15);
                 cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
                 cardView.setClickable(true);
                 cardView.setOnClickListener(view -> {
