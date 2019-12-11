@@ -14,22 +14,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.dash.R;
+import com.example.dash.ui.RedditApp;
 import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
 import com.example.dash.ui.settings.SettingsActivity;
+import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.oauth.OAuthHelper;
+import net.dean.jraw.oauth.TokenStore;
 
 import static android.view.Gravity.END;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
-    private FrameLayout redditf;
     private int backCounter;
     private long startTime;
 
@@ -124,7 +126,6 @@ public class DashboardActivity extends AppCompatActivity {
         myLayout.requestFocus();
 
         menuBtn = findViewById(R.id.menubtn);
-        redditf = findViewById(R.id.redditFragment);
 
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));

@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/redditFragment"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.dashboard.DashFragment"
-    android:visibility="gone">
-
+    android:id="@+id/redditFragment"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".ui.dashboard.DashFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/redditRefresh"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ScrollView
-            android:id="@+id/redditscroll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbarThumbVertical="@drawable/scrollbar"
+            android:scrollbars="vertical">
 
-            <WebView
-                android:id="@+id/wvRddt"
+            <LinearLayout
+                android:id="@+id/redditLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:scrollbarThumbVertical="@drawable/scrollbar"
+                android:scrollbarTrackVertical="@drawable/scrollbar"
+                android:layout_margin="3dp"
+                android:scrollbars="vertical" />
         </ScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

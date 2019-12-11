@@ -1,4 +1,4 @@
-package com.example.dash.ui.reddit;
+package com.example.dash.ui;
 
 import android.app.Application;
 import android.util.Log;
@@ -57,6 +57,11 @@ public final class RedditApp extends Application {
         });
     }
 
-    public static AccountHelper getAccountHelper() { return accountHelper; }
-    public static SharedPreferencesTokenStore getTokenStore() { return tokenStore; }
+    public static AccountHelper getAccountHelper() {
+        return accountHelper;
+    }
+
+    public static SharedPreferencesTokenStore getTokenStore() {
+        return tokenStore;
+    }
 }

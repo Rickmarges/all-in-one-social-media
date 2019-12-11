@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.example.dash.R;
+import com.example.dash.ui.RedditApp;
 
 import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkAdapter;
@@ -30,21 +32,14 @@ public class AddRedditAccount extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reddit_account);
+        final ProgressBar progressBar = findViewById(R.id.addedAccount);
 
         final WebView webView = findViewById(R.id.webview);
         webView.clearCache(true);
         webView.clearHistory();
 
-        // Get a Useragent
-        UserAgent userAgent = new UserAgent("bot", "com.example.dash", Version.get(), "aimiroan");
-
-        // Get a networkadapter
-        NetworkAdapter networkAdapter = new OkHttpNetworkAdapter(userAgent);
-        Credentials creds = Credentials.webapp("EVhT39ISlEL1EQ", "cUb6j5hCjkMVx7aa34ZpLsNgN5c" , "https://www.google.com/");
-
         // Get a StatefulAuthHelper instance to manage interactive authentication
-        //final StatefulAuthHelper helper = RedditApp.getAccountHelper().switchToNewUser();
-        final StatefulAuthHelper helper = OAuthHelper.interactive(networkAdapter, creds);
+        final StatefulAuthHelper helper = RedditApp.getAccountHelper().switchToNewUser();
 
         // Watch for pages loading
         webView.setWebViewClient(new WebViewClient() {
@@ -57,6 +52,7 @@ public class AddRedditAccount extends AppCompatActivity {
 
                     // Try to authenticate the user
                     new AuthenticateTask(AddRedditAccount.this, helper).execute(url);
+                    progressBar.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -64,7 +60,7 @@ public class AddRedditAccount extends AppCompatActivity {
         // Generate an authentication URL
         boolean requestRefreshToken = true;
         boolean useMobileSite = true;
-        String[] scopes = new String[]{ "read", "identity" };
+        String[] scopes = new String[]{"read", "identity"};
         String authUrl = helper.getAuthorizationUrl(requestRefreshToken, useMobileSite, scopes);
 
         // Finally, show the authorization URL to the user
