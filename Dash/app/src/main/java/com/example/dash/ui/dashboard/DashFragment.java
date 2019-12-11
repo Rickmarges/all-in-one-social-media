@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.example.dash.R;
 import com.example.dash.ui.account.AccountActivity;
 
-class DashFragment extends Fragment {
+public class DashFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

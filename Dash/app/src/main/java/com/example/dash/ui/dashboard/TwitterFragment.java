@@ -17,7 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.dash.R;
 
 @SuppressLint("SetJavaScriptEnabled")
-class TwitterFragment extends Fragment {
+public class TwitterFragment extends Fragment {
 
     private WebView twttrWV;
     private SwipeRefreshLayout swipeLayout;

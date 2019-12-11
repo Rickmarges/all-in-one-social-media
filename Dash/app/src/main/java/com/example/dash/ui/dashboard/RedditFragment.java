@@ -17,7 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.dash.R;
 
 @SuppressLint("SetJavaScriptEnabled")
-class RedditFragment extends Fragment {
+public class RedditFragment extends Fragment {
 
     private WebView redditWV;
     private SwipeRefreshLayout swipeLayout;

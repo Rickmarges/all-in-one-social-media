@@ -46,7 +46,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 @SuppressLint("SetJavaScriptEnabled")
-class TrendsFragment extends Fragment {
+public class TrendsFragment extends Fragment {
 
     private SwipeRefreshLayout swipeLayout;
     private String countryCode = "US";
@@ -161,7 +161,11 @@ class TrendsFragment extends Fragment {
                         while (newsNode.getNextSibling() != null) {
                             if (newsNode.getNodeName().equals("ht:news_item_title") && rssItem.getDescription().equals("")) {
                                 String description = newsNode.getFirstChild().getNodeValue();
-                                rssItem.setDescription(Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY).toString());
+                                description = Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY).toString();
+                                if (description.contains("<") && description.contains(">")) {
+                                    description = description.replaceAll("<[^>]*>", "");
+                                }
+                                rssItem.setDescription(description);
                             }
                             if (newsNode.getNodeName().equals("ht:news_item_url") && rssItem.getLink().equals("")) {
                                 rssItem.setLink(newsNode.getFirstChild().getNodeValue());
