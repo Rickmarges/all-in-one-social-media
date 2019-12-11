@@ -1,25 +1,15 @@
 package com.example.dash.ui.dashboard;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -38,10 +28,6 @@ import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.pagination.DefaultPaginator;
-
-import java.net.URISyntaxException;
-
-import static android.content.ContentValues.TAG;
 
 public class RedditFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
@@ -80,9 +66,8 @@ public class RedditFragment extends Fragment {
             try {
                 // frontPage() returns a Paginator.Builder
                 DefaultPaginator<Submission> frontPage = redditClient.frontPage()
-                        .sorting(SubredditSort.TOP)
-                        .timePeriod(TimePeriod.DAY)
-                        .limit(30)
+                        .sorting(SubredditSort.HOT)
+                        .limit(25)
                         .build();
 
                 Listing<Submission> submissions = frontPage.next();
