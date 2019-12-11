@@ -8,12 +8,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -28,9 +30,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
-import org.xmlpull.v1.XmlPullParser;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -136,7 +135,7 @@ public class TrendsFragment extends Fragment {
                 linearLayout.removeAllViews();
             }
             for (RssItem rssItem : rssItems) {
-                LinearLayout cardLayout = new LinearLayout(getContext());
+                RelativeLayout cardLayout = new RelativeLayout(getContext());
                 CardView cardView = new CardView(getContext());
                 TextView textViewTitle = new TextView(getContext());
                 TextView textViewDesc = new TextView(getContext());
@@ -144,16 +143,24 @@ public class TrendsFragment extends Fragment {
 
                 textViewTitle.setText(rssItem.getTitle());
                 textViewTitle.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                textViewTitle.setPadding(15, 5, 10, 5);
+                textViewTitle.setPadding(15, 5, 220, 5);
                 textViewTitle.setTextSize(20);
 
                 String description = rssItem.getDescription();
 
                 textViewDesc.setText(description.substring(0, 1).toUpperCase() + description.substring(1));
                 textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                textViewDesc.setPadding(15, 5, 150, 5);
+                textViewDesc.setPadding(15, 5, 220, 5);
+                textViewDesc.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                textViewDesc.setGravity(Gravity.BOTTOM);
 
+                RelativeLayout.LayoutParams imageParams;
+                imageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                imageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 imageView.setImageBitmap(rssItem.getImage());
+                imageView.setLayoutParams(imageParams);
+                imageView.setMinimumHeight(200);
+                imageView.setMinimumWidth(200);
 
                 cardView.setCardBackgroundColor(getResources().getColor(R.color.colorBackgroundPrimary, null));
                 cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -171,12 +178,10 @@ public class TrendsFragment extends Fragment {
                 layoutParams.height = 220;
                 layoutParams.bottomMargin = 10;
 
-                cardLayout.setOrientation(LinearLayout.VERTICAL);
-
                 cardLayout.addView(textViewTitle);
                 cardLayout.addView(textViewDesc);
+                cardLayout.addView(imageView);
                 cardView.addView(cardLayout);
-                cardView.addView(imageView);
                 linearLayout.addView(cardView);
             }
             swipeLayout.setRefreshing(false);
