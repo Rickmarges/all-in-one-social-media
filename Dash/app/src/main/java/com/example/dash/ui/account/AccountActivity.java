@@ -8,10 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.dash.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class AccountActivity extends AppCompatActivity {
 
-    protected FirebaseAuth mAuth;
-    protected TextView emailAccount;
+    private TextView emailAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +22,8 @@ public class AccountActivity extends AppCompatActivity {
 
         // Get user credentials
         init();
-        mAuth = FirebaseAuth.getInstance();
-        emailAccount.setText(mAuth.getCurrentUser().getEmail());
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        emailAccount.setText(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
     }
 
     @Override
@@ -31,7 +32,7 @@ public class AccountActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-    public void init() {
+    private void init() {
         emailAccount = findViewById(R.id.emailAccount);
     }
 }

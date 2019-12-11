@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -42,27 +44,27 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class TrendsFragment extends Fragment {
-
     protected SwipeRefreshLayout swipeLayout;
     protected final String baseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
     protected String countryCode = "US";
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.trends_fragment, container, false);
 
         //Set refresh on this page
         swipeLayout = rootView.findViewById(R.id.trendsRefresh);
 
-        swipeLayout.setOnRefreshListener(() -> updateRss());
+        swipeLayout.setOnRefreshListener(this::updateRss);
 
         // Change colours of bar and background to match style
         swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
@@ -125,7 +127,7 @@ public class TrendsFragment extends Fragment {
         updateRss();
     }
 
-    public class RssParser extends AsyncTask<String, Void, List<RssItem>> {
+    class RssParser extends AsyncTask<String, Void, List<RssItem>> {
         @Override
         public List<RssItem> doInBackground(String... params) {
             List<RssItem> rssItems;
@@ -156,9 +158,9 @@ public class TrendsFragment extends Fragment {
         protected void onPostExecute(List<RssItem> rssItems) {
             try {
                 createCardUI(rssItems);
-            } catch (Exception e){
-                Log.d("TEST", e.getMessage());
-                Toast.makeText(getActivity().getApplicationContext(), "Unable to update Google Trends", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Log.d("TEST", Objects.requireNonNull(e.getMessage()));
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Unable to update Google Trends", Toast.LENGTH_LONG).show();
             }
             swipeLayout.setRefreshing(false);
         }
@@ -168,7 +170,7 @@ public class TrendsFragment extends Fragment {
         try {
             new RssParser().execute(baseUrl + countryCode);
         } catch (Exception e) {
-            Log.w(getContext().toString(), "Unable to get RSS items");
+            Log.w(Objects.requireNonNull(getContext()).toString(), "Unable to get RSS items");
         }
     }
 
@@ -189,7 +191,7 @@ public class TrendsFragment extends Fragment {
         return bitmap;
     }
 
-    private List<RssItem> createRssItems(NodeList nodes){
+    private List<RssItem> createRssItems(NodeList nodes) {
         List<RssItem> rssItems = new ArrayList<>();
         for (int i = 0; i < nodes.getLength(); i++) {
             NodeList itemNodes;
@@ -210,11 +212,9 @@ public class TrendsFragment extends Fragment {
                         while (newsNode.getNextSibling() != null) {
                             if (newsNode.getNodeName().equals("ht:news_item_title") && rssItem.getDescription().equals("")) {
                                 String description = newsNode.getFirstChild().getNodeValue();
-                                if (description.contains("&#39;")) {
-                                    description = description.replace("&#39;", "'");
-                                }
-                                if (description.contains("&amp;")) {
-                                    description = description.replace("&amp;", "&");
+                                description = Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY).toString();
+                                if (description.contains("<") && description.contains(">")) {
+                                    description = description.replaceAll("<[^>]*>", "");
                                 }
                                 rssItem.setDescription(description);
                             }
@@ -236,16 +236,15 @@ public class TrendsFragment extends Fragment {
      * Creates the UI based on CardView from a list of RssItems/nodes.
      *
      * @param rssItems The list of RssItems which will be parsed into CardViews.
-     *
      */
-    private void createCardUI(List<RssItem> rssItems){
-        LinearLayout linearLayout = getActivity().findViewById(R.id.trendsLayout);
+    private void createCardUI(List<RssItem> rssItems) {
+        LinearLayout linearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.trendsLayout);
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
         }
         for (RssItem rssItem : rssItems) {
             RelativeLayout cardLayout = new RelativeLayout(getContext());
-            CardView cardView = new CardView(getContext());
+            CardView cardView = new CardView(Objects.requireNonNull(getContext()));
             TextView textViewTitle = new TextView(getContext());
             TextView textViewDesc = new TextView(getContext());
             ImageView imageView = new ImageView(getContext());

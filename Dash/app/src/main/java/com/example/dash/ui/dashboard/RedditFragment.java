@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,13 +19,13 @@ import com.example.dash.R;
 @SuppressLint("SetJavaScriptEnabled")
 public class RedditFragment extends Fragment {
 
-    protected WebView redditWV;
-    protected SwipeRefreshLayout swipeLayout;
-    protected String currentUrl = "https://reddit.com/r/pathofexile";
+    private WebView redditWV;
+    private SwipeRefreshLayout swipeLayout;
+    private String currentUrl = "https://reddit.com/r/pathofexile";
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.reddit_fragment, container, false);
 
@@ -52,7 +53,7 @@ public class RedditFragment extends Fragment {
     }
 
 
-    public class MyWebViewClient extends WebViewClient {
+    class MyWebViewClient extends WebViewClient {
         @Override
         public void onPageFinished(WebView view, String url) {
             swipeLayout.setRefreshing(false);

@@ -18,6 +18,8 @@ import com.example.dash.ui.dashboard.DashboardActivity;
 import com.example.dash.ui.register.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText emailTV, passwordTV;
@@ -94,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             .addOnCompleteListener(task -> {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    if (mAuth.getCurrentUser().isEmailVerified()) {
+                    if (Objects.requireNonNull(mAuth.getCurrentUser()).isEmailVerified()) {
                         Intent intent = new Intent(this, DashboardActivity.class);
                         startActivity(intent);
                     } else {

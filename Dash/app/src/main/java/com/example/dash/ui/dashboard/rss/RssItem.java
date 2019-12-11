@@ -3,10 +3,10 @@ package com.example.dash.ui.dashboard.rss;
 import android.graphics.Bitmap;
 
 public class RssItem {
-    String title = "";
-    String description = "";
-    String link = "";
-    Bitmap image = null;
+    private String title = "";
+    private String description = "";
+    private String link = "";
+    private Bitmap image = null;
 
     public String getTitle() {
         return title;
