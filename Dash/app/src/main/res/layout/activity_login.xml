@@ -111,5 +111,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/logo_round" />
 
+    <Button
+        android:id="@+id/testbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="162dp"
+        android:layout_marginTop="46dp"
+        android:layout_marginEnd="145dp"
+        android:layout_marginBottom="78dp"
+        android:text="@string/test"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
