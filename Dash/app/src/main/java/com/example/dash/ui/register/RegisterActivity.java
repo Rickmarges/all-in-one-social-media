@@ -16,7 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.dash.R;
 import com.example.dash.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -45,7 +46,6 @@ public class RegisterActivity extends AppCompatActivity {
                 passwordTV2.setError("Doesn't match");
                 passwordTV.startAnimation(animShake);
                 passwordTV2.startAnimation(animShake);
-                return;
             }
         });
 
@@ -62,8 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void sendEmailVerification(){
-        mAuth.getCurrentUser().sendEmailVerification()
+    private void sendEmailVerification(){
+        Objects.requireNonNull(mAuth.getCurrentUser()).sendEmailVerification()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "Verification sent",  Toast.LENGTH_SHORT).show();

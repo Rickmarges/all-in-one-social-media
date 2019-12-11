@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -16,15 +17,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.dash.R;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class TwitterFragment extends Fragment {
+class TwitterFragment extends Fragment {
 
-    protected WebView twttrWV;
-    protected SwipeRefreshLayout swipeLayout;
-    protected String currentUrl = "https://twitter.com/elonmusk";
+    private WebView twttrWV;
+    private SwipeRefreshLayout swipeLayout;
+    private String currentUrl = "https://twitter.com/elonmusk";
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.twitter_fragment, container, false);
 
@@ -52,7 +53,7 @@ public class TwitterFragment extends Fragment {
     }
 
 
-    public class MyWebViewClient extends WebViewClient {
+    class MyWebViewClient extends WebViewClient {
         @Override
         public void onPageFinished(WebView view, String url) {
             swipeLayout.setRefreshing(false);
