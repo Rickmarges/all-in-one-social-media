@@ -1,16 +1,20 @@
 package com.example.dash.ui.dashboard;
 
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+
+import com.example.dash.BuildConfig;
 import com.example.dash.R;
 import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
@@ -18,6 +22,10 @@ import com.example.dash.ui.settings.SettingsActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
@@ -53,6 +61,12 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initialize() {
+        TwitterConfig config = new TwitterConfig.Builder(this.getBaseContext())
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(new TwitterAuthConfig(BuildConfig.TWITTER_CONSUMER_ACCESS_TOKEN, BuildConfig.TWITTER_CONSUMER_SECRET))
+                .debug(true)
+                .build();
+        Twitter.initialize(config);
         setContentView(R.layout.activity_dashboard);
 
         backCounter = 0;

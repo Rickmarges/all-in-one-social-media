@@ -29,7 +29,6 @@ public class LoginActivity extends AppCompatActivity {
     private int backCounter;
     private long startTime;
 
-    private Button testBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
 
         initializeUI();
 
-        testBtn.setOnClickListener(view -> TwitterApiTest());
         loginBtn.setOnClickListener(view -> loginUserAccount());
         registerBtn.setOnClickListener(view -> {
             Intent intent = new Intent(this, RegisterActivity.class);
@@ -67,11 +65,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
         backCounter = 0;
-    }
-
-    private void TwitterApiTest(){
-        TwitterRepository twitterInstance = new TwitterRepository(BuildConfig.TWITTER_ACCOUNT_ACCESS_TOKEN, BuildConfig.TWITTER_ACCOUNT_SECRET);
-        twitterInstance.GetTwitterTimeline();
     }
 
     private void loginUserAccount() {
@@ -126,7 +119,6 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn = findViewById(R.id.register);
         loginBtn = findViewById(R.id.login);
         progressBar = findViewById(R.id.loading);
-        testBtn = findViewById(R.id.testbutton);
     }
 
     private void hideButtons(){
