@@ -1,6 +1,7 @@
 package com.example.dash.ui.dashboard;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -8,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,6 +32,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
 import com.example.dash.ui.dashboard.rss.RssItem;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,10 +44,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.crypto.Cipher;
+import javax.crypto.EncryptedPrivateKeyInfo;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -56,12 +62,13 @@ public class TrendsFragment extends Fragment {
     protected final String baseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
     protected String countryCode;
     private Spinner spinner;
+    private String encryptedString;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.trends_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_trends, container, false);
 
         //Set refresh on this page
         swipeLayout = rootView.findViewById(R.id.trendsRefresh);
@@ -71,6 +78,9 @@ public class TrendsFragment extends Fragment {
         // Change colours of bar and background to match style
         swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
+
+        FirebaseUser user = ((DashboardActivity) getActivity()).getUser();
+        encryptedString = encryptString(user.getEmail());
 
         return rootView;
     }
@@ -85,9 +95,8 @@ public class TrendsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        int savedValue=PreferenceManager
-                .getDefaultSharedPreferences(getActivity().getBaseContext()) //context
-                .getInt("Country",0);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(encryptedString, Context.MODE_PRIVATE);
+        int savedValue = sharedPreferences.getInt("Country", 0);
 
         spinner.setSelection(savedValue);
     }
@@ -128,7 +137,8 @@ public class TrendsFragment extends Fragment {
                 //If there is a new valid country selected, update the RSS
                 if (!newCountry.isEmpty() || newCountry != countryCode) {
                     countryCode = newCountry;
-                    SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+
+                    SharedPreferences myPrefs = getActivity().getSharedPreferences(encryptedString, Context.MODE_PRIVATE);
                     SharedPreferences.Editor prefsEditor = myPrefs.edit();
                     prefsEditor.putInt("Country", spinner.getSelectedItemPosition());
                     prefsEditor.commit();
@@ -308,6 +318,26 @@ public class TrendsFragment extends Fragment {
             cardLayout.addView(imageView);
             cardView.addView(cardLayout);
             linearLayout.addView(cardView);
+        }
+    }
+
+    private String encryptString (String string) {
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+            PublicKey publicKey = keyPair.getPublic();
+
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+            byte[] input = string.getBytes();
+            cipher.update(input);
+            return cipher.doFinal().toString();
+        } catch (Exception e){
+            // TODO return other encrypted string
+            return "";
         }
     }
 }

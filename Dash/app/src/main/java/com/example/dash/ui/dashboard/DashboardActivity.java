@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -53,6 +54,11 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    @Nullable
+    public FirebaseUser getUser(){
+        return user;
+    }
+
     private void initialize() {
         setContentView(R.layout.activity_dashboard);
 
@@ -82,6 +88,9 @@ public class DashboardActivity extends AppCompatActivity {
     private void signOut() {
         user = null;
         FirebaseAuth.getInstance().signOut();
+        LinearLayout ll = findViewById(R.id.trendsLayout);
+        ll.removeAllViews();
+
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }

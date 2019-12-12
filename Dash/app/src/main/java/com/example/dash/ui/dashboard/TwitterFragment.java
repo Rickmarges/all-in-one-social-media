@@ -27,7 +27,7 @@ public class TwitterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.twitter_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_twitter, container, false);
 
         // Enable webview & link it to webview in fragment layout
         twttrWV = rootView.findViewById(R.id.wvTwttr);

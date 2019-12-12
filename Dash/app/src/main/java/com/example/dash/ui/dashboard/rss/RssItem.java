@@ -12,7 +12,9 @@ public class RssItem {
         return title;
     }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
     public String getLink() {
         return link;
@@ -22,11 +24,19 @@ public class RssItem {
         return image;
     }
 
-    public void setTitle(String title) { this.title = title; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public void setLink(String link) { this.link = link; }
+    public void setLink(String link) {
+        this.link = link;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public void setImage(Bitmap imageUrl) { this.image = imageUrl; }
+    public void setImage(Bitmap imageUrl) {
+        this.image = imageUrl;
+    }
 }

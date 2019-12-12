@@ -27,7 +27,7 @@ public class RedditFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.reddit_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_reddit, container, false);
 
         // Enable webview & link it to webview in fragment layout
         redditWV = rootView.findViewById(R.id.wvRddt);
