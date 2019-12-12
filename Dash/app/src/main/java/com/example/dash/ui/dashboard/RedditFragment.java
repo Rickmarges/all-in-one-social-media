@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
@@ -71,10 +72,6 @@ public class RedditFragment extends Fragment {
                         .sorting(SubredditSort.HOT)
                         .limit(25)
                         .build();
-
-                for (int i = 0; i < RedditApp.getTokenStore().getUsernames().size(); i++) {
-                    Log.d("USERNAMES", RedditApp.getTokenStore().getUsernames().get(i));
-                }
 
                 Listing<Submission> submissions = frontPage.next();
                 return submissions;
