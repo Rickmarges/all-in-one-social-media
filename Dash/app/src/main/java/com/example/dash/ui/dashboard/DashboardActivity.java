@@ -41,11 +41,16 @@ public class DashboardActivity extends AppCompatActivity {
     private DeferredPersistentTokenStore tokenStore;
     private List<String> usernames;
     private TreeMap<String, PersistedAuthData> data;
+    private String encryptedString;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        encryptedString = encryptString(user.getEmail());
 
         initialize();
 
@@ -96,9 +101,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void signOut() {
-//        if (RedditApp.getAccountHelper().isAuthenticated()){
-//            new RedditLogout().execute();
-//        }
         user = null;
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
@@ -145,20 +147,21 @@ public class DashboardActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
     }
-    private void checkReddit(){
+
+    private void checkReddit() {
         try {
             tokenStore = RedditApp.getTokenStore();
             data = new TreeMap<>(tokenStore.data());
             usernames = new ArrayList<>(data.keySet());
 
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            String email = sharedPref.getString(FirebaseAuth.getInstance().getCurrentUser().getEmail(), null);
+            String email = sharedPref.getString("Reddit", null);
             System.out.println(email);
 
             String name = "Geruth";
 
             int index = -1;
-            for (int i=0;i<usernames.size();i++) {
+            for (int i = 0; i < usernames.size(); i++) {
                 if (usernames.get(i).equals(email)) {
                     index = i;
                     break;
@@ -166,7 +169,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
             //usernames.forEach(System.out::println);
             new ReauthenticationTask().execute(usernames.get(index));
-        }catch (RuntimeException ne){
+        } catch (RuntimeException ne) {
             System.out.println("No such user found.");
         }
     }
@@ -182,19 +185,4 @@ public class DashboardActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
         }
     }
-
-//    private class RedditLogout extends AsyncTask<String, Void, Boolean> {
-//        RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
-//
-//        @Override
-//        protected Boolean doInBackground(String... params) {
-//            try {
-//                redditClient.getAuthManager().revokeAccessToken();
-//                return true;
-//            } catch (Exception e) {
-//                // Report failure if an OAuthException occurs
-//                return false;
-//            }
-//        }
-//    }
 }

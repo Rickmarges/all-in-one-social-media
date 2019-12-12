@@ -17,17 +17,25 @@ import android.widget.ProgressBar;
 
 import com.example.dash.R;
 import com.example.dash.ui.RedditApp;
+import com.example.dash.ui.dashboard.DashboardActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
 import java.lang.ref.WeakReference;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PublicKey;
+
+import javax.crypto.Cipher;
 
 import okhttp3.Cookie;
 
 public class AddRedditAccount extends AppCompatActivity {
+    private String encryptedString;
 
 
     @Override
@@ -35,6 +43,9 @@ public class AddRedditAccount extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reddit_account);
         final ProgressBar progressBar = findViewById(R.id.addedAccount);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        encryptedString = encryptString(user.getEmail());
 
         final WebView webView = findViewById(R.id.webview);
         webView.clearCache(true);
@@ -116,10 +127,29 @@ public class AddRedditAccount extends AppCompatActivity {
     }
     private void addSP(){
         RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(FirebaseAuth.getInstance().getCurrentUser().getEmail(), redditClient.getAuthManager().currentUsername());
-        editor.apply();
-        editor.commit();
+        SharedPreferences myPrefs = this.getSharedPreferences(encryptedString, Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = myPrefs.edit();
+        prefsEditor.putString("Reddit", redditClient.getAuthManager().currentUsername());
+        prefsEditor.commit();
+    }
+
+    private String encryptString (String string) {
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+            PublicKey publicKey = keyPair.getPublic();
+
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+            byte[] input = string.getBytes();
+            cipher.update(input);
+            return cipher.doFinal().toString();
+        } catch (Exception e){
+            // TODO return other encrypted string
+            return "";
+        }
     }
 }
