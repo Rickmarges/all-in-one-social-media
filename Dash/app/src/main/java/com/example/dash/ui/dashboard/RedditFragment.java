@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
@@ -46,10 +48,23 @@ public class RedditFragment extends Fragment {
 
         swipeLayout.setOnRefreshListener(() -> updateReddit());
 
-        updateReddit();
+        if (RedditApp.getAccountHelper().isAuthenticated())
+            updateReddit();
 
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateReddit();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateReddit();
     }
 
     private void updateReddit() {
@@ -115,7 +130,6 @@ public class RedditFragment extends Fragment {
 //                textViewTitle.setTextColor(getResources().getColor(R.color.colorPrimary, null));
                 textViewTitle.setPadding(15, 5, 10, 0);
                 textViewTitle.setTextSize(20);
-
 
 
                 // Fill and style description

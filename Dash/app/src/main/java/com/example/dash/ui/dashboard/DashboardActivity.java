@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import net.dean.jraw.RedditClient;
+
+
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
@@ -90,6 +93,9 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void signOut() {
+        if (RedditApp.getAccountHelper().isAuthenticated()){
+            new RedditLogout().execute();
+        }
         user = null;
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
@@ -136,7 +142,6 @@ public class DashboardActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
     }
-
     private void checkReddit(){
         try {
             tokenStore = RedditApp.getTokenStore();
@@ -167,6 +172,21 @@ public class DashboardActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+        }
+    }
+    
+    private class RedditLogout extends AsyncTask<String, Void, Boolean> {
+        RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+                redditClient.getAuthManager().revokeAccessToken();
+                return true;
+            } catch (Exception e) {
+                // Report failure if an OAuthException occurs
+                return false;
+            }
         }
     }
 }
