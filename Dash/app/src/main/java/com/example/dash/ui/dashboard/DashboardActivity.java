@@ -12,12 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.dash.R;
+import com.example.dash.ui.RedditApp;
 import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
 import com.example.dash.ui.settings.SettingsActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import net.dean.jraw.RedditClient;
+import net.dean.jraw.oauth.AuthManager;
 
 
 public class DashboardActivity extends AppCompatActivity {

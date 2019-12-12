@@ -52,6 +52,18 @@ public class RedditFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateReddit();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateReddit();
+    }
+
     private void updateReddit() {
         if (RedditApp.getAccountHelper().isAuthenticated()) {
             new GetRedditFrontpage().execute();
