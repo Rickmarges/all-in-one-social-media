@@ -24,9 +24,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "TWITTER_CONSUMER_ACCESS_TOKEN", keystoreProperties["TWITTER_CONSUMER_ACCESS_TOKEN"]
         buildConfigField "String", "TWITTER_CONSUMER_SECRET", keystoreProperties["TWITTER_CONSUMER_SECRET"]
-        buildConfigField "String", "TWITTER_ACCOUNT_ACCESS_TOKEN", keystoreProperties["TWITTER_ACCOUNT_ACCESS_TOKEN"]
-        buildConfigField "String", "TWITTER_ACCOUNT_SECRET", keystoreProperties["TWITTER_ACCOUNT_SECRET"]
-
     }
     buildTypes {
         release {

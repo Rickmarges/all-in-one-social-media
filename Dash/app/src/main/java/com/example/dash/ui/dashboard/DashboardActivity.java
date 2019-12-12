@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
@@ -26,6 +28,11 @@ import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
+import com.twitter.sdk.android.tweetui.TweetUi;
+
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
@@ -67,6 +74,10 @@ public class DashboardActivity extends AppCompatActivity {
                 .debug(true)
                 .build();
         Twitter.initialize(config);
+        TwitterCore.getInstance();
+        TweetComposer.getInstance();
+        TweetUi.getInstance();
+
         setContentView(R.layout.activity_dashboard);
 
         backCounter = 0;
@@ -133,4 +144,14 @@ public class DashboardActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        FragmentManager fragment = getSupportFragmentManager();
+        if (fragment != null) {
+            Fragment frag = fragment.findFragmentByTag("android:switcher:2131230895:2");
+            frag.onActivityResult(requestCode, resultCode, data);
+        }
+        else Log.d("Twitter", "fragment is null");
+    }
 }

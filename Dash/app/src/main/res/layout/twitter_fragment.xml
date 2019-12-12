@@ -5,15 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.DashFragment">
 
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <ScrollView
         android:id="@+id/twitterscroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.twitter.sdk.android.core.identity.TwitterLoginButton
-            android:id="@+id/twitter_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </ScrollView>
 
 </FrameLayout>
