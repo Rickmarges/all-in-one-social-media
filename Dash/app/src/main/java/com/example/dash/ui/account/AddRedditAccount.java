@@ -3,24 +3,32 @@ package com.example.dash.ui.account;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.example.dash.R;
 import com.example.dash.ui.RedditApp;
+import com.google.firebase.auth.FirebaseAuth;
 
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
 import java.lang.ref.WeakReference;
 
+import okhttp3.Cookie;
+
 public class AddRedditAccount extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,9 @@ public class AddRedditAccount extends AppCompatActivity {
         final WebView webView = findViewById(R.id.webview);
         webView.clearCache(true);
         webView.clearHistory();
+
+        CookieManager.getInstance().removeAllCookies(null);
+        CookieManager.getInstance().flush();
 
         // Get a StatefulAuthHelper instance to manage interactive authentication
         final StatefulAuthHelper helper = RedditApp.getAccountHelper().switchToNewUser();
@@ -65,7 +76,7 @@ public class AddRedditAccount extends AppCompatActivity {
      * An async task that takes a final redirect URL as a parameter and reports the success of
      * authorizing the user.
      */
-    private static final class AuthenticateTask extends AsyncTask<String, Void, Boolean> {
+    private final class AuthenticateTask extends AsyncTask<String, Void, Boolean> {
         // Use a WeakReference so that we don't leak a Context
         private final WeakReference<Activity> context;
 
@@ -80,6 +91,7 @@ public class AddRedditAccount extends AppCompatActivity {
         protected Boolean doInBackground(String... urls) {
             try {
                 helper.onUserChallenge(urls[0]);
+
                 return true;
             } catch (OAuthException e) {
                 // Report failure if an OAuthException occurs
@@ -91,10 +103,23 @@ public class AddRedditAccount extends AppCompatActivity {
         protected void onPostExecute(Boolean success) {
             // Finish the activity if it's still running
             Activity host = this.context.get();
+            addSP();
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+
+
             if (host != null) {
                 host.setResult(success ? Activity.RESULT_OK : Activity.RESULT_CANCELED, new Intent());
                 host.finish();
             }
         }
+    }
+    private void addSP(){
+        RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(FirebaseAuth.getInstance().getCurrentUser().getEmail(), redditClient.getAuthManager().currentUsername());
+        editor.apply();
+        editor.commit();
     }
 }

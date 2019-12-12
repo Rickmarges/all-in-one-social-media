@@ -1,6 +1,8 @@
 package com.example.dash.ui.dashboard;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -72,8 +74,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         backCounter = 0;
 
-        initializeUI();
+
         checkReddit();
+        initializeUI();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -93,9 +96,9 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void signOut() {
-        if (RedditApp.getAccountHelper().isAuthenticated()){
-            new RedditLogout().execute();
-        }
+//        if (RedditApp.getAccountHelper().isAuthenticated()){
+//            new RedditLogout().execute();
+//        }
         user = null;
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
@@ -147,18 +150,23 @@ public class DashboardActivity extends AppCompatActivity {
             tokenStore = RedditApp.getTokenStore();
             data = new TreeMap<>(tokenStore.data());
             usernames = new ArrayList<>(data.keySet());
+
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            String email = sharedPref.getString(FirebaseAuth.getInstance().getCurrentUser().getEmail(), null);
+            System.out.println(email);
+
             String name = "Geruth";
 
             int index = -1;
             for (int i=0;i<usernames.size();i++) {
-                if (usernames.get(i).equals(name)) {
+                if (usernames.get(i).equals(email)) {
                     index = i;
                     break;
                 }
             }
-            usernames.forEach(System.out::println);
+            //usernames.forEach(System.out::println);
             new ReauthenticationTask().execute(usernames.get(index));
-        }catch (NullPointerException ne){
+        }catch (RuntimeException ne){
             System.out.println("No such user found.");
         }
     }
@@ -174,19 +182,19 @@ public class DashboardActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
         }
     }
-    
-    private class RedditLogout extends AsyncTask<String, Void, Boolean> {
-        RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
 
-        @Override
-        protected Boolean doInBackground(String... params) {
-            try {
-                redditClient.getAuthManager().revokeAccessToken();
-                return true;
-            } catch (Exception e) {
-                // Report failure if an OAuthException occurs
-                return false;
-            }
-        }
-    }
+//    private class RedditLogout extends AsyncTask<String, Void, Boolean> {
+//        RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
+//
+//        @Override
+//        protected Boolean doInBackground(String... params) {
+//            try {
+//                redditClient.getAuthManager().revokeAccessToken();
+//                return true;
+//            } catch (Exception e) {
+//                // Report failure if an OAuthException occurs
+//                return false;
+//            }
+//        }
+//    }
 }
