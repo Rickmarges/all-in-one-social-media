@@ -13,9 +13,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,10 +51,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class TrendsFragment extends Fragment {
-
-    private SwipeRefreshLayout swipeLayout;
-    private String countryCode = "US";
-    private String trendsUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
+    protected SwipeRefreshLayout swipeLayout;
+    protected final String baseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
+    protected String countryCode = "US";
 
     @Nullable
     @Override
@@ -71,6 +74,54 @@ public class TrendsFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        Spinner spinner = getActivity().findViewById(R.id.countries_spinner);
+        // Initializing an Array with countries
+        String[] countries = new String[]{
+                "United States",
+                "United Kingdom",
+                "The Netherlands"
+        };
+
+        // Initializing an ArrayAdapter
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, countries);
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(spinnerArrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // Set the new country code
+                String value = adapterView.getSelectedItem().toString();
+                String newCountry = "";
+                switch (value) {
+                    case "United States":
+                        newCountry = "US";
+                        break;
+                    case "United Kingdom":
+                        newCountry = "GB";
+                        break;
+                    case "The Netherlands":
+                        newCountry = "NL";
+                        break;
+                    default:
+                        break;
+                }
+                //If there is a new valid country selected, update the RSS
+                if (!newCountry.isEmpty() || newCountry != countryCode) {
+                    countryCode = newCountry;
+                    updateRss();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // Nothing
+            }
+        });
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         updateRss();
@@ -86,7 +137,7 @@ public class TrendsFragment extends Fragment {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
 
-                URL url = new URL(trendsUrl + countryCode);
+                URL url = new URL(baseUrl + countryCode);
                 Document document = builder.parse(url.openStream());
                 document.getDocumentElement().normalize();
 
@@ -117,7 +168,7 @@ public class TrendsFragment extends Fragment {
 
     private void updateRss() {
         try {
-            new RssParser().execute(trendsUrl + countryCode);
+            new RssParser().execute(baseUrl + countryCode);
         } catch (Exception e) {
             Log.w(Objects.requireNonNull(getContext()).toString(), "Unable to get RSS items");
         }
