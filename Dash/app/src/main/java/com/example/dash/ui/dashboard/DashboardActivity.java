@@ -22,10 +22,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import android.webkit.CookieManager;
-
 import net.dean.jraw.RedditClient;
-
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
