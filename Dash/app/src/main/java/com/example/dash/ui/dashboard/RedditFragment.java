@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,8 @@ public class RedditFragment extends Fragment {
 
         swipeLayout.setOnRefreshListener(() -> updateReddit());
 
-        updateReddit();
+        if (RedditApp.getAccountHelper().isAuthenticated())
+            updateReddit();
 
 
         return rootView;
@@ -81,6 +83,10 @@ public class RedditFragment extends Fragment {
                         .sorting(SubredditSort.HOT)
                         .limit(25)
                         .build();
+
+                for (int i = 0; i < RedditApp.getTokenStore().getUsernames().size(); i++) {
+                    Log.d("USERNAMES", RedditApp.getTokenStore().getUsernames().get(i));
+                }
 
                 Listing<Submission> submissions = frontPage.next();
                 return submissions;
@@ -127,7 +133,6 @@ public class RedditFragment extends Fragment {
 //                textViewTitle.setTextColor(getResources().getColor(R.color.colorPrimary, null));
                 textViewTitle.setPadding(15, 5, 10, 0);
                 textViewTitle.setTextSize(20);
-
 
 
                 // Fill and style description

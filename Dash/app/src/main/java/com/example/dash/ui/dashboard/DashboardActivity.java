@@ -1,6 +1,8 @@
 package com.example.dash.ui.dashboard;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
@@ -21,8 +23,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.oauth.AuthManager;
-
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
@@ -82,13 +82,16 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void signOut() {
+        if (RedditApp.getAccountHelper().isAuthenticated()){
+            new RedditLogout().execute();
+        }
         user = null;
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-    private void popupMenu(){
+    private void popupMenu() {
         PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn);
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
 
@@ -127,5 +130,20 @@ public class DashboardActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public class RedditLogout extends AsyncTask<String, Void, Boolean> {
+        RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+                redditClient.getAuthManager().revokeAccessToken();
+                return true;
+            } catch (Exception e) {
+                // Report failure if an OAuthException occurs
+                return false;
+            }
+        }
     }
 }
