@@ -2,11 +2,13 @@ package com.example.dash.ui.dashboard;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -42,7 +44,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,7 +54,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class TrendsFragment extends Fragment {
     protected SwipeRefreshLayout swipeLayout;
     protected final String baseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
-    protected String countryCode = "US";
+    protected String countryCode;
+    private Spinner spinner;
 
     @Nullable
     @Override
@@ -76,7 +78,23 @@ public class TrendsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Spinner spinner = getActivity().findViewById(R.id.countries_spinner);
+        createSpinner();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        int savedValue=PreferenceManager
+                .getDefaultSharedPreferences(getActivity().getBaseContext()) //context
+                .getInt("Country",0);
+
+        spinner.setSelection(savedValue);
+    }
+
+    private void createSpinner(){
+        spinner = getActivity().findViewById(R.id.countries_spinner);
+
         // Initializing an Array with countries
         String[] countries = new String[]{
                 "United States",
@@ -110,6 +128,10 @@ public class TrendsFragment extends Fragment {
                 //If there is a new valid country selected, update the RSS
                 if (!newCountry.isEmpty() || newCountry != countryCode) {
                     countryCode = newCountry;
+                    SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+                    SharedPreferences.Editor prefsEditor = myPrefs.edit();
+                    prefsEditor.putInt("Country", spinner.getSelectedItemPosition());
+                    prefsEditor.commit();
                     updateRss();
                 }
             }
@@ -119,12 +141,6 @@ public class TrendsFragment extends Fragment {
                 // Nothing
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateRss();
     }
 
     class RssParser extends AsyncTask<String, Void, List<RssItem>> {
@@ -252,7 +268,7 @@ public class TrendsFragment extends Fragment {
             textViewTitle.setText(rssItem.getTitle());
             textViewTitle.setTextColor(getResources().getColor(R.color.colorPrimary, null));
             textViewTitle.setPadding(15, 5, 220, 5);
-            textViewTitle.setTextSize(20);
+            textViewTitle.setTextSize(19);
 
             String description = rssItem.getDescription();
 
