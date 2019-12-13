@@ -2,15 +2,15 @@ package com.example.dash.ui.account;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.R;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class AccountActivity extends AppCompatActivity {
 
@@ -34,6 +34,8 @@ public class AccountActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddRedditAccount.class);
             startActivity(intent);
         });
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        emailAccount.setText(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
     }
 
     @Override

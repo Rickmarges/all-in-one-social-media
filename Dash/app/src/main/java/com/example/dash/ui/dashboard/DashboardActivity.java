@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -29,9 +30,6 @@ import net.dean.jraw.oauth.DeferredPersistentTokenStore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-
-import net.dean.jraw.RedditClient;
-
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
@@ -60,6 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        checkLoggedIn();
     }
 
     @Override
@@ -74,6 +73,11 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    @Nullable
+    public FirebaseUser getUser(){
+        return user;
+    }
+
     private void initialize() {
         setContentView(R.layout.activity_dashboard);
 
@@ -82,7 +86,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         checkReddit();
         initializeUI();
+    }
 
+    private void checkLoggedIn(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -103,6 +109,9 @@ public class DashboardActivity extends AppCompatActivity {
     private void signOut() {
         user = null;
         FirebaseAuth.getInstance().signOut();
+        LinearLayout ll = findViewById(R.id.trendsLayout);
+        ll.removeAllViews();
+
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }

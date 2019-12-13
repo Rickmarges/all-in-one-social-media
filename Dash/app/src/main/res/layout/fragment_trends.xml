@@ -5,8 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.TrendsFragment">
 
+
+    <Spinner
+        android:id="@+id/countries_spinner"
+        android:layout_width="425px"
+        android:layout_height="100px"
+        android:background="#263238"
+        android:backgroundTint="#263238"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/trendsRefresh"
+        android:layout_marginTop="100px"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -15,11 +24,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <WebView
-                android:id="@+id/wvTrends"
+            <LinearLayout
+                android:id="@+id/trendsLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </ScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

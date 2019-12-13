@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -31,14 +32,15 @@ import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.pagination.DefaultPaginator;
 
+
 public class RedditFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.reddit_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_reddit, container, false);
 
 
         swipeLayout = rootView.findViewById(R.id.redditRefresh);
@@ -92,7 +94,6 @@ public class RedditFragment extends Fragment {
                 return null;
             }
         }
-
         @Override
         protected void onPostExecute(Listing<Submission> submissions) {
             // Setup a dynamic linearlayout to add frontpage posts
