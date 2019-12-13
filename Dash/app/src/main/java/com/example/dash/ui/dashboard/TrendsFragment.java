@@ -32,7 +32,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
 import com.example.dash.ui.dashboard.rss.RssItem;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,25 +43,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.crypto.Cipher;
-import javax.crypto.EncryptedPrivateKeyInfo;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class TrendsFragment extends Fragment {
-    protected SwipeRefreshLayout swipeLayout;
-    protected final String baseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
-    protected String countryCode;
+    private SwipeRefreshLayout swipeLayout;
+    private final String baseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
+    private String countryCode;
     private Spinner spinner;
-    private String encryptedString;
 
     @Nullable
     @Override
@@ -79,9 +72,6 @@ public class TrendsFragment extends Fragment {
         swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
-        FirebaseUser user = ((DashboardActivity) getActivity()).getUser();
-        encryptedString = encryptString(user.getEmail());
-
         return rootView;
     }
 
@@ -95,7 +85,7 @@ public class TrendsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(encryptedString, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedString(), Context.MODE_PRIVATE);
         int savedValue = sharedPreferences.getInt("Country", 0);
 
         spinner.setSelection(savedValue);
@@ -135,13 +125,13 @@ public class TrendsFragment extends Fragment {
                         break;
                 }
                 //If there is a new valid country selected, update the RSS
-                if (!newCountry.isEmpty() || newCountry != countryCode) {
+                if (!newCountry.isEmpty() || !newCountry.equals(countryCode)) {
                     countryCode = newCountry;
 
-                    SharedPreferences myPrefs = getActivity().getSharedPreferences(encryptedString, Context.MODE_PRIVATE);
+                    SharedPreferences myPrefs = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedString(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor prefsEditor = myPrefs.edit();
                     prefsEditor.putInt("Country", spinner.getSelectedItemPosition());
-                    prefsEditor.commit();
+                    prefsEditor.apply();
                     updateRss();
                 }
             }
@@ -318,26 +308,6 @@ public class TrendsFragment extends Fragment {
             cardLayout.addView(imageView);
             cardView.addView(cardLayout);
             linearLayout.addView(cardView);
-        }
-    }
-
-    private String encryptString (String string) {
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            PublicKey publicKey = keyPair.getPublic();
-
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-            byte[] input = string.getBytes();
-            cipher.update(input);
-            return cipher.doFinal().toString();
-        } catch (Exception e){
-            // TODO return other encrypted string
-            return "";
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.dash.ui.dashboard;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
@@ -20,11 +21,18 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PublicKey;
+
+import javax.crypto.Cipher;
+
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
     private int backCounter;
     private long startTime;
+    private String encryptedString;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +63,12 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     @Nullable
-    public FirebaseUser getUser(){
+    private FirebaseUser getUser() {
         return user;
+    }
+
+    public String getEncryptedString(){
+        return encryptedString;
     }
 
     private void initialize() {
@@ -67,11 +79,22 @@ public class DashboardActivity extends AppCompatActivity {
         initializeUI();
     }
 
-    private void checkLoggedIn(){
+    private void checkLoggedIn() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        } else {
+            FirebaseUser user = getUser();
+            new Encrypt().execute(user.getEmail());
+        }
+    }
+
+    public class Encrypt extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... strings) {
+            encryptedString = encryptString(strings[0]);
+            return null;
         }
     }
 
@@ -95,7 +118,7 @@ public class DashboardActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void popupMenu(){
+    private void popupMenu() {
         PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuBtn);
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
 
@@ -136,4 +159,23 @@ public class DashboardActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    private String encryptString(String string) {
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+            PublicKey publicKey = keyPair.getPublic();
+
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+            byte[] input = string.getBytes();
+            cipher.update(input);
+            return cipher.doFinal().toString();
+        } catch (Exception e) {
+            // TODO return other encrypted string
+            return "";
+        }
+    }
 }
