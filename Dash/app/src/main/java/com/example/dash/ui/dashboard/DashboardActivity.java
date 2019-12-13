@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.PublicKey;
 
 import javax.crypto.Cipher;
@@ -161,18 +162,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     private String encryptString(String string) {
         try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            PublicKey publicKey = keyPair.getPublic();
-
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-            byte[] input = string.getBytes();
-            cipher.update(input);
-            return cipher.doFinal().toString();
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(string.getBytes());
+            return new String(encodedhash, 0);
         } catch (Exception e) {
             // TODO return other encrypted string
             return "";
