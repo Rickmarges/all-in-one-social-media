@@ -41,9 +41,6 @@ public class AddRedditAccount extends AppCompatActivity {
         setContentView(R.layout.activity_add_reddit_account);
         final ProgressBar progressBar = findViewById(R.id.addedAccount);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        encryptedString = encryptString(user.getEmail());
-
         final WebView webView = findViewById(R.id.webview);
         webView.clearCache(true);
         webView.clearHistory();
@@ -108,7 +105,9 @@ public class AddRedditAccount extends AppCompatActivity {
         protected void onPostExecute(Boolean success) {
             // Finish the activity if it's still running
             Activity host = this.context.get();
-            addSP();
+            if(helper.getAuthStatus().equals(StatefulAuthHelper.Status.AUTHORIZED)){
+                addSP();
+            }
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
             if (host != null) {
@@ -120,29 +119,7 @@ public class AddRedditAccount extends AppCompatActivity {
 
     private void addSP() {
         RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
-        SharedPreferences myPrefs = this.getSharedPreferences(encryptedString, Context.MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = myPrefs.edit();
-        prefsEditor.putString("Reddit", redditClient.getAuthManager().currentUsername());
-        prefsEditor.commit();
-    }
+        String redditUsername = redditClient.getAuthManager().currentUsername();
 
-    private String encryptString(String string) {
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            PublicKey publicKey = keyPair.getPublic();
-
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-            byte[] input = string.getBytes();
-            cipher.update(input);
-            return cipher.doFinal().toString();
-        } catch (Exception e) {
-            // TODO return other encrypted string
-            return "";
-        }
     }
 }

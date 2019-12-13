@@ -74,7 +74,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     @Nullable
-    public FirebaseUser getUser(){
+    public FirebaseUser getUser() {
         return user;
     }
 
@@ -88,7 +88,7 @@ public class DashboardActivity extends AppCompatActivity {
         initializeUI();
     }
 
-    private void checkLoggedIn(){
+    private void checkLoggedIn() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -109,8 +109,12 @@ public class DashboardActivity extends AppCompatActivity {
     private void signOut() {
         user = null;
         FirebaseAuth.getInstance().signOut();
-        LinearLayout ll = findViewById(R.id.trendsLayout);
-        ll.removeAllViews();
+        try {
+            LinearLayout ll = findViewById(R.id.trendsLayout);
+            ll.removeAllViews();
+        } catch (NullPointerException np) {
+            System.out.println("No Views to delete." + np.getMessage());
+        }
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
@@ -169,17 +173,15 @@ public class DashboardActivity extends AppCompatActivity {
 
             String name = "Geruth";
 
-            int index = -1;
             for (int i = 0; i < usernames.size(); i++) {
-                if (usernames.get(i).equals(email)) {
-                    index = i;
+                if (usernames.get(i).equals(name)) {
+                    new ReauthenticationTask().execute(usernames.get(i));
                     break;
                 }
             }
             //usernames.forEach(System.out::println);
-            new ReauthenticationTask().execute(usernames.get(index));
-        } catch (RuntimeException ne) {
-            System.out.println("No such user found.");
+        } catch (RuntimeException re) {
+            System.out.println("No such user found." + re.getMessage());
         }
     }
 
