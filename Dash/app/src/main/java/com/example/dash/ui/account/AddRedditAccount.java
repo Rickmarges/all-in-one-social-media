@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 
 import com.example.dash.R;
 import com.example.dash.ui.RedditApp;
-import com.example.dash.ui.dashboard.DashboardActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -31,8 +30,6 @@ import java.security.KeyPairGenerator;
 import java.security.PublicKey;
 
 import javax.crypto.Cipher;
-
-import okhttp3.Cookie;
 
 public class AddRedditAccount extends AppCompatActivity {
     private String encryptedString;
@@ -83,10 +80,7 @@ public class AddRedditAccount extends AppCompatActivity {
         webView.loadUrl(authUrl);
     }
 
-    /**
-     * An async task that takes a final redirect URL as a parameter and reports the success of
-     * authorizing the user.
-     */
+    // An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.
     private final class AuthenticateTask extends AsyncTask<String, Void, Boolean> {
         // Use a WeakReference so that we don't leak a Context
         private final WeakReference<Activity> context;
@@ -117,15 +111,14 @@ public class AddRedditAccount extends AppCompatActivity {
             addSP();
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
-
-
             if (host != null) {
                 host.setResult(success ? Activity.RESULT_OK : Activity.RESULT_CANCELED, new Intent());
                 host.finish();
             }
         }
     }
-    private void addSP(){
+
+    private void addSP() {
         RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
         SharedPreferences myPrefs = this.getSharedPreferences(encryptedString, Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = myPrefs.edit();
@@ -133,7 +126,7 @@ public class AddRedditAccount extends AppCompatActivity {
         prefsEditor.commit();
     }
 
-    private String encryptString (String string) {
+    private String encryptString(String string) {
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
@@ -147,7 +140,7 @@ public class AddRedditAccount extends AppCompatActivity {
             byte[] input = string.getBytes();
             cipher.update(input);
             return cipher.doFinal().toString();
-        } catch (Exception e){
+        } catch (Exception e) {
             // TODO return other encrypted string
             return "";
         }
