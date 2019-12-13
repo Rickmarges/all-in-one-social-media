@@ -3,9 +3,6 @@ package com.example.dash.ui.dashboard;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -24,6 +19,7 @@ import com.example.dash.ui.RedditApp;
 import com.example.dash.ui.account.AccountActivity;
 import com.example.dash.ui.login.LoginActivity;
 import com.example.dash.ui.settings.SettingsActivity;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,10 +27,10 @@ import com.google.firebase.auth.FirebaseUser;
 import net.dean.jraw.models.PersistedAuthData;
 import net.dean.jraw.oauth.DeferredPersistentTokenStore;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-import java.security.MessageDigest;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
@@ -42,6 +38,8 @@ public class DashboardActivity extends AppCompatActivity {
     private int backCounter;
     private long startTime;
     private static String encryptedEmail;
+    private static AsyncTask testTask;
+    private TabLayout tabLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,10 +47,8 @@ public class DashboardActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
         checkLoggedIn();
-        initialize();
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        encryptedEmail = encryptString(user.getEmail());
+        initialize();
 
         menuBtn.setOnClickListener(view -> popupMenu());
     }
@@ -61,6 +57,8 @@ public class DashboardActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         checkLoggedIn();
+        encryptedEmail = encryptString(user.getEmail());
+        checkReddit();
     }
 
     @Override
@@ -84,11 +82,11 @@ public class DashboardActivity extends AppCompatActivity {
 
         backCounter = 0;
 
-        checkReddit();
         initializeUI();
     }
 
     private void checkLoggedIn() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             startActivity(new Intent(this, LoginActivity.class));
         }
@@ -107,11 +105,19 @@ public class DashboardActivity extends AppCompatActivity {
     private void signOut() {
         user = null;
         FirebaseAuth.getInstance().signOut();
+        tabLayout.getTabAt(0).select();
         try {
             LinearLayout ll = findViewById(R.id.trendsLayout);
             ll.removeAllViews();
-        } catch (NullPointerException np) {
-            System.out.println("No Views to delete." + np.getMessage());
+        } catch (Exception e) {
+            System.out.println("No Trend views to delete." + e.getMessage());
+        }
+
+        try {
+            LinearLayout ll = findViewById(R.id.redditLayout);
+            ll.removeAllViews();
+        } catch (Exception e) {
+            System.out.println("No Views to delete." + e.getMessage());
         }
 
         Intent intent = new Intent(this, LoginActivity.class);
@@ -155,7 +161,7 @@ public class DashboardActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
 
-        TabLayout tabLayout = findViewById(R.id.tablayout);
+        tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -167,13 +173,10 @@ public class DashboardActivity extends AppCompatActivity {
 
             SharedPreferences sharedPref = getSharedPreferences(getEncryptedEmail(), Context.MODE_PRIVATE);
             String redditUsername = sharedPref.getString("Reddit", "");
-//            System.out.println(email);
-
-//            String name = "Geruth";
 
             for (int i = 0; i < usernames.size(); i++) {
                 if (usernames.get(i).equals(redditUsername)) {
-                    new ReauthenticationTask().execute(usernames.get(i));
+                    testTask = new ReauthenticationTask().execute(usernames.get(i));
                     break;
                 }
             }
@@ -183,15 +186,15 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    private static class ReauthenticationTask extends AsyncTask<String, Void, Void> {
+    public static AsyncTask getTestTask(){
+        return testTask;
+    }
+
+    private class ReauthenticationTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... usernames) {
             RedditApp.getAccountHelper().switchToUser(usernames[0]);
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
         }
     }
 

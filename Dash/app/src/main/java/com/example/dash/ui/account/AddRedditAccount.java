@@ -1,19 +1,18 @@
 package com.example.dash.ui.account;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.R;
 import com.example.dash.ui.RedditApp;
@@ -26,48 +25,22 @@ import net.dean.jraw.oauth.StatefulAuthHelper;
 import java.lang.ref.WeakReference;
 
 public class AddRedditAccount extends AppCompatActivity {
-
+    private WebView webView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reddit_account);
-        final ProgressBar progressBar = findViewById(R.id.addedAccount);
+        progressBar = findViewById(R.id.addedAccount);
 
-        final WebView webView = findViewById(R.id.webview);
-        webView.clearCache(true);
-        webView.clearHistory();
+       webView = findViewById(R.id.webview);
+    }
 
-        CookieManager.getInstance().removeAllCookies(null);
-        CookieManager.getInstance().flush();
-
-        // Get a StatefulAuthHelper instance to manage interactive authentication
-        final StatefulAuthHelper helper = RedditApp.getAccountHelper().switchToNewUser();
-
-        // Watch for pages loading
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if (helper.isFinalRedirectUrl(url)) {
-                    // No need to continue loading, we've already got all the required information
-                    webView.stopLoading();
-                    webView.setVisibility(View.GONE);
-
-                    // Try to authenticate the user
-                    new AuthenticateTask(AddRedditAccount.this, helper).execute(url);
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        // Generate an authentication URL
-        boolean requestRefreshToken = true;
-        boolean useMobileSite = true;
-        String[] scopes = new String[]{"read", "identity"};
-        String authUrl = helper.getAuthorizationUrl(requestRefreshToken, useMobileSite, scopes);
-
-        // Finally, show the authorization URL to the user
-        webView.loadUrl(authUrl);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        createWebView();
     }
 
     // An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.
@@ -117,5 +90,41 @@ public class AddRedditAccount extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("Reddit", redditUsername);
         editor.apply();
+    }
+
+    private void createWebView(){
+        webView.clearCache(true);
+        webView.clearHistory();
+
+        CookieManager.getInstance().removeAllCookies(null);
+        CookieManager.getInstance().flush();
+
+        // Get a StatefulAuthHelper instance to manage interactive authentication
+        final StatefulAuthHelper helper = RedditApp.getAccountHelper().switchToNewUser();
+
+        // Watch for pages loading
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                if (helper.isFinalRedirectUrl(url)) {
+                    // No need to continue loading, we've already got all the required information
+                    webView.stopLoading();
+                    webView.setVisibility(View.GONE);
+
+                    // Try to authenticate the user
+                    new AuthenticateTask(AddRedditAccount.this, helper).execute(url);
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        // Generate an authentication URL
+        boolean requestRefreshToken = true;
+        boolean useMobileSite = true;
+        String[] scopes = new String[]{"read", "identity"};
+        String authUrl = helper.getAuthorizationUrl(requestRefreshToken, useMobileSite, scopes);
+
+        // Finally, show the authorization URL to the user
+        webView.loadUrl(authUrl);
     }
 }

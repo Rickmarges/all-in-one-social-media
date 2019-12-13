@@ -113,8 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
                     if (Objects.requireNonNull(mAuth.getCurrentUser()).isEmailVerified()) {
-                        Intent intent = new Intent(this, DashboardActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(this, DashboardActivity.class));
                     } else {
                         Toast.makeText(getApplicationContext(), "Email is not verified", Toast.LENGTH_LONG).show();
                         mAuth.signOut();

@@ -31,12 +31,17 @@ public class DashFragment extends Fragment {
             Intent intent = new Intent(getContext(), AccountActivity.class);
             startActivity(intent);
         });
-//createUI();
 
         return rootView;
     }
 
-    private void createUI(){
+    @Override
+    public void onResume() {
+        super.onResume();
+//        createUI();
+    }
+
+    private void createUI() {
         List<CardView> allCards = new ArrayList<>();
         List<CardView> redditCards;
         List<CardView> twitterCards;
@@ -46,11 +51,11 @@ public class DashFragment extends Fragment {
 
         int i = 0;
 
-        while(i < redditCards.size() || i < twitterCards.size()) {
-            if(i < redditCards.size()) {
+        while (i < redditCards.size() || i < twitterCards.size()) {
+            if (i < redditCards.size()) {
                 allCards.add(redditCards.get(i));
             }
-            if(i < twitterCards.size()) {
+            if (i < twitterCards.size()) {
                 allCards.add(twitterCards.get(i));
             }
             i++;
