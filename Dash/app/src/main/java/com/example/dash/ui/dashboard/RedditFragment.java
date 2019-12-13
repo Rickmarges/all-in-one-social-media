@@ -50,10 +50,6 @@ public class RedditFragment extends Fragment {
 
         swipeLayout.setOnRefreshListener(() -> updateReddit());
 
-        if (RedditApp.getAccountHelper().isAuthenticated())
-            updateReddit();
-
-
         return rootView;
     }
 
@@ -66,7 +62,6 @@ public class RedditFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateReddit();
     }
 
     private void updateReddit() {

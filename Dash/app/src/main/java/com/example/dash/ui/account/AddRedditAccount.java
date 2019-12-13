@@ -3,12 +3,12 @@ package com.example.dash.ui.account;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -17,22 +17,15 @@ import android.widget.ProgressBar;
 
 import com.example.dash.R;
 import com.example.dash.ui.RedditApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.dash.ui.dashboard.DashboardActivity;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
 import java.lang.ref.WeakReference;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PublicKey;
-
-import javax.crypto.Cipher;
 
 public class AddRedditAccount extends AppCompatActivity {
-    private String encryptedString;
 
 
     @Override
@@ -120,6 +113,9 @@ public class AddRedditAccount extends AppCompatActivity {
     private void addSP() {
         RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
         String redditUsername = redditClient.getAuthManager().currentUsername();
-
+        SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Reddit", redditUsername);
+        editor.apply();
     }
 }
