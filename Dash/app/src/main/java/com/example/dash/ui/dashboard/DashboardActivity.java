@@ -30,16 +30,14 @@ import net.dean.jraw.oauth.DeferredPersistentTokenStore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.security.MessageDigest;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
     private int backCounter;
     private long startTime;
-    private DeferredPersistentTokenStore tokenStore;
-    private List<String> usernames;
-    private TreeMap<String, PersistedAuthData> data;
-    private String encryptedString;
+    private static String encryptedEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +48,7 @@ public class DashboardActivity extends AppCompatActivity {
 //        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 //        encryptedString = encryptString(user.getEmail());
 
+        checkLoggedIn();
         initialize();
 
         menuBtn.setOnClickListener(view -> popupMenu());
@@ -74,15 +73,18 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     @Nullable
-    public FirebaseUser getUser() {
+    private FirebaseUser getUser() {
         return user;
+    }
+
+    public static String getEncryptedEmail() {
+        return encryptedEmail;
     }
 
     private void initialize() {
         setContentView(R.layout.activity_dashboard);
 
         backCounter = 0;
-
 
         checkReddit();
         initializeUI();
@@ -93,6 +95,9 @@ public class DashboardActivity extends AppCompatActivity {
         if (user == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        } else {
+            FirebaseUser user = getUser();
+            encryptedEmail = encryptString(user.getEmail());
         }
     }
 
@@ -163,18 +168,18 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void checkReddit() {
         try {
-            tokenStore = RedditApp.getTokenStore();
-            data = new TreeMap<>(tokenStore.data());
-            usernames = new ArrayList<>(data.keySet());
+            DeferredPersistentTokenStore tokenStore = RedditApp.getTokenStore();
+            TreeMap<String, PersistedAuthData> data = new TreeMap<>(tokenStore.data());
+            List<String> usernames = new ArrayList<>(data.keySet());
 
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            String email = sharedPref.getString("Reddit", null);
-            System.out.println(email);
+            SharedPreferences sharedPref = getSharedPreferences(getEncryptedEmail(), Context.MODE_PRIVATE);
+            String redditUsername = sharedPref.getString("Reddit", "");
+//            System.out.println(email);
 
-            String name = "Geruth";
+//            String name = "Geruth";
 
             for (int i = 0; i < usernames.size(); i++) {
-                if (usernames.get(i).equals(name)) {
+                if (usernames.get(i).equals(redditUsername)) {
                     new ReauthenticationTask().execute(usernames.get(i));
                     break;
                 }
@@ -194,6 +199,17 @@ public class DashboardActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+        }
+    }
+
+    public String encryptString(String string) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(string.getBytes());
+            return new String(encodedhash);
+        } catch (Exception e) {
+            // TODO return other encrypted string
+            return "";
         }
     }
 }
