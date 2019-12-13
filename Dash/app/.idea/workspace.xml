@@ -14,6 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0b2975bc-27f5-435f-8a46-a4ba8ae7fadb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/TrendsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/TrendsFragment.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/../.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -36,23 +37,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/TrendsFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="139" column="68" lean-forward="true" selection-start-line="139" selection-start-column="68" selection-end-line="139" selection-end-column="68" />
+            <state relative-caret-position="255">
+              <caret line="87" column="136" selection-start-line="87" selection-start-column="136" selection-end-line="87" selection-end-column="136" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-29/android/app/SharedPreferencesImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="458" selection-start-line="458" selection-end-line="458" />
             </state>
           </provider>
         </entry>
@@ -88,14 +80,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="122" column="13" lean-forward="true" selection-start-line="122" selection-start-column="13" selection-end-line="122" selection-end-column="13" />
+            <state relative-caret-position="-1242">
+              <caret line="79" lean-forward="true" selection-start-line="79" selection-end-line="79" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1982#1983#0" expanded="true" />
+                <element signature="e#2227#2228#0" expanded="true" />
                 <element signature="e#1962#1963#0" expanded="true" />
                 <element signature="e#1999#2000#0" expanded="true" />
               </folding>
@@ -459,13 +451,13 @@
       <window_info anchor="bottom" id="Logcat" order="0" weight="0.3286119" />
       <window_info anchor="bottom" id="TODO" order="1" weight="0.3286119" />
       <window_info anchor="bottom" id="Android Profiler" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.32577905" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.32577905" />
       <window_info anchor="bottom" id="Terminal" order="4" />
       <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.5053691" side_tool="true" weight="0.32719547" />
       <window_info anchor="bottom" id="Version Control" order="6" sideWeight="0.49932885" weight="0.3286119" />
       <window_info anchor="bottom" id="Build" order="7" sideWeight="0.49463087" weight="0.32719547" />
       <window_info anchor="bottom" id="Find" order="8" weight="0.3286119" />
-      <window_info anchor="bottom" id="Run" order="9" sideWeight="0.49463087" weight="0.33144477" />
+      <window_info active="true" anchor="bottom" id="Run" order="9" sideWeight="0.49463087" visible="true" weight="0.33144477" />
       <window_info anchor="bottom" id="Inspection Results" order="10" weight="0.3286119" />
       <window_info anchor="right" id="StringPreview" order="0" />
       <window_info anchor="right" id="Gradle" order="1" />
@@ -518,22 +510,6 @@
     </option>
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/TrendsFragment.java</url>
-          <line>133</line>
-          <properties />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/TrendsFragment.java</url>
-          <line>90</line>
-          <properties />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="app">
         <watch expression="document" />
@@ -922,25 +898,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/TrendsFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="122" column="13" lean-forward="true" selection-start-line="122" selection-start-column="13" selection-end-line="122" selection-end-column="13" />
+        <state relative-caret-position="255">
+          <caret line="87" column="136" selection-start-line="87" selection-start-column="136" selection-end-line="87" selection-end-column="136" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1982#1983#0" expanded="true" />
-            <element signature="e#1962#1963#0" expanded="true" />
-            <element signature="e#1999#2000#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/TrendsFragment.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashboardActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="139" column="68" lean-forward="true" selection-start-line="139" selection-start-column="68" selection-end-line="139" selection-end-column="68" />
+        <state relative-caret-position="-1242">
+          <caret line="79" lean-forward="true" selection-start-line="79" selection-end-line="79" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#2227#2228#0" expanded="true" />
+            <element signature="e#1962#1963#0" expanded="true" />
+            <element signature="e#1999#2000#0" expanded="true" />
           </folding>
         </state>
       </provider>

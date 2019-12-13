@@ -1,9 +1,9 @@
 package com.example.dash.ui.dashboard;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -21,19 +21,14 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
-import java.security.PublicKey;
-
-import javax.crypto.Cipher;
 
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
     private int backCounter;
     private long startTime;
-    private String encryptedString;
+    private String encryptedEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,8 +63,8 @@ public class DashboardActivity extends AppCompatActivity {
         return user;
     }
 
-    public String getEncryptedString(){
-        return encryptedString;
+    public String getEncryptedEmail(){
+        return encryptedEmail;
     }
 
     private void initialize() {
@@ -87,15 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             FirebaseUser user = getUser();
-            new Encrypt().execute(user.getEmail());
-        }
-    }
-
-    public class Encrypt extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... strings) {
-            encryptedString = encryptString(strings[0]);
-            return null;
+            encryptedEmail = encryptString(user.getEmail());
         }
     }
 
@@ -112,8 +99,13 @@ public class DashboardActivity extends AppCompatActivity {
     private void signOut() {
         user = null;
         FirebaseAuth.getInstance().signOut();
-        LinearLayout ll = findViewById(R.id.trendsLayout);
-        ll.removeAllViews();
+
+        try {
+            LinearLayout ll = findViewById(R.id.trendsLayout);
+            ll.removeAllViews();
+        } catch (Exception e){
+            Log.d(getApplicationContext().toString(), e.getMessage());
+        }
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
@@ -160,11 +152,11 @@ public class DashboardActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    private String encryptString(String string) {
+    public String encryptString(String string) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedhash = digest.digest(string.getBytes());
-            return new String(encodedhash, 0);
+            return new String(encodedhash);
         } catch (Exception e) {
             // TODO return other encrypted string
             return "";

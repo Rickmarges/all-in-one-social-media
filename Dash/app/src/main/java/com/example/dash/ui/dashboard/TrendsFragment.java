@@ -85,7 +85,7 @@ public class TrendsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedString(), Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
         int savedValue = sharedPreferences.getInt("Country", 0);
 
         spinner.setSelection(savedValue);
@@ -128,7 +128,7 @@ public class TrendsFragment extends Fragment {
                 if (!newCountry.isEmpty() || !newCountry.equals(countryCode)) {
                     countryCode = newCountry;
 
-                    SharedPreferences myPrefs = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedString(), Context.MODE_PRIVATE);
+                    SharedPreferences myPrefs = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
                     SharedPreferences.Editor prefsEditor = myPrefs.edit();
                     prefsEditor.putInt("Country", spinner.getSelectedItemPosition());
                     prefsEditor.apply();
