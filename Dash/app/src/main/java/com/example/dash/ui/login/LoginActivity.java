@@ -17,6 +17,7 @@ import com.example.dash.R;
 import com.example.dash.ui.dashboard.DashboardActivity;
 import com.example.dash.ui.register.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -40,6 +41,8 @@ public class LoginActivity extends AppCompatActivity {
 
         backCounter = 0;
 
+        checkLoggedIn();
+
         initializeUI();
 
         loginBtn.setOnClickListener(view -> loginUserAccount());
@@ -48,6 +51,12 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeUI();
     }
 
     @Override
@@ -66,6 +75,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
         backCounter = 0;
+    }
+
+    private void checkLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            startActivity(new Intent(this, DashboardActivity.class));
+        }
     }
 
     private void loginUserAccount() {
@@ -120,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn = findViewById(R.id.register);
         loginBtn = findViewById(R.id.login);
         progressBar = findViewById(R.id.loading);
+        showButtons();
     }
 
     private void hideButtons(){

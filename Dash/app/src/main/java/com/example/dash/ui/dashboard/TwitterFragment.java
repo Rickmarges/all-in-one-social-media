@@ -7,17 +7,28 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TwitterFragment extends Fragment {
+
+    private SwipeRefreshLayout swipeLayout;
+    private List<CardView> cardList = new ArrayList<>();
+    private static TwitterFragment instance;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_twitter, container, false);
+
+        instance = this;
 
         //Set refresh on this page
         SwipeRefreshLayout swipeLayout = rootView.findViewById(R.id.twitterRefresh);
@@ -26,5 +37,13 @@ public class TwitterFragment extends Fragment {
         swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
         return rootView;
+    }
+    
+    public static TwitterFragment getInstance(){
+        return instance;
+    }
+
+    public List<CardView> getCardList(){
+        return cardList;
     }
 }

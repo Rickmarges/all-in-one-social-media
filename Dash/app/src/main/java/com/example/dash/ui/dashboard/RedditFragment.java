@@ -31,10 +31,17 @@ import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.pagination.DefaultPaginator;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RedditFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
+    private List<CardView> cardList = new ArrayList<>();
+    private static RedditFragment instance;
 
     @Nullable
     @Override
@@ -42,6 +49,7 @@ public class RedditFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_reddit, container, false);
 
+        instance = this;
 
         swipeLayout = rootView.findViewById(R.id.redditRefresh);
         // Change colours of bar and background to match style
@@ -70,9 +78,16 @@ public class RedditFragment extends Fragment {
         }
     }
 
+    public static RedditFragment getInstance(){
+        return instance;
+    }
+
+    public List<CardView> getCardList(){
+        return cardList;
+    }
+
     public class GetRedditFrontpage extends AsyncTask<String, Void, Listing<Submission>> {
         RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
-
         @Override
         protected Listing<Submission> doInBackground(String... params) {
             try {

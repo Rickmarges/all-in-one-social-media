@@ -269,8 +269,9 @@ public class TrendsFragment extends Fragment {
             textViewTitle.setTextSize(19);
 
             String description = rssItem.getDescription();
+            description = description.substring(0, 1).toUpperCase() + description.substring(1);;
 
-            textViewDesc.setText(description.substring(0, 1).toUpperCase() + description.substring(1));
+            textViewDesc.setText(description);
             textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
             textViewDesc.setPadding(15, 5, 220, 10);
             textViewDesc.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
