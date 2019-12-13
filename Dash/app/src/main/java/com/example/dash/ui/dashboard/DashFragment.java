@@ -31,28 +31,18 @@ public class DashFragment extends Fragment {
             Intent intent = new Intent(getContext(), AccountActivity.class);
             startActivity(intent);
         });
-
-        createUI();
+//createUI();
 
         return rootView;
     }
 
     private void createUI(){
         List<CardView> allCards = new ArrayList<>();
-        List<CardView> redditCards = new ArrayList<>();
-        List<CardView> twitterCards = new ArrayList<>();
+        List<CardView> redditCards;
+        List<CardView> twitterCards;
 
-        redditCards.add(new CardView(getContext()));
-        redditCards.add(new CardView(getContext()));
-        redditCards.add(new CardView(getContext()));
-        twitterCards.add(new CardView(getContext()));
-        twitterCards.add(new CardView(getContext()));
-        twitterCards.add(new CardView(getContext()));
-        twitterCards.add(new CardView(getContext()));
-        twitterCards.add(new CardView(getContext()));
-
-//        redditCards = RedditFragment.getInstance().getCardList();
-//        twitterCards = TwitterFragment.getInstance().getCardList();
+        redditCards = RedditFragment.getInstance().getCardList();
+        twitterCards = TwitterFragment.getInstance().getCardList();
 
         int i = 0;
 

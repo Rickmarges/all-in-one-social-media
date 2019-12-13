@@ -1,6 +1,9 @@
 package com.example.dash.ui.dashboard;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -20,7 +24,6 @@ import com.example.dash.ui.settings.SettingsActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.security.MessageDigest;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -36,6 +39,9 @@ public class DashboardActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
         initialize();
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        encryptedEmail = encryptString(user.getEmail());
 
         menuBtn.setOnClickListener(view -> popupMenu());
     }
@@ -58,11 +64,6 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    @Nullable
-    private FirebaseUser getUser() {
-        return user;
-    }
-
     public String getEncryptedEmail(){
         return encryptedEmail;
     }
@@ -76,13 +77,8 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void checkLoggedIn() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        } else {
-            FirebaseUser user = getUser();
-            encryptedEmail = encryptString(user.getEmail());
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 
