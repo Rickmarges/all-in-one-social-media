@@ -149,7 +149,7 @@ public class DashboardActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         FragmentManager fragment = getSupportFragmentManager();
         if (fragment != null) {
-            Fragment frag = fragment.findFragmentByTag("android:switcher:2131230895:2");
+            Fragment frag = fragment.findFragmentByTag("android:switcher:2131230896:2");
             frag.onActivityResult(requestCode, resultCode, data);
         }
         else Log.d("Twitter", "fragment is null");

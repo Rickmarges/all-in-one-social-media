@@ -18,17 +18,68 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.models.Tweet;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class TwitterFragment extends Fragment{
     private TwitterLoginButton loginButton;
+    private TwitterFragment twitterFragment = this;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.twitter_fragment, container, false);
-
         loginButton = rootView.findViewById(R.id.twitter_login_button);
+
+        if(!isLoggedIn()){
+            login();
+        }else{
+
+        }
+
+        return rootView;
+    }
+
+    public boolean isLoggedIn(){
+        FileInputStream fis = null;
+        try{
+            fis = getContext().openFileInput("");
+        }catch(Exception ex){
+
+        }
+        InputStreamReader inputStreamReader = new InputStreamReader(fis, StandardCharsets.UTF_8);
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
+            String line = reader.readLine();
+            while (line != null) {
+                stringBuilder.append(line).append('\n');
+                line = reader.readLine();
+            }
+            //Todo if lines contains tokens check
+            return true;
+        } catch (IOException e) {
+            // Error occurred when opening raw file for reading.
+            return false;
+        } finally {
+            return false;
+        }
+
+
+        return false;
+    }
+
+    public void login(){
+        //Todo get global path name
+        File file = new File(getContext().getFilesDir(), "");
+
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
@@ -36,6 +87,11 @@ public class TwitterFragment extends Fragment{
                 if(session != null){
                     Toast.makeText(getContext(), "Authentication succesfull", Toast.LENGTH_SHORT).show();
                     TwitterRepository twitterRepository = new TwitterRepository(session);
+
+                    //Create login session and store it.
+                    //Load Twitter data if first time
+                    twitterRepository.Login();
+                    twitterRepository.GetHomeTimeline(twitterFragment, 20);
                 }else{
                     this.failure(new TwitterException("Session could not be created"));
                 }
@@ -46,12 +102,16 @@ public class TwitterFragment extends Fragment{
                 Toast.makeText(getContext(), "Authentication failed try again...", Toast.LENGTH_SHORT).show();
             }
         });
-        return rootView;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         loginButton.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void createHomeTimelineView(List<Tweet> data){
+        Toast.makeText(getContext(), "Retrieved Twitter data correctly", Toast.LENGTH_SHORT).show();
+        return;
     }
 }
