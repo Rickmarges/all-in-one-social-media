@@ -53,7 +53,6 @@ public class TrendsFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
     private final String baseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
     private String countryCode;
-    private Spinner spinner;
 
     @Nullable
     @Override
@@ -76,69 +75,18 @@ public class TrendsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        createSpinner();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
-        int savedValue = sharedPreferences.getInt("Country", 0);
+        try {
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
+            countryCode = sharedPreferences.getString("Country", "US");
+        } catch (Exception e) {
 
-        spinner.setSelection(savedValue);
-    }
-
-    private void createSpinner(){
-        spinner = getActivity().findViewById(R.id.countries_spinner);
-
-        // Initializing an Array with countries
-        String[] countries = new String[]{
-                "United States",
-                "United Kingdom",
-                "The Netherlands"
-        };
-
-        // Initializing an ArrayAdapter
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, countries);
-        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setAdapter(spinnerArrayAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                // Set the new country code
-                String value = adapterView.getSelectedItem().toString();
-                String newCountry = "";
-                switch (value) {
-                    case "United States":
-                        newCountry = "US";
-                        break;
-                    case "United Kingdom":
-                        newCountry = "GB";
-                        break;
-                    case "The Netherlands":
-                        newCountry = "NL";
-                        break;
-                    default:
-                        break;
-                }
-                //If there is a new valid country selected, update the RSS
-                if (!newCountry.isEmpty() || !newCountry.equals(countryCode)) {
-                    countryCode = newCountry;
-
-                    SharedPreferences myPrefs = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
-                    SharedPreferences.Editor prefsEditor = myPrefs.edit();
-                    prefsEditor.putInt("Country", spinner.getSelectedItemPosition());
-                    prefsEditor.apply();
-                    updateRss();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                // Nothing
-            }
-        });
+        }
     }
 
     class RssParser extends AsyncTask<String, Void, List<RssItem>> {
@@ -269,7 +217,8 @@ public class TrendsFragment extends Fragment {
             textViewTitle.setTextSize(19);
 
             String description = rssItem.getDescription();
-            description = description.substring(0, 1).toUpperCase() + description.substring(1);;
+            description = description.substring(0, 1).toUpperCase() + description.substring(1);
+            ;
 
             textViewDesc.setText(description);
             textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
