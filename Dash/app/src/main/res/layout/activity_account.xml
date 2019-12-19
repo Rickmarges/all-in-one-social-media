@@ -73,6 +73,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailAccount" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="37dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/addReddit"
+        android:textColor="@color/colorPrimary"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addReddit" />
+
     <ImageButton
         android:id="@+id/addredditbtn"
         style="@style/Base.TextAppearance.AppCompat.Widget.Button"
@@ -80,6 +93,7 @@
         android:layout_height="56dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/colorBackgroundSecondary"
         android:contentDescription="@string/reddit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addReddit"
@@ -112,6 +126,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/addTrends" />
 
+    <Button
+        android:id="@+id/resetpwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorBackgroundSecondary"
+        android:text="@string/resetPass"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider5" />
+
     <View
         android:id="@+id/divider6"
         android:layout_width="wrap_content"
@@ -121,18 +147,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider5" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="37dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/addReddit"
-        android:textColor="@color/colorPrimary"
-        android:textColorHighlight="@color/colorPrimaryDark"
-        android:textSize="22sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addReddit" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
