@@ -45,6 +45,9 @@
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:noHistory="true" />
+        <activity
+            android:name=".ui.account.ResetPasswordActivity"
+            android:noHistory="true" />
         <activity android:name=".ui.account.AddRedditAccount" />
 
     </application>

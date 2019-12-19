@@ -38,6 +38,7 @@ public class TwitterFragment extends Fragment{
     private TwitterFragment twitterFragment = this;
     private SwipeRefreshLayout swipeLayout;
     private List<CardView> cardList = new ArrayList<>();
+    private static TwitterFragment instance;
 
     @Nullable
     @Override
@@ -53,10 +54,12 @@ public class TwitterFragment extends Fragment{
         }
 
         //Set refresh on this page
-        SwipeRefreshLayout swipeLayout = rootView.findViewById(R.id.twitterRefresh);
+        swipeLayout = rootView.findViewById(R.id.twitterRefresh);
         // Change colours of bar and background to match style
         swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
+
+        instance = this;
 
         return rootView;
     }
@@ -127,5 +130,11 @@ public class TwitterFragment extends Fragment{
 
     public List<CardView> getCardList(){
         return cardList;
+    public static TwitterFragment getInstance(){
+        return instance;
+    }
+
+    public void update(){
+
     }
 }

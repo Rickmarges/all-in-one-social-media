@@ -2,21 +2,24 @@ package com.example.dash.ui.account;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.R;
+import com.example.dash.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
 public class AccountActivity extends AppCompatActivity {
 
-    protected FirebaseAuth mAuth;
-    protected TextView emailAccount;
-    protected ImageButton imageButton;
+    private TextView emailAccount;
+    private ImageButton imageButton;
+    private Button resetBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,16 +29,21 @@ public class AccountActivity extends AppCompatActivity {
 
         // Get user credentials
         init();
-        mAuth = FirebaseAuth.getInstance();
-        emailAccount.setText(mAuth.getCurrentUser().getEmail());
-        imageButton.findViewById(R.id.addredditbtn);
-
-        imageButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this, AddRedditAccount.class);
-            startActivity(intent);
-        });
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        emailAccount.setText(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
+        emailAccount.setText(mAuth.getCurrentUser().getEmail());
+
+        imageButton.setOnClickListener(view -> startActivity(new Intent(this, AddRedditAccount.class)));
+
+        resetBtn.setOnClickListener(view -> {
+            mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail())
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Sent reset email!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        });
     }
 
     @Override
@@ -47,5 +55,6 @@ public class AccountActivity extends AppCompatActivity {
     public void init() {
         imageButton = findViewById(R.id.addredditbtn);
         emailAccount = findViewById(R.id.emailAccount);
+        resetBtn = findViewById(R.id.resetpwd);
     }
 }

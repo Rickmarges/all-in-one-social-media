@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
 
@@ -21,6 +22,7 @@ public class DashFragment extends Fragment {
     private List<CardView> redditCards = new ArrayList<>();
     private List<CardView> twitterCards = new ArrayList<>();
     private LinearLayout linearLayout;
+    private SwipeRefreshLayout swipeLayout;
 
     @Nullable
     @Override
@@ -30,6 +32,13 @@ public class DashFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_dash, container, false);
 
         linearLayout = rootView.findViewById(R.id.dashLayout);
+
+        swipeLayout = rootView.findViewById(R.id.swipe);
+        swipeLayout.setOnRefreshListener(this::updateCards);
+
+        // Change colours of bar and background to match style
+        swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
+        swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
         return rootView;
     }
@@ -47,12 +56,17 @@ public class DashFragment extends Fragment {
         linearLayout.removeAllViews();
     }
 
+    private void updateCards() {
+        RedditFragment.getInstance().updateReddit();
+        TwitterFragment.getInstance().update();
+    }
+
     void setRedditCards(List<CardView> redditCards) {
         this.redditCards = redditCards;
         createUI();
     }
 
-    public void setTwitterCards(List<CardView> twitterCards) {
+    void setTwitterCards(List<CardView> twitterCards) {
         this.twitterCards = twitterCards;
     }
 
@@ -87,6 +101,7 @@ public class DashFragment extends Fragment {
         for (CardView cardView : allCards) {
             linearLayout.addView(cardView);
         }
+        swipeLayout.setRefreshing(false);
     }
 
     static DashFragment getInstance() {
