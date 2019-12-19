@@ -1,5 +1,6 @@
 package com.example.dash.ui.dashboard;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
@@ -40,6 +41,8 @@ import com.twitter.sdk.android.tweetui.TweetUi;
 import java.util.List;
 import java.security.MessageDigest;
 
+
+@SuppressLint("ClickableViewAccessibility")
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
