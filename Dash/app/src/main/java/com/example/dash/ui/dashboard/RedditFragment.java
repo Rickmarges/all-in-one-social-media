@@ -22,7 +22,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
 import com.example.dash.ui.RedditApp;
-import com.squareup.picasso.Picasso;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Submission;
@@ -182,7 +181,7 @@ public class RedditFragment extends Fragment {
         }
 
         // Insert path into Picasso to download image
-        Picasso.get().load(submission.getUrl()).into(imageView);
+        com.squareup.picasso.Picasso.with(this.getContext()).load(submission.getUrl()).into(imageView);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setPadding(10, 0, 10, 20);
 
