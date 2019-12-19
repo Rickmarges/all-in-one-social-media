@@ -3,17 +3,16 @@ package com.example.dash.ui.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.dash.R;
-import com.example.dash.ui.dashboard.DashboardActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.dash.R;
+import com.example.dash.ui.dashboard.DashboardActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 

@@ -25,15 +25,12 @@ import com.example.dash.ui.RedditApp;
 import com.squareup.picasso.Picasso;
 
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.SubredditSort;
-import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.pagination.DefaultPaginator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 
 public class RedditFragment extends Fragment {
@@ -54,7 +51,7 @@ public class RedditFragment extends Fragment {
 
         swipeLayout.setOnRefreshListener(() -> updateReddit());
 
-        linearLayout = getActivity().findViewById(R.id.redditLayout);
+        linearLayout = rootView.findViewById(R.id.redditLayout);
 
         updateReddit();
 
@@ -84,7 +81,7 @@ public class RedditFragment extends Fragment {
         }
     }
 
-    public class GetRedditFrontpage extends AsyncTask<String, Void, Listing<Submission>> {
+    public class GetRedditFrontpage extends AsyncTask<String, Void, List<Submission>> {
         RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
 
         SubredditSort[] sorts = new SubredditSort[]{
@@ -97,7 +94,7 @@ public class RedditFragment extends Fragment {
         };
 
         @Override
-        protected Listing<Submission> doInBackground(String... params) {
+        protected List<Submission> doInBackground(String... params) {
             try {
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
                 int savedValue = sharedPreferences.getInt("RedditSort", 0);
@@ -108,23 +105,26 @@ public class RedditFragment extends Fragment {
                         .limit(25)
                         .build();
 
-                Listing<Submission> submissions = frontPage.next();
+                List<Submission> submissions = frontPage.next();
                 return submissions;
             } catch (Exception e) {
-                // Report failure if an OAuthException occurs
+                // Report failure if an Exception occurs
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Listing<Submission> submissions) {
+        protected void onPostExecute(List<Submission> submissions) {
             createUI(submissions);
             DashFragment.getInstance().setRedditCards(cardList);
         }
     }
 
-    private void createUI(Listing<Submission> submissions) {
+    private void createUI(List<Submission> submissions) {
         // Setup a dynamic linearlayout to add frontpage posts
+        if (linearLayout == null) {
+            linearLayout = getActivity().findViewById(R.id.dashLayout);
+        }
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
         }
