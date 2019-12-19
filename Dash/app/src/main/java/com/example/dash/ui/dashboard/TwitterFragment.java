@@ -42,7 +42,7 @@ public class TwitterFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.twitter_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_twitter, container, false);
         loginButton = rootView.findViewById(R.id.twitter_login_button);
 
         if(!isLoggedIn()){
@@ -50,7 +50,6 @@ public class TwitterFragment extends Fragment{
         }else{
 
         }
-        View rootView = inflater.inflate(R.layout.fragment_twitter, container, false);
 
         //Set refresh on this page
         SwipeRefreshLayout swipeLayout = rootView.findViewById(R.id.twitterRefresh);
@@ -84,9 +83,6 @@ public class TwitterFragment extends Fragment{
         } finally {
             return false;
         }
-
-
-        return false;
     }
 
     public void login(){
