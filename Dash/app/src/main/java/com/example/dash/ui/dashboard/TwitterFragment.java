@@ -20,15 +20,12 @@ public class TwitterFragment extends Fragment {
 
     private SwipeRefreshLayout swipeLayout;
     private List<CardView> cardList = new ArrayList<>();
-    private static TwitterFragment instance;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_twitter, container, false);
-
-        instance = this;
 
         //Set refresh on this page
         SwipeRefreshLayout swipeLayout = rootView.findViewById(R.id.twitterRefresh);
@@ -37,10 +34,6 @@ public class TwitterFragment extends Fragment {
         swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
         return rootView;
-    }
-    
-    public static TwitterFragment getInstance(){
-        return instance;
     }
 
     public List<CardView> getCardList(){

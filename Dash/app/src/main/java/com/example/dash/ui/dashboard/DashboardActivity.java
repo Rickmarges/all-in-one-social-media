@@ -23,14 +23,7 @@ import com.example.dash.ui.settings.SettingsActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import net.dean.jraw.models.PersistedAuthData;
-import net.dean.jraw.oauth.DeferredPersistentTokenStore;
-
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
 
 
 @SuppressLint("ClickableViewAccessibility")
@@ -40,7 +33,6 @@ public class DashboardActivity extends AppCompatActivity {
     private int backCounter;
     private long startTime;
     private static String encryptedEmail;
-    private static AsyncTask testTask;
     private TabLayout tabLayout;
 
     @Override
@@ -76,8 +68,12 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    public static String getEncryptedEmail() {
-        return encryptedEmail;
+    public static String getEncryptedEmail() throws Exception{
+        if (!encryptedEmail.equals("")) {
+            return encryptedEmail;
+        } else {
+            throw new Exception();
+        }
     }
 
     private void initialize() {
@@ -170,27 +166,15 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void checkReddit() {
         try {
-            DeferredPersistentTokenStore tokenStore = RedditApp.getTokenStore();
-            TreeMap<String, PersistedAuthData> data = new TreeMap<>(tokenStore.data());
-            List<String> usernames = new ArrayList<>(data.keySet());
-
             SharedPreferences sharedPref = getSharedPreferences(getEncryptedEmail(), Context.MODE_PRIVATE);
             String redditUsername = sharedPref.getString("Reddit", "");
 
-            for (int i = 0; i < usernames.size(); i++) {
-                if (usernames.get(i).equals(redditUsername)) {
-                    testTask = new ReauthenticationTask().execute(usernames.get(i));
-                    break;
-                }
+            if (!redditUsername.equals("")) {
+                new ReauthenticationTask().execute(redditUsername);
             }
-            //usernames.forEach(System.out::println);
-        } catch (RuntimeException re) {
-            System.out.println("No such user found." + re.getMessage());
+        } catch (Exception e) {
+            System.out.println("No such user found." + e.getMessage());
         }
-    }
-
-    public static AsyncTask getTestTask(){
-        return testTask;
     }
 
     private class ReauthenticationTask extends AsyncTask<String, Void, Void> {
@@ -207,7 +191,6 @@ public class DashboardActivity extends AppCompatActivity {
             byte[] encodedhash = digest.digest(string.getBytes());
             return new String(encodedhash);
         } catch (Exception e) {
-            // TODO return other encrypted string
             return "";
         }
     }

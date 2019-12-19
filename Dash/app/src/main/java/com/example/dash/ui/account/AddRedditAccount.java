@@ -6,11 +6,13 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -84,12 +86,16 @@ public class AddRedditAccount extends AppCompatActivity {
     }
 
     private void addSP() {
-        RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
-        String redditUsername = redditClient.getAuthManager().currentUsername();
-        SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("Reddit", redditUsername);
-        editor.apply();
+        try {
+            RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
+            String redditUsername = redditClient.getAuthManager().currentUsername();
+            SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("Reddit", redditUsername);
+            editor.apply();
+        } catch (Exception e) {
+            Log.w(getApplicationContext().toString(), "Couldn't save preferences: " + e);
+        }
     }
 
     private void createWebView(){

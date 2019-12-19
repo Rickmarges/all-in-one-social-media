@@ -80,12 +80,11 @@ public class TrendsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         try {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
             countryCode = sharedPreferences.getString("Country", "US");
         } catch (Exception e) {
-
+            Log.d("Warning", "Couldn't load preferences!");
         }
     }
 
