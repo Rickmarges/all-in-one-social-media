@@ -23,6 +23,7 @@ public class DashFragment extends Fragment {
     private static DashFragment instance;
     private List<CardView> redditCards = new ArrayList<>();
     private List<CardView> twitterCards = new ArrayList<>();
+    private LinearLayout linearLayout;
 
     @Nullable
     @Override
@@ -31,11 +32,7 @@ public class DashFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_dash, container, false);
 
-//        ImageButton addBtn = rootView.findViewById(R.id.addBtn);
-//        addBtn.setOnClickListener(view -> {
-//            Intent intent = new Intent(getContext(), AccountActivity.class);
-//            startActivity(intent);
-//        });
+        linearLayout = rootView.findViewById(R.id.dashLayout);
 
         return rootView;
     }
@@ -47,7 +44,13 @@ public class DashFragment extends Fragment {
         instance = this;
     }
 
-    public void setRedditCards(List<CardView> redditCards) {
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        linearLayout.removeAllViews();
+    }
+
+    void setRedditCards(List<CardView> redditCards) {
         this.redditCards = redditCards;
         createUI();
     }
@@ -57,17 +60,16 @@ public class DashFragment extends Fragment {
     }
 
     private void createUI() {
-        if (redditCards.size() == 0 && twitterCards.size() == 0) {
-            return;
-        }
-
-        LinearLayout linearLayout = getActivity().findViewById(R.id.dashLayout);
+        List<CardView> allCards = new ArrayList<>();
 
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
+            allCards.clear();
         }
 
-        List<CardView> allCards = new ArrayList<>();
+        if (redditCards.size() == 0 && twitterCards.size() == 0) {
+            return;
+        }
 
         int i = 0;
 
@@ -86,7 +88,7 @@ public class DashFragment extends Fragment {
         }
     }
 
-    public static DashFragment getInstance(){
+    static DashFragment getInstance() {
         return instance;
     }
 }
