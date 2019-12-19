@@ -37,6 +37,7 @@ public class RedditFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
     private List<CardView> cardList = new ArrayList<>();
     private LinearLayout linearLayout;
+    private static RedditFragment instance;
 
     @Nullable
     @Override
@@ -49,9 +50,11 @@ public class RedditFragment extends Fragment {
         swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
-        swipeLayout.setOnRefreshListener(() -> updateReddit());
+        swipeLayout.setOnRefreshListener(this::updateReddit);
 
         linearLayout = rootView.findViewById(R.id.redditLayout);
+
+        instance = this;
 
         updateReddit();
 
@@ -79,6 +82,10 @@ public class RedditFragment extends Fragment {
         if (RedditApp.getAccountHelper().isAuthenticated()) {
             new GetRedditFrontpage().execute();
         }
+    }
+
+    public static RedditFragment getInstance() {
+        return instance;
     }
 
     public class GetRedditFrontpage extends AsyncTask<String, Void, List<Submission>> {
@@ -136,7 +143,7 @@ public class RedditFragment extends Fragment {
         swipeLayout.setRefreshing(false);
     }
 
-    private CardView createCardView(Submission submission){
+    private CardView createCardView(Submission submission) {
         boolean hasSelfText = false;
 
         // Initialize the dynamic linearlayout with fields
