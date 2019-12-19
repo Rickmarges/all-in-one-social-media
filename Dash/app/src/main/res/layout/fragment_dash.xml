@@ -17,15 +17,15 @@
             android:scrollbarThumbVertical="@color/colorPrimaryDark"
             android:scrollbarTrackVertical="@color/colorBackgroundSecondary">
 
-            <ImageButton
-                android:id="@+id/addBtn"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/dashLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/colorBackgroundPrimary"
-                android:src="@drawable/ic_add_circle_24px"
-                android:foreground="@drawable/rounded_add_btn"
-                android:tint="@color/colorPrimaryDark" />
+                android:orientation="vertical"
+                android:scrollbarThumbVertical="@drawable/scrollbar"
+                android:scrollbarTrackVertical="@drawable/scrollbar"
+                android:layout_margin="3dp"
+                android:scrollbars="vertical" />
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

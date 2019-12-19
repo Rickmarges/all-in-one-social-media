@@ -83,13 +83,18 @@ public class TrendsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
-        int savedValue = sharedPreferences.getInt("Country", 0);
+        try {
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
+            int savedValue = sharedPreferences.getInt("Country", 0);
 
-        spinner.setSelection(savedValue);
+            spinner.setSelection(savedValue);
+        } catch (Exception e) {
+            spinner.setSelection(0);
+            Log.w("Preference warning", "Couldn't load preferences: " + e);
+        }
     }
 
-    private void createSpinner(){
+    private void createSpinner() {
         spinner = getActivity().findViewById(R.id.countries_spinner);
 
         // Initializing an Array with countries
@@ -125,11 +130,14 @@ public class TrendsFragment extends Fragment {
                 //If there is a new valid country selected, update the RSS
                 if (!newCountry.isEmpty() || !newCountry.equals(countryCode)) {
                     countryCode = newCountry;
-
-                    SharedPreferences myPrefs = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
-                    SharedPreferences.Editor prefsEditor = myPrefs.edit();
-                    prefsEditor.putInt("Country", spinner.getSelectedItemPosition());
-                    prefsEditor.apply();
+                    try {
+                        SharedPreferences myPrefs = getActivity().getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor prefsEditor = myPrefs.edit();
+                        prefsEditor.putInt("Country", spinner.getSelectedItemPosition());
+                        prefsEditor.apply();
+                    } catch (Exception e) {
+                        Log.w("Preference warning", "Couldn't save preferences: " + e);
+                    }
                     updateRss();
                 }
             }
@@ -269,7 +277,8 @@ public class TrendsFragment extends Fragment {
             textViewTitle.setTextSize(19);
 
             String description = rssItem.getDescription();
-            description = description.substring(0, 1).toUpperCase() + description.substring(1);;
+            description = description.substring(0, 1).toUpperCase() + description.substring(1);
+            ;
 
             textViewDesc.setText(description);
             textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));

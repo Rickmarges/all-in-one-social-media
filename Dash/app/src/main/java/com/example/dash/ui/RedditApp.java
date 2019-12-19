@@ -60,8 +60,4 @@ public final class RedditApp extends Application {
     public static AccountHelper getAccountHelper() {
         return accountHelper;
     }
-
-    public static SharedPreferencesTokenStore getTokenStore() {
-        return tokenStore;
-    }
 }

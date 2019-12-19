@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DashFragment extends Fragment {
+    private static DashFragment instance;
+    private List<CardView> redditCards = new ArrayList<>();
+    private List<CardView> twitterCards = new ArrayList<>();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -26,11 +31,11 @@ public class DashFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_dash, container, false);
 
-        ImageButton addBtn = rootView.findViewById(R.id.addBtn);
-        addBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), AccountActivity.class);
-            startActivity(intent);
-        });
+//        ImageButton addBtn = rootView.findViewById(R.id.addBtn);
+//        addBtn.setOnClickListener(view -> {
+//            Intent intent = new Intent(getContext(), AccountActivity.class);
+//            startActivity(intent);
+//        });
 
         return rootView;
     }
@@ -38,16 +43,31 @@ public class DashFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        createUI();
+        createUI();
+        instance = this;
+    }
+
+    public void setRedditCards(List<CardView> redditCards) {
+        this.redditCards = redditCards;
+        createUI();
+    }
+
+    public void setTwitterCards(List<CardView> twitterCards) {
+        this.twitterCards = twitterCards;
     }
 
     private void createUI() {
-        List<CardView> allCards = new ArrayList<>();
-        List<CardView> redditCards;
-        List<CardView> twitterCards;
+        if (redditCards.size() == 0 && twitterCards.size() == 0) {
+            return;
+        }
 
-        redditCards = RedditFragment.getInstance().getCardList();
-        twitterCards = TwitterFragment.getInstance().getCardList();
+        LinearLayout linearLayout = getActivity().findViewById(R.id.dashLayout);
+
+        if (linearLayout.getChildCount() > 0) {
+            linearLayout.removeAllViews();
+        }
+
+        List<CardView> allCards = new ArrayList<>();
 
         int i = 0;
 
@@ -60,6 +80,13 @@ public class DashFragment extends Fragment {
             }
             i++;
         }
-        return;
+
+        for (CardView cardView : allCards) {
+            linearLayout.addView(cardView);
+        }
+    }
+
+    public static DashFragment getInstance(){
+        return instance;
     }
 }
