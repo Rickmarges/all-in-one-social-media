@@ -1,11 +1,9 @@
 package com.example.dash.ui.dashboard;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -14,7 +12,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.dash.R;
-import com.example.dash.ui.account.AccountActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +58,10 @@ public class DashFragment extends Fragment {
 
     private void createUI() {
         List<CardView> allCards = new ArrayList<>();
+
+        if (linearLayout == null) {
+            linearLayout = getActivity().findViewById(R.id.dashLayout);
+        }
 
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
