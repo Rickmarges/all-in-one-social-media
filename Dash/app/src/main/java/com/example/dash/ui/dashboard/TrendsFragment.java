@@ -86,6 +86,7 @@ public class TrendsFragment extends Fragment {
         } catch (Exception e) {
             Log.d("Warning", "Couldn't load preferences!");
         }
+        updateRss();
     }
 
     class RssParser extends AsyncTask<String, Void, List<RssItem>> {

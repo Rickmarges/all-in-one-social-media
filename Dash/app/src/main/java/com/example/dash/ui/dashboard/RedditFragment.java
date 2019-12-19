@@ -39,6 +39,7 @@ import java.util.zip.Inflater;
 public class RedditFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
     private List<CardView> cardList = new ArrayList<>();
+    private LinearLayout linearLayout;
 
     @Nullable
     @Override
@@ -52,6 +53,8 @@ public class RedditFragment extends Fragment {
         swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
         swipeLayout.setOnRefreshListener(() -> updateReddit());
+
+        linearLayout = getActivity().findViewById(R.id.redditLayout);
 
         updateReddit();
 
@@ -67,6 +70,12 @@ public class RedditFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        linearLayout.removeAllViews();
     }
 
     public void updateReddit() {
@@ -101,7 +110,7 @@ public class RedditFragment extends Fragment {
 
                 Listing<Submission> submissions = frontPage.next();
                 return submissions;
-            } catch (OAuthException e) {
+            } catch (Exception e) {
                 // Report failure if an OAuthException occurs
                 return null;
             }
@@ -116,7 +125,6 @@ public class RedditFragment extends Fragment {
 
     private void createUI(Listing<Submission> submissions) {
         // Setup a dynamic linearlayout to add frontpage posts
-        LinearLayout linearLayout = getActivity().findViewById(R.id.redditLayout);
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
         }

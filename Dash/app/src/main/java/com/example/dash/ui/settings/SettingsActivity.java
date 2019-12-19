@@ -29,8 +29,11 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-        myPrefs = getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
-        prefsEditor = myPrefs.edit();
+        try {
+            myPrefs = getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
+        } catch (Exception e){
+            Log.w("Warning", "Couldn't load preferences!");
+        }
 
         String[] countries = new String[]{
                 "US",
@@ -68,6 +71,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void createSpinners() {
+        prefsEditor = myPrefs.edit();
+
         sortingSpinner = findViewById(R.id.spinnerRedditSort);
         countrySpinner = findViewById(R.id.spinnerCountry);
 
