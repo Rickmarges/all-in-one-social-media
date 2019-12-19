@@ -10,11 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.dash.R;
 import com.example.dash.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.example.dash.R;
+
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -43,7 +46,6 @@ public class RegisterActivity extends AppCompatActivity {
                 passwordTV2.setError("Doesn't match");
                 passwordTV.startAnimation(animShake);
                 passwordTV2.startAnimation(animShake);
-                return;
             }
         });
 
@@ -53,8 +55,15 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public void sendEmailVerification(){
-        mAuth.getCurrentUser().sendEmailVerification()
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void sendEmailVerification(){
+        Objects.requireNonNull(mAuth.getCurrentUser()).sendEmailVerification()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "Verification sent",  Toast.LENGTH_SHORT).show();

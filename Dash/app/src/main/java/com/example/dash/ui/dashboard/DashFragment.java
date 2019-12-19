@@ -2,51 +2,91 @@ package com.example.dash.ui.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+
 import com.example.dash.R;
 import com.example.dash.ui.account.AccountActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DashFragment extends Fragment {
-    private ImageButton addBtn;
+    private static DashFragment instance;
+    private List<CardView> redditCards = new ArrayList<>();
+    private List<CardView> twitterCards = new ArrayList<>();
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.dash_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_dash, container, false);
 
-        addBtn = rootView.findViewById(R.id.addBtn);
-        addBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), AccountActivity.class);
-            startActivity(intent);
-        });
+//        ImageButton addBtn = rootView.findViewById(R.id.addBtn);
+//        addBtn.setOnClickListener(view -> {
+//            Intent intent = new Intent(getContext(), AccountActivity.class);
+//            startActivity(intent);
+//        });
 
-        ViewGroup viewGroup = (ViewGroup) rootView;
+        return rootView;
+    }
 
-//        LinearLayout dashLL = new LinearLayout(getContext());
-//        dashLL.setOrientation(LinearLayout.VERTICAL);
-//        dashLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//        dashLL.setGravity(Gravity.CENTER);
-//
-//        ImageButton imageButton = new ImageButton(getContext());
-//        imageButton.setImageResource(R.drawable.ic_add_circle_24px);
-//        imageButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-//        imageButton.setBackgroundResource(0);
-//
-//        dashLL.addView(imageButton);
-//
-//        viewGroup.addView(dashLL);
+    @Override
+    public void onResume() {
+        super.onResume();
+        createUI();
+        instance = this;
+    }
 
-        return viewGroup;
+    public void setRedditCards(List<CardView> redditCards) {
+        this.redditCards = redditCards;
+        createUI();
+    }
+
+    public void setTwitterCards(List<CardView> twitterCards) {
+        this.twitterCards = twitterCards;
+    }
+
+    private void createUI() {
+        if (redditCards.size() == 0 && twitterCards.size() == 0) {
+            return;
+        }
+
+        LinearLayout linearLayout = getActivity().findViewById(R.id.dashLayout);
+
+        if (linearLayout.getChildCount() > 0) {
+            linearLayout.removeAllViews();
+        }
+
+        List<CardView> allCards = new ArrayList<>();
+
+        int i = 0;
+
+        while (i < redditCards.size() || i < twitterCards.size()) {
+            if (i < redditCards.size()) {
+                allCards.add(redditCards.get(i));
+            }
+            if (i < twitterCards.size()) {
+                allCards.add(twitterCards.get(i));
+            }
+            i++;
+        }
+
+        for (CardView cardView : allCards) {
+            linearLayout.addView(cardView);
+        }
+    }
+
+    public static DashFragment getInstance(){
+        return instance;
     }
 }

@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#23C7AC</color>
     <color name="colorBackgroundSecondary">#455A64</color>
     <color name="colorBackgroundPrimary">#263238</color>
+    <color name="colorReddit">#FF4500</color>
 </resources>

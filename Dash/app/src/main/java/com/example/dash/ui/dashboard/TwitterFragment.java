@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
 import com.example.dash.data.TwitterRepository;
@@ -27,14 +30,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.ArrayList;
 
 public class TwitterFragment extends Fragment{
     private TwitterLoginButton loginButton;
     private TwitterFragment twitterFragment = this;
+    private SwipeRefreshLayout swipeLayout;
+    private List<CardView> cardList = new ArrayList<>();
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.twitter_fragment, container, false);
         loginButton = rootView.findViewById(R.id.twitter_login_button);
@@ -44,6 +50,13 @@ public class TwitterFragment extends Fragment{
         }else{
 
         }
+        View rootView = inflater.inflate(R.layout.fragment_twitter, container, false);
+
+        //Set refresh on this page
+        SwipeRefreshLayout swipeLayout = rootView.findViewById(R.id.twitterRefresh);
+        // Change colours of bar and background to match style
+        swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
+        swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
         return rootView;
     }
@@ -110,8 +123,12 @@ public class TwitterFragment extends Fragment{
         loginButton.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void createHomeTimelineView(List<Tweet> data){
+    public void createHomeTimelineView(List<Tweet> data) {
         Toast.makeText(getContext(), "Retrieved Twitter data correctly", Toast.LENGTH_SHORT).show();
         return;
+    }
+
+    public List<CardView> getCardList(){
+        return cardList;
     }
 }

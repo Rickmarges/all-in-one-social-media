@@ -10,14 +10,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.BuildConfig;
 import com.example.dash.data.TwitterRepository;
+import com.example.dash.R;
 import com.example.dash.ui.dashboard.DashboardActivity;
 import com.example.dash.ui.register.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.example.dash.R;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
 
         backCounter = 0;
 
+        checkLoggedIn();
+
         initializeUI();
 
         loginBtn.setOnClickListener(view -> loginUserAccount());
@@ -47,6 +53,12 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeUI();
     }
 
     @Override
@@ -65,6 +77,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
         backCounter = 0;
+    }
+
+    private void checkLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            startActivity(new Intent(this, DashboardActivity.class));
+        }
     }
 
     private void loginUserAccount() {
@@ -95,9 +114,8 @@ public class LoginActivity extends AppCompatActivity {
             .addOnCompleteListener(task -> {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    if (mAuth.getCurrentUser().isEmailVerified()) {
-                        Intent intent = new Intent(this, DashboardActivity.class);
-                        startActivity(intent);
+                    if (Objects.requireNonNull(mAuth.getCurrentUser()).isEmailVerified()) {
+                        startActivity(new Intent(this, DashboardActivity.class));
                     } else {
                         Toast.makeText(getApplicationContext(), "Email is not verified", Toast.LENGTH_LONG).show();
                         mAuth.signOut();
@@ -105,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 } else {
                     showButtons();
-                    Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Login failed! Please try again", Toast.LENGTH_LONG).show();
                     Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
                     loginBtn.startAnimation(animShake);
                 }
@@ -119,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn = findViewById(R.id.register);
         loginBtn = findViewById(R.id.login);
         progressBar = findViewById(R.id.loading);
+        showButtons();
     }
 
     private void hideButtons(){
