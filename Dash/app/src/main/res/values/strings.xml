@@ -31,5 +31,6 @@
     <string name="addReddit">Add a Reddit Account</string>
     <string name="readMore">Read More..</string>
     <string name="forgotpwd">Forgot Password?</string>
+    <string name="resetPass">Reset Password</string>
 
 </resources>
