@@ -1,5 +1,6 @@
 package com.example.dash.ui.dashboard;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import java.security.MessageDigest;
 
+
+@SuppressLint("ClickableViewAccessibility")
 public class DashboardActivity extends AppCompatActivity {
     private Button menuBtn;
     private FirebaseUser user;
