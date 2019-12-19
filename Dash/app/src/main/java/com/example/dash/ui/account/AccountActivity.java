@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.R;
+import com.example.dash.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
@@ -32,7 +34,16 @@ public class AccountActivity extends AppCompatActivity {
 
         imageButton.setOnClickListener(view -> startActivity(new Intent(this, AddRedditAccount.class)));
 
-        resetBtn.setOnClickListener(view -> mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail()));
+        resetBtn.setOnClickListener(view -> {
+            mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail())
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Sent reset email!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        });
     }
 
     @Override

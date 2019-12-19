@@ -13,14 +13,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b2975bc-27f5-435f-8a46-a4ba8ae7fadb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/ResetPasswordActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/layout/acitivity_reset_password.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/AccountActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/AccountActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/ResetPasswordActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/ResetPasswordActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/ic_iconmonstr_reddit_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/drawable/ic_iconmonstr_reddit_1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_account.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_account.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_login.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/../.gradle/" />
@@ -45,10 +42,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/ResetPasswordActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
-              <caret line="138" column="45" lean-forward="true" selection-start-line="138" selection-start-column="45" selection-end-line="138" selection-end-column="45" />
+            <state relative-caret-position="352">
+              <caret line="43" column="72" lean-forward="true" selection-start-line="43" selection-start-column="72" selection-end-line="51" selection-end-column="23" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -59,108 +56,22 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/AccountActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="121">
-              <caret line="34" column="44" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="44" />
+            <state relative-caret-position="393">
+              <caret line="40" column="115" selection-start-line="40" selection-start-column="115" selection-end-line="40" selection-end-column="115" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/acitivity_reset_password.xml">
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="20" column="41" lean-forward="true" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="41" />
-              <folding>
-                <element signature="e#448#483#0" expanded="true" />
-                <element signature="e#507#540#0" expanded="true" />
-                <element signature="e#566#601#0" expanded="true" />
-                <element signature="e#628#661#0" expanded="true" />
-                <element signature="e#1914#1936#0" expanded="true" />
-                <element signature="e#2300#2319#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer2" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_login.xml">
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="31" lean-forward="true" selection-end-line="114" selection-end-column="52" />
-            </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer2" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/AndroidManifest.xml">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="30" column="27" lean-forward="true" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
-              <folding>
-                <element signature="e#512#530#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-          <provider editor-type-id="android-manifest" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/ResetPasswordActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#773#774#0" expanded="true" />
-                <element signature="e#792#793#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-29/android/os/Looper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3315">
-              <caret line="219" selection-start-line="219" selection-end-line="219" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/settings/SettingsActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1785">
-              <caret line="117" column="17" selection-start-line="117" selection-start-column="17" selection-end-line="117" selection-end-column="17" />
+            <state relative-caret-position="-595">
+              <caret line="49" column="49" selection-start-line="49" selection-start-column="49" selection-end-line="49" selection-end-column="49" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/DashFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="850">
-              <caret line="66" column="9" selection-start-line="66" selection-start-column="9" selection-end-line="66" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_dash.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="43" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="43" />
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer2" />
         </entry>
       </file>
     </leaf>
@@ -235,7 +146,6 @@
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_dash.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/dash/ui/RedditApp.java" />
-        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/AddRedditAccount.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/dash/ui/dashboard/ViewPagerAdapter.java" />
         <option value="$PROJECT_DIR$/src/main/res/menu/menu.xml" />
@@ -248,8 +158,9 @@
         <option value="$PROJECT_DIR$/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_login.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/acitivity_reset_password.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/ResetPasswordActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java" />
+        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/ResetPasswordActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/AccountActivity.java" />
       </list>
     </option>
@@ -327,6 +238,12 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="res" type="d4f16f75:AndroidResFolderNode" />
               <item name="layout" type="ddeffd01:AndroidResFolderTypeNode" />
+            </path>
+            <path>
+              <item name="Dash" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
             </path>
             <path>
               <item name="Dash" type="1abcf292:AndroidViewProjectNode" />
@@ -535,14 +452,14 @@
       <window_info id="Favorites" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Logcat" order="0" weight="0.3286119" />
       <window_info anchor="bottom" id="TODO" order="1" weight="0.3286119" />
-      <window_info anchor="bottom" id="Android Profiler" order="2" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Android Profiler" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3555241" />
       <window_info anchor="bottom" id="Terminal" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.5060403" side_tool="true" visible="true" weight="0.32719547" />
+      <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.5060403" side_tool="true" weight="0.32719547" />
       <window_info anchor="bottom" id="Version Control" order="6" sideWeight="0.49932885" weight="0.3286119" />
-      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.49395972" visible="true" weight="0.32719547" />
+      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.49395972" weight="0.32719547" />
       <window_info anchor="bottom" id="Find" order="8" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run" order="9" sideWeight="0.49463087" visible="true" weight="0.33144477" />
+      <window_info anchor="bottom" id="Run" order="9" sideWeight="0.49463087" weight="0.33144477" />
       <window_info anchor="bottom" id="Inspection Results" order="10" weight="0.3286119" />
       <window_info anchor="right" id="StringPreview" order="0" />
       <window_info anchor="right" id="Gradle" order="1" />
@@ -821,13 +738,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/spinner_item.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -991,6 +901,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="410">
+          <caret line="30" column="58" lean-forward="true" selection-start-line="30" selection-start-column="58" selection-end-line="30" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="30" column="27" lean-forward="true" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
+          <folding>
+            <element signature="e#512#530#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/acitivity_reset_password.xml">
       <provider editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -1007,51 +935,41 @@
       </provider>
       <provider selected="true" editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="30" column="27" lean-forward="true" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
-          <folding>
-            <element signature="e#512#530#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-      <provider editor-type-id="android-manifest" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_login.xml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="31" lean-forward="true" selection-end-line="114" selection-end-column="52" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="138" column="45" lean-forward="true" selection-start-line="138" selection-start-column="45" selection-end-line="138" selection-end-column="45" />
+        <state relative-caret-position="1598">
+          <caret line="94" column="20" selection-start-line="94" selection-start-column="20" selection-end-line="94" selection-end-column="20" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#4045#4064#0" expanded="true" />
           </folding>
         </state>
       </provider>
+      <provider editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/ResetPasswordActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="352">
+          <caret line="43" column="72" lean-forward="true" selection-start-line="43" selection-start-column="72" selection-end-line="51" selection-end-column="23" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#773#774#0" expanded="true" />
-            <element signature="e#792#793#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/login/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-595">
+          <caret line="49" column="49" selection-start-line="49" selection-start-column="49" selection-end-line="49" selection-end-column="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/dash/ui/account/AccountActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="34" column="44" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="44" />
+        <state relative-caret-position="393">
+          <caret line="40" column="115" selection-start-line="40" selection-start-column="115" selection-end-line="40" selection-end-column="115" />
         </state>
       </provider>
     </entry>
