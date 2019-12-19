@@ -30,5 +30,6 @@
     <string name="test">test</string>
     <string name="addReddit">Add a Reddit Account</string>
     <string name="readMore">Read More..</string>
+    <string name="forgotpwd">Forgot Password?</string>
 
 </resources>
