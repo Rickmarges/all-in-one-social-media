@@ -1,6 +1,8 @@
 package com.example.dash.ui.dashboard;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -76,12 +78,24 @@ public class RedditFragment extends Fragment {
     public class GetRedditFrontpage extends AsyncTask<String, Void, Listing<Submission>> {
         RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
 
+        SubredditSort[] sorts = new SubredditSort[]{
+                SubredditSort.HOT,
+                SubredditSort.TOP,
+                SubredditSort.BEST,
+                SubredditSort.CONTROVERSIAL,
+                SubredditSort.NEW,
+                SubredditSort.RISING
+        };
+
         @Override
         protected Listing<Submission> doInBackground(String... params) {
             try {
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
+                int savedValue = sharedPreferences.getInt("RedditSort", 0);
+
                 // frontPage() returns a Paginator.Builder
                 DefaultPaginator<Submission> frontPage = redditClient.frontPage()
-                        .sorting(SubredditSort.HOT)
+                        .sorting(sorts[savedValue])
                         .limit(25)
                         .build();
 
