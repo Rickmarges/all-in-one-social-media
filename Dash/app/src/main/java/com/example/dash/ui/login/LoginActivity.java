@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.R;
+import com.example.dash.ui.account.ResetPasswordActivity;
 import com.example.dash.ui.dashboard.DashboardActivity;
 import com.example.dash.ui.register.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailTV, passwordTV;
     private Button loginBtn;
     private Button registerBtn;
+    private Button forgotBtn;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private int backCounter;
@@ -47,10 +49,9 @@ public class LoginActivity extends AppCompatActivity {
 
         loginBtn.setOnClickListener(view -> loginUserAccount());
 
-        registerBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(this, RegisterActivity.class);
-            startActivity(intent);
-        });
+        registerBtn.setOnClickListener(view -> startActivity(new Intent(this, RegisterActivity.class)));
+
+        forgotBtn.setOnClickListener(view -> startActivity(new Intent(this, ResetPasswordActivity.class)));
     }
 
     @Override
@@ -135,16 +136,19 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn = findViewById(R.id.register);
         loginBtn = findViewById(R.id.login);
         progressBar = findViewById(R.id.loading);
+        forgotBtn = findViewById(R.id.forgotpwd);
         showButtons();
     }
 
     private void hideButtons(){
         loginBtn.setVisibility(View.GONE);
         registerBtn.setVisibility(View.GONE);
+        forgotBtn.setVisibility(View.GONE);
     }
 
     private void showButtons(){
         loginBtn.setVisibility(View.VISIBLE);
         registerBtn.setVisibility(View.VISIBLE);
+        forgotBtn.setVisibility(View.VISIBLE);
     }
 }
