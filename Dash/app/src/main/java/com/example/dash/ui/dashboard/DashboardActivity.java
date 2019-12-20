@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.security.MessageDigest;
+import java.util.Objects;
 
 
 @SuppressLint("ClickableViewAccessibility")
@@ -51,7 +52,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        tabLayout.getTabAt(0).select();
+        Objects.requireNonNull(tabLayout.getTabAt(0)).select();
         checkLoggedIn();
         encryptedEmail = encryptString(user.getEmail());
         checkReddit();
@@ -105,7 +106,7 @@ public class DashboardActivity extends AppCompatActivity {
     private void signOut() {
         user = null;
         FirebaseAuth.getInstance().signOut();
-        tabLayout.getTabAt(0).select();
+        Objects.requireNonNull(tabLayout.getTabAt(0)).select();
         try {
             LinearLayout ll = findViewById(R.id.trendsLayout);
             ll.removeAllViews();
@@ -144,7 +145,7 @@ public class DashboardActivity extends AppCompatActivity {
                     signOut();
                     break;
                 default:
-                    break;
+                    return false;
             }
             return true;
         });
@@ -186,7 +187,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    public String encryptString(String string) {
+    private String encryptString(String string) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedhash = digest.digest(string.getBytes());

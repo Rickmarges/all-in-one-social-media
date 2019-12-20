@@ -74,7 +74,6 @@
         app:layout_constraintTop_toBottomOf="@id/emailAccount" />
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="37dp"
@@ -139,7 +138,6 @@
         app:layout_constraintTop_toBottomOf="@+id/divider5" />
 
     <View
-        android:id="@+id/divider6"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:layout_marginTop="80dp"

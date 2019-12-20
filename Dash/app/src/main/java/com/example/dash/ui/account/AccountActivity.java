@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.R;
-import com.example.dash.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
@@ -30,20 +29,18 @@ public class AccountActivity extends AppCompatActivity {
         // Get user credentials
         init();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        emailAccount.setText(mAuth.getCurrentUser().getEmail());
+        emailAccount.setText(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
 
         imageButton.setOnClickListener(view -> startActivity(new Intent(this, AddRedditAccount.class)));
 
-        resetBtn.setOnClickListener(view -> {
-            mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail())
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Sent reset email!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_LONG).show();
-                        }
-                    });
-        });
+        resetBtn.setOnClickListener(view -> mAuth.sendPasswordResetEmail(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()))
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Sent reset email!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_LONG).show();
+                    }
+                }));
     }
 
     @Override
@@ -52,7 +49,7 @@ public class AccountActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-    public void init() {
+    private void init() {
         imageButton = findViewById(R.id.addredditbtn);
         emailAccount = findViewById(R.id.emailAccount);
         resetBtn = findViewById(R.id.resetpwd);

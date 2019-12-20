@@ -16,8 +16,9 @@ import com.example.dash.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class DashFragment extends Fragment {
+class DashFragment extends Fragment {
     private static DashFragment instance;
     private List<CardView> redditCards = new ArrayList<>();
     private List<CardView> twitterCards = new ArrayList<>();
@@ -57,8 +58,14 @@ public class DashFragment extends Fragment {
     }
 
     private void updateCards() {
+        TwitterFragment twitterFragment;
         RedditFragment.getInstance().updateReddit();
-        TwitterFragment.getInstance().update();
+        if (TwitterFragment.getInstance() == null) {
+            twitterFragment = new TwitterFragment();
+        } else {
+            twitterFragment = TwitterFragment.getInstance();
+        }
+        twitterFragment.update();
     }
 
     void setRedditCards(List<CardView> redditCards) {
@@ -75,7 +82,7 @@ public class DashFragment extends Fragment {
         List<CardView> allCards = new ArrayList<>();
 
         if (linearLayout == null) {
-            linearLayout = getActivity().findViewById(R.id.dashLayout);
+            linearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.dashLayout);
         }
 
         if (linearLayout.getChildCount() > 0) {

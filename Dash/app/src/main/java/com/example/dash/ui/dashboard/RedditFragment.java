@@ -31,11 +31,12 @@ import net.dean.jraw.pagination.DefaultPaginator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class RedditFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
-    private List<CardView> cardList = new ArrayList<>();
+    private final List<CardView> cardList = new ArrayList<>();
     private LinearLayout linearLayout;
     private static RedditFragment instance;
 
@@ -68,11 +69,6 @@ public class RedditFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         linearLayout.removeAllViews();
@@ -88,10 +84,10 @@ public class RedditFragment extends Fragment {
         return instance;
     }
 
-    public class GetRedditFrontpage extends AsyncTask<String, Void, List<Submission>> {
-        RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
+    class GetRedditFrontpage extends AsyncTask<String, Void, List<Submission>> {
+        final RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
 
-        SubredditSort[] sorts = new SubredditSort[]{
+        final SubredditSort[] sorts = new SubredditSort[]{
                 SubredditSort.HOT,
                 SubredditSort.TOP,
                 SubredditSort.BEST,
@@ -103,7 +99,7 @@ public class RedditFragment extends Fragment {
         @Override
         protected List<Submission> doInBackground(String... params) {
             try {
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
                 int savedValue = sharedPreferences.getInt("RedditSort", 0);
 
                 // frontPage() returns a Paginator.Builder
@@ -112,8 +108,7 @@ public class RedditFragment extends Fragment {
                         .limit(25)
                         .build();
 
-                List<Submission> submissions = frontPage.next();
-                return submissions;
+                return frontPage.next();
             } catch (Exception e) {
                 // Report failure if an Exception occurs
                 return null;
@@ -130,7 +125,7 @@ public class RedditFragment extends Fragment {
     private void createUI(List<Submission> submissions) {
         // Setup a dynamic linearlayout to add frontpage posts
         if (linearLayout == null) {
-            linearLayout = getActivity().findViewById(R.id.dashLayout);
+            linearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.dashLayout);
         }
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
@@ -148,7 +143,7 @@ public class RedditFragment extends Fragment {
 
         // Initialize the dynamic linearlayout with fields
         LinearLayout cardLayout = new LinearLayout(getContext());
-        CardView cardView = new CardView(getContext());
+        CardView cardView = new CardView(Objects.requireNonNull(getContext()));
         TextView textViewTitle = new TextView(getContext());
         TextView textViewInfo = new TextView(getContext());
         TextView textViewDesc = new TextView(getContext());

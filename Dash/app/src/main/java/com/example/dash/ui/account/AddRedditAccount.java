@@ -124,10 +124,8 @@ public class AddRedditAccount extends AppCompatActivity {
         });
 
         // Generate an authentication URL
-        boolean requestRefreshToken = true;
-        boolean useMobileSite = true;
         String[] scopes = new String[]{"read", "identity"};
-        String authUrl = helper.getAuthorizationUrl(requestRefreshToken, useMobileSite, scopes);
+        String authUrl = helper.getAuthorizationUrl(true, true, scopes);
 
         // Finally, show the authorization URL to the user
         webView.loadUrl(authUrl);

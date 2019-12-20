@@ -16,7 +16,6 @@ import java.util.UUID;
 
 public final class RedditApp extends Application {
     private static AccountHelper accountHelper;
-    private static SharedPreferencesTokenStore tokenStore;
 
     @Override
     public void onCreate() {
@@ -29,7 +28,7 @@ public final class RedditApp extends Application {
         UUID deviceUuid = UUID.randomUUID();
 
         // Store our access tokens and refresh tokens in shared preferences
-        tokenStore = new SharedPreferencesTokenStore(getApplicationContext());
+        SharedPreferencesTokenStore tokenStore = new SharedPreferencesTokenStore(getApplicationContext());
         // Load stored tokens into memory
         tokenStore.load();
         // Automatically save new tokens as they arrive
