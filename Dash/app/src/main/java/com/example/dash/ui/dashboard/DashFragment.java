@@ -68,6 +68,7 @@ public class DashFragment extends Fragment {
 
     void setTwitterCards(List<CardView> twitterCards) {
         this.twitterCards = twitterCards;
+        createUI();
     }
 
     private void createUI() {
