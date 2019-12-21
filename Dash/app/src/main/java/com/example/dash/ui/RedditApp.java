@@ -1,15 +1,12 @@
 package com.example.dash.ui;
 
 import android.app.Application;
-import android.util.Log;
 
 import net.dean.jraw.android.AndroidHelper;
 import net.dean.jraw.android.AppInfoProvider;
 import net.dean.jraw.android.ManifestAppInfoProvider;
 import net.dean.jraw.android.SharedPreferencesTokenStore;
-import net.dean.jraw.android.SimpleAndroidLogAdapter;
-import net.dean.jraw.http.LogAdapter;
-import net.dean.jraw.http.SimpleHttpLogger;
+import net.dean.jraw.http.NoopHttpLogger;
 import net.dean.jraw.oauth.AccountHelper;
 
 import java.util.UUID;
@@ -42,15 +39,15 @@ public final class RedditApp extends Application {
         accountHelper.onSwitch(redditClient -> {
             // By default, JRAW logs HTTP activity to System.out. We're going to use Log.i()
             // instead.
-            LogAdapter logAdapter = new SimpleAndroidLogAdapter(Log.INFO);
+//            LogAdapter logAdapter = new SimpleAndroidLogAdapter(Log.INFO);
 
             // We're going to use the LogAdapter to write down the summaries produced by
             // SimpleHttpLogger
-            redditClient.setLogger(
-                    new SimpleHttpLogger(SimpleHttpLogger.DEFAULT_LINE_LENGTH, logAdapter));
+//            redditClient.setLogger(
+//                    new SimpleHttpLogger(SimpleHttpLogger.DEFAULT_LINE_LENGTH, logAdapter));
 
             // If you want to disable logging, use a NoopHttpLogger instead:
-            // redditClient.setLogger(new NoopHttpLogger());
+             redditClient.setLogger(new NoopHttpLogger());
 
             return null;
         });

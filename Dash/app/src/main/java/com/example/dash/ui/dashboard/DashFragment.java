@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class DashFragment extends Fragment {
+public class DashFragment extends Fragment {
     private static DashFragment instance;
     private List<CardView> redditCards = new ArrayList<>();
     private List<CardView> twitterCards = new ArrayList<>();
@@ -31,8 +31,6 @@ class DashFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.fragment_dash, container, false);
-
-        linearLayout = rootView.findViewById(R.id.dashLayout);
 
         swipeLayout = rootView.findViewById(R.id.swipe);
         swipeLayout.setOnRefreshListener(this::updateCards);
@@ -47,7 +45,6 @@ class DashFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        createUI();
         instance = this;
     }
 
@@ -58,14 +55,13 @@ class DashFragment extends Fragment {
     }
 
     private void updateCards() {
-        TwitterFragment twitterFragment;
         RedditFragment.getInstance().updateReddit();
-        if (TwitterFragment.getInstance() == null) {
+
+        TwitterFragment twitterFragment = TwitterFragment.getInstance();
+        if (twitterFragment == null) {
             twitterFragment = new TwitterFragment();
-        } else {
-            twitterFragment = TwitterFragment.getInstance();
         }
-        twitterFragment.update();
+        twitterFragment.updateTwitter();
     }
 
     void setRedditCards(List<CardView> redditCards) {
@@ -79,6 +75,7 @@ class DashFragment extends Fragment {
     }
 
     private void createUI() {
+        linearLayout = getActivity().findViewById(R.id.dashLayout);
         List<CardView> allCards = new ArrayList<>();
 
         if (linearLayout == null) {
@@ -87,7 +84,6 @@ class DashFragment extends Fragment {
 
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
-            allCards.clear();
         }
 
         if (redditCards.size() == 0 && twitterCards.size() == 0) {

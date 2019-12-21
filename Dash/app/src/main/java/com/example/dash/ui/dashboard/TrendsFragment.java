@@ -46,7 +46,7 @@ import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-class TrendsFragment extends Fragment {
+public class TrendsFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
     private final String baseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
     private String countryCode;

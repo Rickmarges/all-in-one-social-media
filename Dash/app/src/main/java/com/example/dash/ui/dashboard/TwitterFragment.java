@@ -39,11 +39,11 @@ public class TwitterFragment extends Fragment {
         return rootView;
     }
 
-    public static TwitterFragment getInstance(){
+    static TwitterFragment getInstance(){
         return instance;
     }
 
-    public void update(){
+    void updateTwitter(){
 
     }
 }

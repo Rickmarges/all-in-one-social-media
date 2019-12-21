@@ -129,6 +129,7 @@ public class RedditFragment extends Fragment {
         }
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
+            cardList.clear();
         }
         // Loop through submissions from frontpage
         for (Submission submission : submissions) {
