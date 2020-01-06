@@ -41,7 +41,7 @@
             android:launchMode="singleTask"/>
         <activity
             android:name=".ui.account.AccountActivity"
-            android:noHistory="true" />
+            android:noHistory="false" />
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:noHistory="true" />

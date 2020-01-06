@@ -38,15 +38,8 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TwitterConfig config = new TwitterConfig.Builder(this.getBaseContext())
-                .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(new TwitterAuthConfig(BuildConfig.TWITTER_CONSUMER_ACCESS_TOKEN, BuildConfig.TWITTER_CONSUMER_SECRET))
-                .debug(true)
-                .build();
-        Twitter.initialize(config);
-        TwitterCore.getInstance();
-        TweetComposer.getInstance();
-        TweetUi.getInstance();
+
+        TwitterRepository.InitializeTwitter(getApplicationContext());
 
         setContentView(R.layout.activity_account);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -57,7 +50,7 @@ public class AccountActivity extends AppCompatActivity {
         emailAccount.setText(mAuth.getCurrentUser().getEmail());
 
         imageButton.setOnClickListener(view -> startActivity(new Intent(this, AddRedditAccount.class)));
-        TwitterRepository.setTwitterCallback(this.getApplicationContext(), addTwitterBtn);
+        TwitterRepository.setTwitterCallback(this, addTwitterBtn);
 
         resetBtn.setOnClickListener(view -> {
             mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail())
@@ -87,8 +80,6 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // Pass the activity result to the login button.
         addTwitterBtn.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -2,23 +2,30 @@ package com.example.dash.data;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.dash.BuildConfig;
 import com.example.dash.R;
 import com.example.dash.ui.dashboard.TwitterFragment;
 import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.services.StatusesService;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
+import com.twitter.sdk.android.tweetui.TweetUi;
 
 import java.io.File;
 import java.util.List;
@@ -62,6 +69,18 @@ public class TwitterRepository extends AppCompatActivity {
         });
     }
 
+    static public void InitializeTwitter(Context context){
+        TwitterConfig config = new TwitterConfig.Builder(context)
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(new TwitterAuthConfig(BuildConfig.TWITTER_CONSUMER_ACCESS_TOKEN, BuildConfig.TWITTER_CONSUMER_SECRET))
+                .debug(true)
+                .build();
+        Twitter.initialize(config);
+        TwitterCore.getInstance();
+        TweetComposer.getInstance();
+        TweetUi.getInstance();
+    }
+
     static public void setTwitterCallback(Context context, TwitterLoginButton twitterBtn) {
         twitterBtn.setCallback(new Callback<TwitterSession>() {
             @Override
@@ -83,14 +102,5 @@ public class TwitterRepository extends AppCompatActivity {
         TwitterRepository twitterRepository = new TwitterRepository(session);
         twitterRepository.Login();
         //twitterRepository.GetHomeTimeline(twitterFragment, 20);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Pass the activity result to the login button.
-        TwitterLoginButton twitterBtn = findViewById(R.id.addtwitterbtn);
-        twitterBtn.onActivityResult(requestCode, resultCode, data);
     }
 }
