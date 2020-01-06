@@ -94,15 +94,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initialize() {
-        TwitterConfig config = new TwitterConfig.Builder(this.getBaseContext())
-                .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(new TwitterAuthConfig(BuildConfig.TWITTER_CONSUMER_ACCESS_TOKEN, BuildConfig.TWITTER_CONSUMER_SECRET))
-                .debug(true)
-                .build();
-        Twitter.initialize(config);
-        TwitterCore.getInstance();
-        TweetComposer.getInstance();
-        TweetUi.getInstance();
+
 
         setContentView(R.layout.activity_dashboard);
 
@@ -196,8 +188,9 @@ public class DashboardActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         FragmentManager fragment = getSupportFragmentManager();
         if (fragment != null) {
-            Fragment frag = fragment.findFragmentByTag("android:switcher:2131230896:2");
+            Fragment frag = fragment.findFragmentByTag("android:switcher:2131230908:2");
             frag.onActivityResult(requestCode, resultCode, data);
+
         }
         else Log.d("Twitter", "fragment is null");
     }
