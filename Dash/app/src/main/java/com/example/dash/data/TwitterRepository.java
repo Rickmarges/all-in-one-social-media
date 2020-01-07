@@ -1,8 +1,12 @@
 package com.example.dash.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,29 +32,46 @@ import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 import com.twitter.sdk.android.tweetui.TweetUi;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import retrofit2.Call;
 
 // Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki
 public class TwitterRepository extends AppCompatActivity {
+    public static final TwitterRepository TwitterSingleton = new TwitterRepository();
     private Twitter instance;
     private String token;
     private String secret;
-    private TwitterSession userSession;
+    public TwitterSession userSession;
 
-    public TwitterRepository(TwitterSession session) {
+    public TwitterRepository() {
+        //TwitterAuthToken authToken = session.getAuthToken();
+        //token = authToken.token;
+        //secret = authToken.secret;
+    }
+
+    public void createSession(TwitterSession session){
+        TwitterSingleton.userSession = session;
         TwitterAuthToken authToken = session.getAuthToken();
-        token = authToken.token;
-        secret = authToken.secret;
-        userSession = session;
+        TwitterSingleton.token = authToken.token;
+        TwitterSingleton.secret = authToken.secret;
     }
 
-    public void Login() {
-        //Save the tokens encrypted to local storage
+    public TwitterCore getSession(){
+        return TwitterCore.getInstance();
     }
 
-    public void GetHomeTimeline(TwitterFragment twitterFragment, int amount){
+    public void clearSession(){
+        TwitterCore.getInstance().getSessionManager().clearActiveSession();
+    }
+
+    public TwitterSession getActiveSession(){
+        return TwitterCore.getInstance().getSessionManager().getActiveSession();
+    }
+
+    public void GetHomeTimeline(int amount) throws InterruptedException {
         TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
         StatusesService statusesService = twitterApiClient.getStatusesService();
 
@@ -60,8 +81,9 @@ public class TwitterRepository extends AppCompatActivity {
             @Override
             public void success(Result<List<Tweet>> result) {
                 //Do something with result
-                List<Tweet> tweetList = result.data;
-                twitterFragment.createHomeTimelineView(tweetList);
+                List<Tweet> t = result.data;
+
+                //t.get(0).entities.media.get(0).url;
             }
             public void failure(TwitterException exception) {
                 //Do something on failure
@@ -86,21 +108,26 @@ public class TwitterRepository extends AppCompatActivity {
             @Override
             public void success(Result<TwitterSession> result) {
                 Toast.makeText(context, "Authentication succesfull", Toast.LENGTH_SHORT).show();
-                FirstTimeAuthenticated();
+                TextView textView = (TextView) ((Activity) context).findViewById(R.id.textView3);
+                twitterBtn.setVisibility(View.INVISIBLE);
+                ((Activity) context).finish();
+
+                TwitterSession session = TwitterRepository.TwitterSingleton.getActiveSession();
+                TwitterRepository.TwitterSingleton.createSession(session);
+                textView.setText(session.getUserName());
+
+                try {
+                    TwitterRepository.TwitterSingleton.GetHomeTimeline(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void failure(TwitterException exception) {
                 Toast.makeText(context, "Authentication failed try again...", Toast.LENGTH_SHORT).show();
+                TwitterRepository.TwitterSingleton.clearSession();
             }
         });
-    }
-
-    static private void FirstTimeAuthenticated(){
-        TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-
-        TwitterRepository twitterRepository = new TwitterRepository(session);
-        twitterRepository.Login();
-        //twitterRepository.GetHomeTimeline(twitterFragment, 20);
     }
 }
