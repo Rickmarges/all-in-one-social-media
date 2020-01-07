@@ -70,7 +70,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    public static String getEncryptedEmail() throws Exception{
+    public static String getEncryptedEmail() throws Exception {
         if (!encryptedEmail.equals("")) {
             return encryptedEmail;
         } else {
