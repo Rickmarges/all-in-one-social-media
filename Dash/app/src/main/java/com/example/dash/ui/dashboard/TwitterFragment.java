@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +13,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dash.R;
+import com.example.dash.data.TwitterRepository;
+import com.twitter.sdk.android.core.models.Tweet;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.example.dash.R;
-import com.example.dash.data.TwitterRepository;
-import com.twitter.sdk.android.core.models.MediaEntity;
-import com.twitter.sdk.android.core.models.Tweet;
-import com.twitter.sdk.android.tweetui.TweetUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TwitterFragment extends Fragment {
     private SwipeRefreshLayout swipeLayout;
@@ -48,6 +50,12 @@ public class TwitterFragment extends Fragment {
         linearLayout = rootView.findViewById(R.id.twitterLayout);
 
         instance = this;
+
+        try {
+            TwitterRepository.TwitterSingleton.GetHomeTimeline(20, this);
+        } catch (InterruptedException e) {
+            Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT);
+        }
 
         return rootView;
     }
@@ -79,9 +87,16 @@ public class TwitterFragment extends Fragment {
         View divider = new View(getContext());
 
         // Fill and style author
-        String author = " By: " + tweet.user.screenName;
+        String author = " By: @" + tweet.user.screenName;
         textViewInfo.append(author);
-        String time = "Created at: " + tweet.createdAt;
+        // Parse the createdAt format to 'x ago'
+        Date date = new Date();
+        try {
+            date = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy").parse(tweet.createdAt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String time = " " + DateUtils.getRelativeTimeSpanString(date.getTime());
         textViewInfo.append(time);
         textViewInfo.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
         textViewInfo.setPadding(20, 5, 150, 5);
@@ -95,9 +110,15 @@ public class TwitterFragment extends Fragment {
         textViewTitle.setPadding(15, 5, 10, 0);
         textViewTitle.setTextSize(20);
 
+        textViewDesc.setText(tweet.text);
+        textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
+        textViewDesc.setPadding(25, 5, 150, 5);
+        textViewDesc.setVerticalScrollBarEnabled(true);
+        textViewDesc.setHeight(250);
+
         // Insert path into Picasso to download image
         //TODO: Imageloading, adapting to other media if needed
-        if (tweet.entities.media != null){
+        if (tweet.entities.media.size() != 0) {
             com.squareup.picasso.Picasso.with(this.getContext()).load(tweet.entities.media.get(0).mediaUrlHttps).into(imageView);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setPadding(10, 0, 10, 20);
@@ -116,9 +137,10 @@ public class TwitterFragment extends Fragment {
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> {
             String url;
-            if (tweet.entities.media != null) {
+            // Check if the url is in the media or urls List
+            if (tweet.entities.media.size() != 0) {
                 url = tweet.entities.media.get(0).url;
-            } else if (tweet.entities.urls != null) {
+            } else if (tweet.entities.urls.size() != 0) {
                 url = tweet.entities.urls.get(0).url;
             } else {
                 Toast.makeText(getContext(), "Unable to open tweet", Toast.LENGTH_SHORT).show();

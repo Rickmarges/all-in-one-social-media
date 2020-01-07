@@ -2,23 +2,19 @@ package com.example.dash.data;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.BuildConfig;
 import com.example.dash.R;
 import com.example.dash.ui.dashboard.TwitterFragment;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterApiClient;
-import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterConfig;
@@ -31,11 +27,9 @@ import com.twitter.sdk.android.core.services.StatusesService;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 import com.twitter.sdk.android.tweetui.TweetUi;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
+import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 
 // Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki
@@ -52,26 +46,26 @@ public class TwitterRepository extends AppCompatActivity {
         //secret = authToken.secret;
     }
 
-    public void createSession(TwitterSession session){
+    public void createSession(TwitterSession session) {
         TwitterSingleton.userSession = session;
         TwitterAuthToken authToken = session.getAuthToken();
         TwitterSingleton.token = authToken.token;
         TwitterSingleton.secret = authToken.secret;
     }
 
-    public TwitterCore getSession(){
+    public TwitterCore getSession() {
         return TwitterCore.getInstance();
     }
 
-    public void clearSession(){
+    public void clearSession() {
         TwitterCore.getInstance().getSessionManager().clearActiveSession();
     }
 
-    public TwitterSession getActiveSession(){
+    public TwitterSession getActiveSession() {
         return TwitterCore.getInstance().getSessionManager().getActiveSession();
     }
 
-    public void GetHomeTimeline(int amount) throws InterruptedException {
+    public void GetHomeTimeline(int amount, TwitterFragment fragment) throws InterruptedException {
         TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
         StatusesService statusesService = twitterApiClient.getStatusesService();
 
@@ -83,15 +77,17 @@ public class TwitterRepository extends AppCompatActivity {
                 //Do something with result
                 List<Tweet> t = result.data;
 
+                fragment.createHomeTimelineView(t);
                 //t.get(0).entities.media.get(0).url;
             }
+
             public void failure(TwitterException exception) {
                 //Do something on failure
             }
         });
     }
 
-    static public void InitializeTwitter(Context context){
+    static public void InitializeTwitter(Context context) {
         TwitterConfig config = new TwitterConfig.Builder(context)
                 .logger(new DefaultLogger(Log.DEBUG))
                 .twitterAuthConfig(new TwitterAuthConfig(BuildConfig.TWITTER_CONSUMER_ACCESS_TOKEN, BuildConfig.TWITTER_CONSUMER_SECRET))
@@ -115,12 +111,6 @@ public class TwitterRepository extends AppCompatActivity {
                 TwitterSession session = TwitterRepository.TwitterSingleton.getActiveSession();
                 TwitterRepository.TwitterSingleton.createSession(session);
                 textView.setText(session.getUserName());
-
-                try {
-                    TwitterRepository.TwitterSingleton.GetHomeTimeline(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
