@@ -12,7 +12,20 @@
 
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbarThumbVertical="@drawable/scrollbar"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:id="@+id/twitterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:scrollbarThumbVertical="@drawable/scrollbar"
+                android:scrollbarTrackVertical="@drawable/scrollbar"
+                android:layout_margin="3dp"
+                android:scrollbars="vertical" />
         </ScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
