@@ -1,11 +1,13 @@
-package com.example.dash.ui.dashboard;
+package com.example.dash.ui.dashboard.Viewpager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-class ViewPagerAdapter extends FragmentPagerAdapter {
+import com.example.dash.ui.dashboard.Viewpager.Fragments.*;
+
+public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private final Fragment[] childFragments;
 

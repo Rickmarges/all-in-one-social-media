@@ -16,8 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.dash.R;
-import com.example.dash.ui.RedditApp;
+import com.example.dash.ui.DashApp;
 import com.example.dash.ui.account.AccountActivity;
+import com.example.dash.ui.dashboard.Viewpager.ViewPagerAdapter;
 import com.example.dash.ui.login.LoginActivity;
 import com.example.dash.ui.settings.SettingsActivity;
 import com.google.android.material.tabs.TabLayout;
@@ -182,7 +183,7 @@ public class DashboardActivity extends AppCompatActivity {
     private class ReauthenticationTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... usernames) {
-            RedditApp.getAccountHelper().switchToUser(usernames[0]);
+            DashApp.getAccountHelper().switchToUser(usernames[0]);
             return null;
         }
     }

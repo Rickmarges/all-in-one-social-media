@@ -1,4 +1,4 @@
-package com.example.dash.ui.dashboard;
+package com.example.dash.ui.dashboard.Viewpager.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +21,8 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
-import com.example.dash.ui.RedditApp;
+import com.example.dash.ui.DashApp;
+import com.example.dash.ui.dashboard.DashboardActivity;
 import com.squareup.picasso.Picasso;
 
 import net.dean.jraw.RedditClient;
@@ -75,7 +76,7 @@ public class RedditFragment extends Fragment {
     }
 
     public void updateReddit() {
-        if (RedditApp.getAccountHelper().isAuthenticated()) {
+        if (DashApp.getAccountHelper().isAuthenticated()) {
             new GetRedditFrontpage().execute();
         }
     }
@@ -85,7 +86,7 @@ public class RedditFragment extends Fragment {
     }
 
     class GetRedditFrontpage extends AsyncTask<String, Void, List<Submission>> {
-        final RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
+        final RedditClient redditClient = DashApp.getAccountHelper().getReddit();
 
         final SubredditSort[] sorts = new SubredditSort[]{
                 SubredditSort.HOT,
@@ -185,9 +186,11 @@ public class RedditFragment extends Fragment {
         }
 
         // Insert path into Picasso to download image
-        Picasso.get().load(submission.getUrl()).into(imageView);
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setPadding(10, 0, 10, 20);
+        if (submission.hasThumbnail()) {
+            Picasso.get().load(submission.getUrl()).into(imageView);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setPadding(10, 0, 10, 20);
+        }
 
         // Style end enable divider
         divider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5));
@@ -201,7 +204,7 @@ public class RedditFragment extends Fragment {
         cardView.setRadius(15);
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(submission.getUrl()));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.reddit.com" + submission.getPermalink()));
             startActivity(browserIntent);
         });
         cardLayout.setOrientation(LinearLayout.VERTICAL);
@@ -216,7 +219,9 @@ public class RedditFragment extends Fragment {
         if (hasSelfText) {
             cardLayout.addView(textViewReadMore);
         }
-        cardLayout.addView(imageView);
+        if (submission.hasThumbnail()) {
+            cardLayout.addView(imageView);
+        }
         cardView.addView(cardLayout);
 
         return cardView;

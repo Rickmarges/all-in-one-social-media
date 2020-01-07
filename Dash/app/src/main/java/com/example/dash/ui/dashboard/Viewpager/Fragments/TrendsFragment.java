@@ -1,4 +1,4 @@
-package com.example.dash.ui.dashboard;
+package com.example.dash.ui.dashboard.Viewpager.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.dash.R;
+import com.example.dash.ui.dashboard.DashboardActivity;
 import com.example.dash.ui.dashboard.rss.RssItem;
 
 import org.w3c.dom.Document;

@@ -11,7 +11,7 @@ import net.dean.jraw.oauth.AccountHelper;
 
 import java.util.UUID;
 
-public final class RedditApp extends Application {
+public final class DashApp extends Application {
     private static AccountHelper accountHelper;
 
     @Override

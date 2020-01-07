@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dash.R;
-import com.example.dash.ui.RedditApp;
+import com.example.dash.ui.DashApp;
 import com.example.dash.ui.dashboard.DashboardActivity;
 
 import net.dean.jraw.RedditClient;
@@ -86,7 +86,7 @@ public class AddRedditAccount extends AppCompatActivity {
 
     private void addSP() {
         try {
-            RedditClient redditClient = RedditApp.getAccountHelper().getReddit();
+            RedditClient redditClient = DashApp.getAccountHelper().getReddit();
             String redditUsername = redditClient.getAuthManager().currentUsername();
             SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -105,7 +105,7 @@ public class AddRedditAccount extends AppCompatActivity {
         CookieManager.getInstance().flush();
 
         // Get a StatefulAuthHelper instance to manage interactive authentication
-        final StatefulAuthHelper helper = RedditApp.getAccountHelper().switchToNewUser();
+        final StatefulAuthHelper helper = DashApp.getAccountHelper().switchToNewUser();
 
         // Watch for pages loading
         webView.setWebViewClient(new WebViewClient() {

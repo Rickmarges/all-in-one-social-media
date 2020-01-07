@@ -1,4 +1,4 @@
-package com.example.dash.ui.dashboard;
+package com.example.dash.ui.dashboard.Viewpager.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
