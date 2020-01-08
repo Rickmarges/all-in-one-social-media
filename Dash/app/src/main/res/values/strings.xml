@@ -1,27 +1,33 @@
 <resources>
     <string name="app_name">Dash</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+
+    <!-- Strings related to multiple layouts -->
+    <string name="email">Email</string>
     <string name="action_login">Login</string>
-    <string name="action_login_short">log</string>
-    <string name="back">Back</string>
-    <string name="confirm_password">Confirm Password</string>
     <string name="password">Password</string>
     <string name="dash_logo">Dash Logo</string>
-    <string name="action_register">Register</string>
+    <string name="register_btn">Register</string>
+    <string name="settings">Settings</string>
+    <string name="account">Account</string>
+
+    <!-- String only related to login -->
+    <string name="forgot_password">Forgot Password?</string>
+
+    <!-- String only related to register -->
+    <string name="back">Back</string>
+    <string name="confirm_password">Confirm Password</string>
+
+    <!-- Strings related to tabs -->
     <string name="dash">Dash</string>
     <string name="reddit">Reddit</string>
     <string name="twitter">Twitter</string>
-
-    <string name="settings">Settings</string>
-    <string name="account">Account</string>
-    <string name="sign_out">Sign Out</string>
     <string name="trends">Trends</string>
-    <string name="addReddit">Add a Reddit Account</string>
-    <string name="readMore">Read More..</string>
-    <string name="reset_password">Reset Password</string>
-    <string name="forgotpwd">Forgot Password?</string>
-    <string name="resetPass">Reset Password</string>
+    <string name="sign_out">Sign Out</string>
 
+    <!-- String only related to account -->
+    <string name="add_reddit">Add a Reddit Account</string>
+    <string name="reset_password">Reset Password</string>
+
+    <!-- String only related to reddit -->
+    <string name="read_more">Read More..</string>
 </resources>

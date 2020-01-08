@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="37dp"
         android:layout_marginTop="28dp"
-        android:text="@string/addReddit"
+        android:text="@string/add_reddit"
         android:textColor="@color/colorPrimary"
         android:textColorHighlight="@color/colorPrimaryDark"
         android:textSize="22sp"
@@ -86,7 +86,7 @@
         app:layout_constraintTop_toBottomOf="@+id/addReddit" />
 
     <ImageButton
-        android:id="@+id/addredditbtn"
+        android:id="@+id/add_reddit_btn"
         style="@style/Base.TextAppearance.AppCompat.Widget.Button"
         android:layout_width="56dp"
         android:layout_height="56dp"
@@ -131,7 +131,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/colorBackgroundSecondary"
-        android:text="@string/resetPass"
+        android:text="@string/reset_password"
         android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
