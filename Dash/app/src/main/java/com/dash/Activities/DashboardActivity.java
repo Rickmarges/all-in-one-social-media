@@ -160,14 +160,16 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void checkReddit() {
         try {
-            //TODO loop through usernames, encrypt them and then reauthenticate
-         //   DashApp.getTokenStore().getUsernames()
-
             SharedPreferences sharedPreferences = getSharedPreferences(getEncryptedEmail(), Context.MODE_PRIVATE);
             String redditUsername = sharedPreferences.getString("Reddit", "");
 
-            if (!redditUsername.equals("")) {
-                new ReauthenticationTask().execute(redditUsername);
+            for (int i = 0; i < DashApp.getTokenStore().getUsernames().size(); i++) {
+                String tempUser = DashApp.getTokenStore().getUsernames().get(i);
+                String tempString = encryptString(tempUser);
+
+                if (tempString.equals(redditUsername) && !tempUser.equals("")) {
+                    new ReauthenticationTask().execute(tempUser);
+                }
             }
         } catch (NullPointerException npe) {
             Log.w(getApplicationContext().toString(), "No such user found." + npe.getMessage());
