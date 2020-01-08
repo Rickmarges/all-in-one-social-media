@@ -22,7 +22,6 @@ public class DashFragment extends Fragment {
     private static DashFragment sInstance;
     private List<CardView> mRedditCardList = new ArrayList<>();
     private List<CardView> mTwitterCardList = new ArrayList<>();
-    private LinearLayout mLinearLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Nullable
@@ -46,14 +45,8 @@ public class DashFragment extends Fragment {
     public void onResume() {
         super.onResume();
         sInstance = this;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mLinearLayout != null) {
-            mLinearLayout.removeAllViews();
-        }
+        mRedditCardList.clear();
+        mTwitterCardList.clear();
     }
 
     private void updateCards() {
@@ -81,7 +74,7 @@ public class DashFragment extends Fragment {
     }
 
     private void createUI() {
-        mLinearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.dashLayout);
+        LinearLayout mLinearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.dashLayout);
         List<CardView> cardViewList = new ArrayList<>();
 
         if (mLinearLayout != null) {
@@ -107,7 +100,7 @@ public class DashFragment extends Fragment {
         }
 
         for (CardView cardView : cardViewList) {
-            mLinearLayout.addView(cardView);
+            Objects.requireNonNull(mLinearLayout).addView(cardView);
         }
         mSwipeRefreshLayout.setRefreshing(false);
     }

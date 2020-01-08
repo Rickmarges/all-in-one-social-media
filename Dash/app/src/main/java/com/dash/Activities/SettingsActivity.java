@@ -19,16 +19,13 @@ public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private ArrayAdapter<String> mCountryAdapter;
-    private static String[] sCountries = new String[]{"US", "GB", "NL"};
+    private static final String[] sCountries = new String[]{"US", "GB", "NL"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-        mCountryAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, sCountries);
-        createSpinners();
 
         init();
     }
@@ -42,8 +39,9 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mSharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
+        mCountryAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, sCountries);
         try {
-            mSharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
             int sortsSavedValue = mSharedPreferences.getInt("RedditSort", 0);
 
             String countrySavedValue = mSharedPreferences.getString("Country", "NL");
@@ -57,6 +55,8 @@ public class SettingsActivity extends AppCompatActivity {
             mCountrySpinner.setSelection(0);
             Log.w(getApplicationContext().toString(), "Couldn't load preferences: " + ise.getMessage());
         }
+
+        createSpinners();
     }
 
     private void createSpinners() {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundPrimary"
     android:backgroundTint="@color/colorBackgroundPrimary"
-    tools:context=".ui.account.AddRedditAccount">
+    tools:context=".Activities.AddRedditAccountActivity">
 
     <ProgressBar
         android:id="@+id/addedAccount"

@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.R;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -27,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button mLoginBtn, mRegisterBtn, mForgotBtn;
     private ProgressBar mProgressBar;
     private FirebaseAuth mFirebaseAuth;
-    private FirebaseAnalytics mFirebaseAnalytics;
     private int mBackCounter;
     private long mStartTime;
 
@@ -39,9 +37,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Obtain the Firebase Authentication instance
         mFirebaseAuth = FirebaseAuth.getInstance();
-
-        // Obtain the FirebaseAnalytics instance
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mBackCounter = 0;
 

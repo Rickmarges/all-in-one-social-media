@@ -8,7 +8,6 @@ import net.dean.jraw.android.ManifestAppInfoProvider;
 import net.dean.jraw.android.SharedPreferencesTokenStore;
 import net.dean.jraw.http.NoopHttpLogger;
 import net.dean.jraw.oauth.AccountHelper;
-import net.dean.jraw.oauth.TokenStore;
 
 import java.util.UUID;
 

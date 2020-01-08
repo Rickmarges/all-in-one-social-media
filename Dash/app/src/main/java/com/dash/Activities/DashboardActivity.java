@@ -127,6 +127,15 @@ public class DashboardActivity extends AppCompatActivity {
             Log.w(getApplicationContext().toString(), "No Reddit views to delete." + npe.getMessage());
         }
 
+        try {
+            LinearLayout linearLayout = findViewById(R.id.dashLayout);
+            linearLayout.removeAllViews();
+        } catch (NullPointerException npe) {
+            Log.w(getApplicationContext().toString(), "No views in dashboard to delete." + npe.getMessage());
+        }
+
+        DashApp.getAccountHelper().logout();
+
         startActivity(new Intent(this, LoginActivity.class));
     }
 
@@ -169,6 +178,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                 if (tempString.equals(redditUsername) && !tempUser.equals("")) {
                     new ReauthenticationTask().execute(tempUser);
+                    return;
                 }
             }
         } catch (NullPointerException npe) {

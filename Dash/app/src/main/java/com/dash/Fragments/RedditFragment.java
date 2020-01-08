@@ -68,12 +68,6 @@ public class RedditFragment extends Fragment {
         updateReddit();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mLinearLayout.removeAllViews();
-    }
-
     void updateReddit() {
         if (DashApp.getAccountHelper().isAuthenticated()) {
             new GetRedditFrontpage().execute();
