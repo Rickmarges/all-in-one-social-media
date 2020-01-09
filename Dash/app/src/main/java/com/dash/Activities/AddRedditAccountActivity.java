@@ -1,3 +1,23 @@
+/*
+ * Copyright 2019 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Furthermore this project is licensed under the firebase.google.com/terms and
+ * firebase.google.com/terms/crashlytics.
+ *
+ */
+
 package com.dash.Activities;
 
 import android.app.Activity;
@@ -18,41 +38,65 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dash.DashApp;
 import com.dash.R;
 
+import java.lang.ref.WeakReference;
+
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
-import java.lang.ref.WeakReference;
+/**
+ * This activity is for adding a reddit account to your Dash account. It will open a new activity
+ * containing a WebView that opens a Authentication URL provided by JRAW. With this authentication
+ * URL you can sign in to your reddit account and link it to your Dash account. This activity will
+ * be destroyed and will not be accessible again.
+ */
 
 public class AddRedditAccountActivity extends AppCompatActivity {
-    private WebView mWebView;
     private ProgressBar mProgressBar;
+    private WebView mWebView;
 
+    /**
+     * Creation of the view in the activity.
+     *
+     * @param savedInstanceState saved instance of this activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reddit_account);
 
+        // Initialize UI parts
         init();
     }
 
+    /**
+     * When the activity is created the WebView with the reddit authentication is shown.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         createWebView();
     }
 
-    // An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.
+    /**
+     * An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.
+     */
     class AuthenticateTask extends AsyncTask<String, Void, Boolean> {
         // Use a WeakReference so that we don't leak a Context
-        private final WeakReference<Activity> mWeakReference;
         private final StatefulAuthHelper mStatefulAuthHelper;
+        private final WeakReference<Activity> mWeakReference;
 
         AuthenticateTask(Activity context, StatefulAuthHelper helper) {
-            this.mWeakReference = new WeakReference<>(context);
             this.mStatefulAuthHelper = helper;
+            this.mWeakReference = new WeakReference<>(context);
         }
 
+        /**
+         * The mStatefulAuthHelper is executed with the auth url provided by JRAW, if it fails an OAUTHException is reported.
+         *
+         * @param urls the authentication URL provided by JRAW
+         * @return success if authentication is succesfull and an OAUTHException if it isn't.
+         */
         @Override
         protected Boolean doInBackground(String... urls) {
             try {
@@ -64,6 +108,11 @@ public class AddRedditAccountActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         * An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.         *
+         *
+         * @param success boolean describing the result of the authentication
+         */
         @Override
         protected void onPostExecute(Boolean success) {
             if (mStatefulAuthHelper.getAuthStatus().equals(StatefulAuthHelper.Status.AUTHORIZED)) {
@@ -82,6 +131,9 @@ public class AddRedditAccountActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adds the reddit username to the shared preferences so it can be used. It first encrypts the username, then saves it.
+     */
     private void addSharedPreferences() {
         try {
             RedditClient redditClient = DashApp.getAccountHelper().getReddit();
@@ -101,6 +153,9 @@ public class AddRedditAccountActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.
+     */
     private void createWebView() {
         mWebView.clearCache(true);
         mWebView.clearHistory();
@@ -113,6 +168,14 @@ public class AddRedditAccountActivity extends AppCompatActivity {
 
         // Watch for pages loading
         mWebView.setWebViewClient(new WebViewClient() {
+
+            /**
+             * If the WebView has loaded the page the WebView stops loading and executes the authentication URL
+             *
+             * @param view The WebView
+             * @param url The authentication URL
+             * @param favicon The favicon
+             */
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 if (statefulAuthHelper.isFinalRedirectUrl(url)) {
@@ -137,6 +200,10 @@ public class AddRedditAccountActivity extends AppCompatActivity {
         mWebView.loadUrl(authorizationUrl);
     }
 
+    /**
+     * Initializes the WebView and ProgressBar in the layout and links them to their corresponding
+     * layout elements.
+     */
     private void init() {
         mProgressBar = findViewById(R.id.addedAccount);
         mWebView = findViewById(R.id.webview);
