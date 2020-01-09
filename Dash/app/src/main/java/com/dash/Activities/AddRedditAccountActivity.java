@@ -85,13 +85,19 @@ public class AddRedditAccountActivity extends AppCompatActivity {
     private void addSharedPreferences() {
         try {
             RedditClient redditClient = DashApp.getAccountHelper().getReddit();
-            String redditUsername = DashboardActivity.encryptString(redditClient.getAuthManager().currentUsername());
-            SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
+            String redditUsername = DashboardActivity.encryptString(redditClient
+                    .getAuthManager()
+                    .currentUsername());
+
+            SharedPreferences sharedPreferences = getSharedPreferences(
+                    DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
+
             editor.putString("Reddit", redditUsername);
             editor.apply();
         } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(), "Couldn't save preferences: " + npe.getMessage());
+            Log.w(getApplicationContext().toString(),
+                    "Couldn't save preferences: " + npe.getMessage());
         }
     }
 
@@ -115,7 +121,8 @@ public class AddRedditAccountActivity extends AppCompatActivity {
                     mWebView.setVisibility(View.GONE);
 
                     // Try to authenticate the user
-                    new AuthenticateTask(AddRedditAccountActivity.this, statefulAuthHelper).execute(url);
+                    new AuthenticateTask(AddRedditAccountActivity.this, statefulAuthHelper)
+                            .execute(url);
                     mProgressBar.setVisibility(View.VISIBLE);
                 }
             }
@@ -123,7 +130,8 @@ public class AddRedditAccountActivity extends AppCompatActivity {
 
         // Generate an authentication URL
         String[] scopes = new String[]{"read", "identity"};
-        String authorizationUrl = statefulAuthHelper.getAuthorizationUrl(true, true, scopes);
+        String authorizationUrl = statefulAuthHelper
+                .getAuthorizationUrl(true, true, scopes);
 
         // Finally, show the authorization URL to the user
         mWebView.loadUrl(authorizationUrl);

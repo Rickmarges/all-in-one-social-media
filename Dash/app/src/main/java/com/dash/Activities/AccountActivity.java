@@ -1,8 +1,10 @@
 package com.dash.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -19,7 +21,7 @@ public class AccountActivity extends AppCompatActivity {
     private TextView mEmailAccountTV;
     private ImageButton mRedditIB;
     private Button mResetBtn;
-    boolean secondClick;
+    private boolean secondClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +40,29 @@ public class AccountActivity extends AppCompatActivity {
 
         // Add an OnClickListener to the Reddit imagebutton
         // If the button is pressed it will send the user to the AddRedditAccountActivity
-        mRedditIB.setOnClickListener(view -> startActivity(new Intent(this, AddRedditAccountActivity.class)));
+        mRedditIB.setOnClickListener(view -> startActivity(new Intent(this,
+                AddRedditAccountActivity.class)));
 
         // Add an OnClickListener to the
         // If the button is pressed it will send the user to the AddRedditAccountActivity
+        Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
+
         mResetBtn.setOnClickListener(view -> {
-            mResetBtn.setText("Confirm");
+            if (!secondClick) {
+                mResetBtn.setText("Confirm");
+                mResetBtn.setAnimation(animShake);
+            }
             if (secondClick) {
-                firebaseAuth.sendPasswordResetEmail(Objects.requireNonNull(firebaseAuth.getCurrentUser().getEmail()))
+                firebaseAuth.sendPasswordResetEmail(Objects.requireNonNull(firebaseAuth
+                        .getCurrentUser()
+                        .getEmail()))
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Sent reset email!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Sent reset email!",
+                                        Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Error sending email.",
+                                        Toast.LENGTH_LONG).show();
                             }
                             mResetBtn.setText(R.string.reset_password);
                             secondClick = false;

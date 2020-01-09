@@ -40,10 +40,12 @@ public class ResetPasswordActivity extends AppCompatActivity {
             mFirebaseAuth.sendPasswordResetEmail(mEmailET.getText().toString())
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Sent reset email!", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(ResetPasswordActivity.this, LoginActivity.class));
+                            Toast.makeText(getApplicationContext(),
+                                    "Sent reset email!", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(this, LoginActivity.class));
                         } else {
-                            Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),
+                                    "Error sending email.", Toast.LENGTH_LONG).show();
                         }
                     });
         }

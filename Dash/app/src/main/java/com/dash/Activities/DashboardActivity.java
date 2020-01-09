@@ -63,7 +63,8 @@ public class DashboardActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mBackCounter < 1 || (System.currentTimeMillis() - mStartTime) / 1000 > 3) {
             mStartTime = System.currentTimeMillis();
-            Toast.makeText(getApplicationContext(), "Press again to exit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Press again to exit", Toast.LENGTH_SHORT)
+                    .show();
             mBackCounter++;
         } else {
             mBackCounter = 0;
@@ -117,21 +118,24 @@ public class DashboardActivity extends AppCompatActivity {
             LinearLayout linearLayout = findViewById(R.id.trendsLayout);
             linearLayout.removeAllViews();
         } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(), "No Trend views to delete." + npe.getMessage());
+            Log.w(getApplicationContext().toString(),
+                    "No Trend views to delete." + npe.getMessage());
         }
 
         try {
             LinearLayout linearLayout = findViewById(R.id.redditLayout);
             linearLayout.removeAllViews();
         } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(), "No Reddit views to delete." + npe.getMessage());
+            Log.w(getApplicationContext().toString(),
+                    "No Reddit views to delete." + npe.getMessage());
         }
 
         try {
             LinearLayout linearLayout = findViewById(R.id.dashLayout);
             linearLayout.removeAllViews();
         } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(), "No views in dashboard to delete." + npe.getMessage());
+            Log.w(getApplicationContext().toString(),
+                    "No views in dashboard to delete." + npe.getMessage());
         }
 
         DashApp.getAccountHelper().logout();
@@ -140,7 +144,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void popupMenu() {
-        PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, mMenuBtn);
+        PopupMenu popupMenu = new PopupMenu(this, mMenuBtn);
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -169,7 +173,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void checkReddit() {
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences(getEncryptedEmail(), Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences(getEncryptedEmail(),
+                    Context.MODE_PRIVATE);
+
             String redditUsername = sharedPreferences.getString("Reddit", "");
 
             for (int i = 0; i < DashApp.getTokenStore().getUsernames().size(); i++) {
@@ -182,7 +188,8 @@ public class DashboardActivity extends AppCompatActivity {
                 }
             }
         } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(), "No such user found." + npe.getMessage());
+            Log.w(getApplicationContext().toString(),
+                    "No such user found." + npe.getMessage());
         }
     }
 

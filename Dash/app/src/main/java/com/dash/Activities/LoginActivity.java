@@ -46,9 +46,11 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginBtn.setOnClickListener(view -> loginUserAccount());
 
-        mRegisterBtn.setOnClickListener(view -> startActivity(new Intent(this, RegisterActivity.class)));
+        mRegisterBtn.setOnClickListener(view -> startActivity(new Intent(this,
+                RegisterActivity.class)));
 
-        mForgotBtn.setOnClickListener(view -> startActivity(new Intent(this, ResetPasswordActivity.class)));
+        mForgotBtn.setOnClickListener(view -> startActivity(new Intent(this,
+                ResetPasswordActivity.class)));
     }
 
     @Override
@@ -61,7 +63,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mBackCounter < 1 || (System.currentTimeMillis() - mStartTime) / 1000 > 3) {
             mStartTime = System.currentTimeMillis();
-            Toast.makeText(getApplicationContext(), "Press again to exit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Press again to exit", Toast.LENGTH_SHORT)
+                    .show();
             mBackCounter++;
         } else {
             mBackCounter = 0;
@@ -103,14 +106,18 @@ public class LoginActivity extends AppCompatActivity {
                         if (checkVerified()) {
                             startActivity(new Intent(this, DashboardActivity.class));
                         } else {
-                            Toast.makeText(getApplicationContext(), "Email is not verified", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Email is not verified",
+                                    Toast.LENGTH_LONG)
+                                    .show();
                             mFirebaseAuth.signOut();
                             showButtons();
                         }
                     } else {
                         showButtons();
-                        Toast.makeText(getApplicationContext(), "Login failed! Please try again", Toast.LENGTH_LONG).show();
-                        Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
+                        Toast.makeText(getApplicationContext(), "Login failed! Please try again",
+                                Toast.LENGTH_LONG)
+                                .show();
+                        Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
                         mLoginBtn.startAnimation(animShake);
                     }
                 });
@@ -123,21 +130,21 @@ public class LoginActivity extends AppCompatActivity {
     private boolean checkValidFields(String email, String password) {
         if (TextUtils.isEmpty(email)) {
             mEmailET.setError("Required");
-            Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
+            Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
             mEmailET.startAnimation(animShake);
             mProgressBar.setVisibility(View.GONE);
             return true;
         }
         if (!email.contains("@") && !email.contains(".")) {
             mEmailET.setError("Please enter a valid email");
-            Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
+            Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
             mEmailET.startAnimation(animShake);
             mProgressBar.setVisibility(View.GONE);
             return true;
         }
         if (TextUtils.isEmpty(password)) {
             mPasswordET.setError("Required");
-            Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
+            Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
             mPasswordET.startAnimation(animShake);
             mProgressBar.setVisibility(View.GONE);
             return true;

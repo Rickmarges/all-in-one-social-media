@@ -36,23 +36,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         init();
 
-        mRegBtn.setOnClickListener(view -> {
-            mEmail = mEmailET.getText().toString();
-            mPassword = mPasswordET.getText().toString();
-            mPasswordCheck = mPasswordCheckET.getText().toString();
+        mRegBtn.setOnClickListener(view -> registerNewUser());
 
-            if (mPassword.equals(mPasswordCheck)) {
-                registerNewUser();
-            } else {
-                Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
-                mPasswordET.setError("Doesn't match");
-                mPasswordCheckET.setError("Doesn't match");
-                mPasswordET.startAnimation(animShake);
-                mPasswordCheckET.startAnimation(animShake);
-            }
-        });
-
-        mLoginBtn.setOnClickListener(view -> startActivity(new Intent(this, LoginActivity.class)));
+        mLoginBtn.setOnClickListener(view ->
+                startActivity(new Intent(this, LoginActivity.class)));
     }
 
     @Override
@@ -65,9 +52,11 @@ public class RegisterActivity extends AppCompatActivity {
         Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).sendEmailVerification()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Verification sent", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                "Verification sent", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "Failed to send verification", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),
+                                "Failed to send verification", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -75,7 +64,12 @@ public class RegisterActivity extends AppCompatActivity {
     private void registerNewUser() {
         mProgressBar.setVisibility(View.VISIBLE);
 
+        mEmail = mEmailET.getText().toString();
+        mPassword = mPasswordET.getText().toString();
+        mPasswordCheck = mPasswordCheckET.getText().toString();
+
         if (checkValidFields()) {
+            mProgressBar.setVisibility(View.GONE);
             return;
         }
 
@@ -86,8 +80,10 @@ public class RegisterActivity extends AppCompatActivity {
                         sendEmailVerification();
                         startActivity(new Intent(this, LoginActivity.class));
                     } else {
-                        Toast.makeText(getApplicationContext(), "Registration failed! Please try again later", Toast.LENGTH_LONG).show();
-                        Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
+                        Toast.makeText(getApplicationContext(),
+                                "Registration failed! Please try again later", Toast.LENGTH_LONG)
+                                .show();
+                        Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
                         mRegBtn.startAnimation(animShake);
                         mProgressBar.setVisibility(View.GONE);
                     }
@@ -95,39 +91,37 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean checkValidFields() {
-        if (TextUtils.isEmpty(mEmailET.getText().toString())) {
+        Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
+        if (TextUtils.isEmpty(mEmail)) {
             mEmailET.setError("Required");
-            Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
             mEmailET.startAnimation(animShake);
-            mProgressBar.setVisibility(View.GONE);
             return true;
         }
-        if (!mEmailET.getText().toString().contains("@") && !mEmailET.getText().toString().contains(".")) {
+        if (!mEmail.contains("@") && !mEmail.contains(".")) {
             mEmailET.setError("Please enter a valid email");
-            Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
             mEmailET.startAnimation(animShake);
-            mProgressBar.setVisibility(View.GONE);
             return true;
         }
-        if (TextUtils.isEmpty(mPasswordET.getText().toString())) {
+        if (TextUtils.isEmpty(mPassword)) {
             mPasswordET.setError("Required");
-            Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
             mPasswordET.startAnimation(animShake);
-            mProgressBar.setVisibility(View.GONE);
             return true;
         }
-        if (mPasswordET.getText().toString().length() < 6) {
+        if (mPassword.length() < 6) {
             mPasswordET.setError("Minimum password length is 6");
-            Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
             mPasswordET.startAnimation(animShake);
-            mProgressBar.setVisibility(View.GONE);
             return true;
         }
-        if (TextUtils.isEmpty(mPasswordCheckET.getText().toString())) {
+        if (TextUtils.isEmpty(mPasswordCheck)) {
             mPasswordCheckET.setError("Required");
-            Animation animShake = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.hshake);
             mPasswordCheckET.startAnimation(animShake);
-            mProgressBar.setVisibility(View.GONE);
+            return true;
+        }
+        if (!mPassword.equals(mPasswordCheck)) {
+            mPasswordET.setError("Doesn't match");
+            mPasswordCheckET.setError("Doesn't match");
+            mPasswordET.startAnimation(animShake);
+            mPasswordCheckET.startAnimation(animShake);
             return true;
         }
         return false;
