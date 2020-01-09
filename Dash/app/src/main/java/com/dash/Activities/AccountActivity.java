@@ -1,3 +1,23 @@
+/*
+ * Copyright 2019 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Furthermore this project is licensed under the firebase.google.com/terms and
+ * firebase.google.com/terms/crashlytics.
+ *
+ */
+
 package com.dash.Activities;
 
 import android.content.Intent;
@@ -14,11 +34,23 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
-public class AccountActivity extends AppCompatActivity {
-    private TextView mEmailAccountTV;
-    private ImageButton mRedditIB;
-    private Button mResetBtn;
+/**
+ * This activity is for showing which accounts are linked to the Dash account, it shows the
+ * Email from the FirebaseUser and links to pages that let you add different social media accounts.
+ */
 
+public class AccountActivity extends AppCompatActivity {
+    private Button mResetBtn;
+    private ImageButton mRedditIB;
+    private TextView mEmailAccountTV;
+
+
+    /**
+     * Creation of the view in the activity, fills textview with FirebaseUser email, and sets
+     * onClickListeners for buttons that let you add social media accounts to your Dash account.
+     *
+     * @param savedInstanceState saved instance of this activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +68,9 @@ public class AccountActivity extends AppCompatActivity {
         // If the button is pressed it will send the user to the AddRedditAccountActivity
         mRedditIB.setOnClickListener(view -> startActivity(new Intent(this, AddRedditAccountActivity.class)));
 
-        // Add an OnClickListener to the
-        // If the button is pressed it will send the user to the AddRedditAccountActivity
+        // Add an OnClickListener to the sendPasswordRessetEmail
+        // If the button is pressed it will send the user to a reset email and it shows a popup if
+        // it succeeds and another popup if it fails
         mResetBtn.setOnClickListener(view -> firebaseAuth.sendPasswordResetEmail(Objects.requireNonNull(firebaseAuth.getCurrentUser().getEmail()))
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -48,11 +81,20 @@ public class AccountActivity extends AppCompatActivity {
                 }));
     }
 
+    /**
+     * When back button is pressed the standard animation is overridden to show our custom animation.
+     */
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+
+    /**
+     * Initializes the TextViews and Buttons in the layout and links them to their corresponding
+     * layout elements.
+     */
 
     private void init() {
         mRedditIB = findViewById(R.id.add_reddit_btn);
