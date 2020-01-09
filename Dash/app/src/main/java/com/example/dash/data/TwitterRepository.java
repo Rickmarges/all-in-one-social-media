@@ -120,4 +120,8 @@ public class TwitterRepository extends AppCompatActivity {
             }
         });
     }
+
+    static public long getCurrentUserId(){
+        return TwitterRepository.TwitterSingleton.getActiveSession().getUserId();
+    }
 }
