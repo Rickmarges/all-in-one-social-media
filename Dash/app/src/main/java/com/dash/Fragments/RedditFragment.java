@@ -208,7 +208,7 @@ public class RedditFragment extends Fragment {
         }
         return linearLayout;
     }
-
+    
     private CardView createCardView(Submission submission) {
         CardView cardView = new CardView(Objects.requireNonNull(getContext()));
         cardView.setCardBackgroundColor(getResources().getColor(R.color.colorBackgroundSecondary, null));
@@ -216,6 +216,7 @@ public class RedditFragment extends Fragment {
         cardView.setUseCompatPadding(true);
         cardView.setCardElevation(7);
         cardView.setRadius(15);
+        cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.reddit.com" + submission.getPermalink()))));
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();

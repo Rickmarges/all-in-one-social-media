@@ -2,6 +2,7 @@ package com.dash.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ public class AccountActivity extends AppCompatActivity {
     private TextView mEmailAccountTV;
     private ImageButton mRedditIB;
     private Button mResetBtn;
+    boolean secondClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class AccountActivity extends AppCompatActivity {
 
         // Initialize UI parts
         init();
+
+        secondClick = false;
 
         // Get user email and encrypt that email so it can be used for storage
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -38,14 +42,22 @@ public class AccountActivity extends AppCompatActivity {
 
         // Add an OnClickListener to the
         // If the button is pressed it will send the user to the AddRedditAccountActivity
-        mResetBtn.setOnClickListener(view -> firebaseAuth.sendPasswordResetEmail(Objects.requireNonNull(firebaseAuth.getCurrentUser().getEmail()))
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Sent reset email!", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_LONG).show();
-                    }
-                }));
+        mResetBtn.setOnClickListener(view -> {
+            mResetBtn.setText("Confirm");
+            if (secondClick) {
+                firebaseAuth.sendPasswordResetEmail(Objects.requireNonNull(firebaseAuth.getCurrentUser().getEmail()))
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "Sent reset email!", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_LONG).show();
+                            }
+                            mResetBtn.setText(R.string.reset_password);
+                            secondClick = false;
+                        });
+            }
+            secondClick = true;
+        });
     }
 
     @Override
