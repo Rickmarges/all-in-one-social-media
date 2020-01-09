@@ -13,8 +13,9 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarThumbVertical="@color/colorPrimaryDark"
-            android:scrollbarTrackVertical="@color/colorBackgroundSecondary">
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbarThumbVertical="@drawable/scrollbar"
+            android:scrollbars="vertical">
 
             <LinearLayout
                 android:id="@+id/dashLayout"

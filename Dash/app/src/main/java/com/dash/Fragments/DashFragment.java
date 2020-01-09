@@ -23,6 +23,7 @@ public class DashFragment extends Fragment {
     private List<CardView> mRedditCardList = new ArrayList<>();
     private List<CardView> mTwitterCardList = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private LinearLayout mLinearLayout;
 
     @Nullable
     @Override
@@ -37,6 +38,8 @@ public class DashFragment extends Fragment {
         // Change colours of bar and background to match style
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
+
+        mLinearLayout = Objects.requireNonNull(rootView.findViewById(R.id.dashLayout));
 
         return rootView;
     }
@@ -74,7 +77,6 @@ public class DashFragment extends Fragment {
     }
 
     private void createUI() {
-        LinearLayout mLinearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.dashLayout);
         List<CardView> cardViewList = new ArrayList<>();
 
         if (mLinearLayout != null) {
@@ -100,7 +102,9 @@ public class DashFragment extends Fragment {
         }
 
         for (CardView cardView : cardViewList) {
-            Objects.requireNonNull(mLinearLayout).addView(cardView);
+            if (cardView.getParent() == null) {
+                Objects.requireNonNull(mLinearLayout).addView(cardView);
+            }
         }
         mSwipeRefreshLayout.setRefreshing(false);
     }
