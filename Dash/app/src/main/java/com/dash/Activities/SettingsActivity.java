@@ -1,3 +1,23 @@
+/*
+ * Copyright 2019 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Furthermore this project is licensed under the firebase.google.com/terms and
+ * firebase.google.com/terms/crashlytics.
+ *
+ */
+
 package com.dash.Activities;
 
 import android.app.Application;
@@ -14,6 +34,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.R;
 
+/**
+ * This activity is for showing the current settings of the account and for changing these settings.
+ */
+
 public class SettingsActivity extends AppCompatActivity {
 
     private Spinner mSortingSpinner, mCountrySpinner;
@@ -22,21 +46,35 @@ public class SettingsActivity extends AppCompatActivity {
     private ArrayAdapter<String> mCountryAdapter;
     private static final String[] sCountries = new String[]{"US", "GB", "NL"};
 
+    /**
+     * Creation of the view in the activity.
+     *
+     * @param savedInstanceState saved instance of this activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
+        //Initialize UI parts
         init();
     }
 
+    /**
+     * If the back button is pressed the app will return to the previous activity.
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
+    /**
+     * Sets the dropdown menus to a default selection if none was saved before.
+     * Saves the selection to the users account.
+     */
+    //TODO comments in the method
     @Override
     protected void onResume() {
         super.onResume();
@@ -63,6 +101,10 @@ public class SettingsActivity extends AppCompatActivity {
         createSpinners();
     }
 
+    /**
+     * Creates the options which you can choose in the dropdown menus.
+     */
+    //TODO comments in the method
     private void createSpinners() {
         mEditor = mSharedPreferences.edit();
 
@@ -118,6 +160,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes the Reddit sorting dropdown menu and the Country dropdown menu
+     * and links them to their corresponding layout elements.
+     */
     private void init() {
         mSortingSpinner = findViewById(R.id.spinnerRedditSort);
         mCountrySpinner = findViewById(R.id.spinnerCountry);
