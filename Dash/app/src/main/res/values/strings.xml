@@ -27,6 +27,7 @@
     <!-- String only related to account -->
     <string name="add_reddit">Add a Reddit Account</string>
     <string name="reset_password">Reset Password</string>
+    <string name="confirm">Confirm</string>
 
     <!-- String only related to reddit -->
     <string name="read_more">Read More..</string>

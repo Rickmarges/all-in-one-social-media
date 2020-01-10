@@ -224,7 +224,7 @@ public class DashboardActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(this, mMenuBtn);
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
 
-        // If the android version is Q+(10.0) it shows additional icons in the popupmenu.
+        // If the android version is equal or greater than Q (10.0) it shows additional icons in the popupmenu.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             popupMenu.setForceShowIcon(true);
         }

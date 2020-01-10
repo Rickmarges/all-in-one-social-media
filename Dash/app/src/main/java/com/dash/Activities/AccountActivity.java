@@ -80,7 +80,7 @@ public class AccountActivity extends AppCompatActivity {
 
         mResetBtn.setOnClickListener(view -> {
             if (!mSecondClick) {
-                mResetBtn.setText("Confirm");
+                mResetBtn.setText(R.string.confirm);
                 mResetBtn.setAnimation(animShake);
             }
             if (mSecondClick) {

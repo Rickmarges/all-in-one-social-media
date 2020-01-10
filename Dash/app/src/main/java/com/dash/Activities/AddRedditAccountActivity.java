@@ -38,11 +38,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dash.DashApp;
 import com.dash.R;
 
-import java.lang.ref.WeakReference;
-
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.oauth.StatefulAuthHelper;
+
+import java.lang.ref.WeakReference;
 
 /**
  * This activity is for adding a reddit account to your Dash account. It will open a new activity
