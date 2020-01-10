@@ -212,7 +212,7 @@ public class RedditFragment extends Fragment {
     private ImageView createImage(Submission submission) {
         // Insert path into Picasso to download image
         ImageView imageView = new ImageView(getContext());
-        Picasso.get().load(submission.getUrl()).into(imageView);
+        Picasso.with(this.getContext()).load(submission.getUrl()).into(imageView);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setPadding(10, 0, 10, 20);
         return imageView;
