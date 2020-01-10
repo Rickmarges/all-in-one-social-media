@@ -76,7 +76,8 @@ public class TrendsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_trends, container, false);
 
@@ -96,10 +97,13 @@ public class TrendsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         try {
-            SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity())
+                    .getSharedPreferences(DashboardActivity.getEncryptedEmail(),
+                            Context.MODE_PRIVATE);
             mCountryCode = sharedPreferences.getString("Country", "US");
         } catch (NullPointerException npe) {
-            Log.w(Objects.requireNonNull(getContext()).toString(), "Couldn't load preferences: " + npe.getMessage());
+            Log.w(Objects.requireNonNull(getContext()).toString(),
+                    "Couldn't load preferences: " + npe.getMessage());
         }
         updateRss();
     }
@@ -125,8 +129,10 @@ public class TrendsFragment extends Fragment {
                 nodes = node.getChildNodes();
 
                 rssItems = createRssItems(nodes);
-            } catch (ParserConfigurationException | IOException | NullPointerException | SAXException e) {
+            } catch (ParserConfigurationException | IOException | SAXException e) {
                 rssItems = null;
+                Log.w(Objects.requireNonNull(getContext()).toString(),
+                        "Unable to parse RSS: " + e.getMessage());
             }
             return rssItems;
         }
@@ -136,8 +142,10 @@ public class TrendsFragment extends Fragment {
             try {
                 createCardUI(rssItems);
             } catch (NullPointerException npe) {
-                Log.w(Objects.requireNonNull(getContext()).toString(), "Error creating UI: " + npe.getMessage());
-                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Unable to update Google Trends", Toast.LENGTH_LONG).show();
+                Log.w(Objects.requireNonNull(getContext()).toString(),
+                        "Error creating UI: " + npe.getMessage());
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Unable to update Google Trends", Toast.LENGTH_LONG).show();
             }
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -147,7 +155,8 @@ public class TrendsFragment extends Fragment {
         try {
             new RssParser().execute(mBaseUrl + mCountryCode);
         } catch (NullPointerException npe) {
-            Log.w(Objects.requireNonNull(getContext()).toString(), "Unable to get RSS items: " + npe.getMessage());
+            Log.w(Objects.requireNonNull(getContext()).toString(),
+                    "Unable to get RSS items: " + npe.getMessage());
         }
     }
 
@@ -163,7 +172,8 @@ public class TrendsFragment extends Fragment {
             bufferedInputStream.close();
             inputStream.close();
         } catch (IOException ioe) {
-            Log.w(Objects.requireNonNull(getContext()).toString(), "Error getting bitmap: " + ioe.getMessage());
+            Log.w(Objects.requireNonNull(getContext()).toString(),
+                    "Error getting bitmap: " + ioe.getMessage());
         }
         return bitmap;
     }
@@ -187,15 +197,19 @@ public class TrendsFragment extends Fragment {
                     if (tempNode.getNodeName().equals("ht:news_item")) {
                         Node newsNode = tempNode.getFirstChild();
                         while (newsNode.getNextSibling() != null) {
-                            if (newsNode.getNodeName().equals("ht:news_item_title") && rssItem.getDescription().equals("")) {
+                            if (newsNode.getNodeName().equals("ht:news_item_title")
+                                    && rssItem.getDescription().equals("")) {
                                 String description = newsNode.getFirstChild().getNodeValue();
-                                description = Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY).toString();
+                                description = Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY)
+                                        .toString();
                                 if (description.contains("<") && description.contains(">")) {
-                                    description = description.replaceAll("<[^>]*>", "");
+                                    description = description
+                                            .replaceAll("<[^>]*>", "");
                                 }
                                 rssItem.setDescription(description);
                             }
-                            if (newsNode.getNodeName().equals("ht:news_item_url") && rssItem.getLink().equals("")) {
+                            if (newsNode.getNodeName().equals("ht:news_item_url")
+                                    && rssItem.getLink().equals("")) {
                                 rssItem.setLink(newsNode.getFirstChild().getNodeValue());
                             }
                             newsNode = newsNode.getNextSibling();
@@ -215,7 +229,8 @@ public class TrendsFragment extends Fragment {
      * @param rssItems The list of RssItems which will be parsed into CardViews.
      */
     private void createCardUI(List<RssItem> rssItems) {
-        LinearLayout linearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.trendsLayout);
+        LinearLayout linearLayout = Objects.requireNonNull(getActivity())
+                .findViewById(R.id.trendsLayout);
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
         }
@@ -247,7 +262,9 @@ public class TrendsFragment extends Fragment {
         textView.setText(description);
         textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
         textView.setPadding(15, 5, 220, 10);
-        textView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        textView.setLayoutParams(new RelativeLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         textView.setGravity(Gravity.BOTTOM);
         return textView;
     }
@@ -255,7 +272,8 @@ public class TrendsFragment extends Fragment {
     private ImageView createImage(Bitmap bitmap) {
         ImageView imageView = new ImageView(getContext());
         RelativeLayout.LayoutParams imageParams;
-        imageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        imageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
         imageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         imageView.setImageBitmap(bitmap);
         imageView.setLayoutParams(imageParams);
@@ -266,14 +284,17 @@ public class TrendsFragment extends Fragment {
 
     private CardView createCard(String link) {
         CardView cardView = new CardView(Objects.requireNonNull(getContext()));
-        cardView.setCardBackgroundColor(getResources().getColor(R.color.colorBackgroundSecondary, null));
-        cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        cardView.setCardBackgroundColor(getResources()
+                .getColor(R.color.colorBackgroundSecondary, null));
+        cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         cardView.setUseCompatPadding(true);
         cardView.setCardElevation(7);
         cardView.setRadius(15);
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
-        cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link))));
+        cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse(link))));
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
         layoutParams.height = 220;
         layoutParams.bottomMargin = 10;

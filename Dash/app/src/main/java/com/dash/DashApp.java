@@ -53,13 +53,14 @@ public final class DashApp extends Application {
         sharedPreferencesTokenStore.setAutoPersist(true);
 
         // An AccountHelper manages switching between accounts and into/out of userless mode.
-        sAccountHelper = AndroidHelper.accountHelper(appInfoProvider, deviceUuid, sharedPreferencesTokenStore);
+        sAccountHelper = AndroidHelper.accountHelper(appInfoProvider,
+                deviceUuid, sharedPreferencesTokenStore);
 
         // Every time we use the AccountHelper to switch between accounts (from one account to
         // another, or into/out of userless mode), call this function
         sAccountHelper.onSwitch(redditClient -> {
             // If you want to disable logging, use a NoopHttpLogger instead:
-             redditClient.setLogger(new NoopHttpLogger());
+            redditClient.setLogger(new NoopHttpLogger());
             return null;
         });
     }
@@ -68,7 +69,7 @@ public final class DashApp extends Application {
         return sAccountHelper;
     }
 
-    public static SharedPreferencesTokenStore getTokenStore(){
+    public static SharedPreferencesTokenStore getTokenStore() {
         return sharedPreferencesTokenStore;
     }
 }

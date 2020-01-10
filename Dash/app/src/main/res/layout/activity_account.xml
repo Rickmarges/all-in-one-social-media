@@ -107,6 +107,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/addReddit" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="108dp"
+        android:text="@string/addTwitter"
+        android:textColor="@color/colorPrimary"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addReddit" />
+
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/addtwitterbtn"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addTwitter" />
+
+    <ImageButton
+        android:id="@+id/removetwitterbtn"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="54dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="76dp"
+        android:backgroundTint="@color/colorBackgroundSecondary"
+        android:contentDescription="@string/reddit"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addReddit"
+        app:srcCompat="@drawable/trash" />
+
     <View
         android:id="@+id/addTrends"
         android:layout_width="wrap_content"

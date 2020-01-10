@@ -64,7 +64,8 @@ public class RedditFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_reddit, container, false);
 
@@ -113,7 +114,9 @@ public class RedditFragment extends Fragment {
         @Override
         protected List<Submission> doInBackground(String... params) {
             try {
-                SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity())
+                        .getSharedPreferences(DashboardActivity
+                                .getEncryptedEmail(), Context.MODE_PRIVATE);
                 int savedValue = sharedPreferences.getInt("RedditSort", 0);
 
                 // frontPage() returns a Paginator.Builder
@@ -125,7 +128,8 @@ public class RedditFragment extends Fragment {
                 return frontPage.next();
             } catch (NullPointerException npe) {
                 // Report failure if an Exception occurs
-                Log.w(Objects.requireNonNull(getContext()).toString(), "Couldn't load preferences: " + npe.getMessage());
+                Log.w(Objects.requireNonNull(getContext()).toString(),
+                        "Couldn't load preferences: " + npe.getMessage());
                 return null;
             }
         }
@@ -196,18 +200,19 @@ public class RedditFragment extends Fragment {
         return textView;
     }
 
-    private View createDivider(){
+    private View createDivider() {
         // Style end enable divider
         View view = new View(getContext());
-        view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5));
+        view.setLayoutParams(new LinearLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5));
         view.setBackgroundResource(R.color.colorBackgroundPrimary);
         return view;
     }
 
-    private ImageView createImage(Submission submission){
+    private ImageView createImage(Submission submission) {
         // Insert path into Picasso to download image
         ImageView imageView = new ImageView(getContext());
-        Picasso.get().load(submission.getUrl()).into(imageView);
+        Picasso.with(this.getContext()).load(submission.getUrl()).into(imageView);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setPadding(10, 0, 10, 20);
         return imageView;
@@ -228,17 +233,20 @@ public class RedditFragment extends Fragment {
         }
         return linearLayout;
     }
-    
+
     private CardView createCardView(Submission submission) {
         CardView cardView = new CardView(Objects.requireNonNull(getContext()));
-        cardView.setCardBackgroundColor(getResources().getColor(R.color.colorBackgroundSecondary, null));
-        cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        cardView.setCardBackgroundColor(getResources()
+                .getColor(R.color.colorBackgroundSecondary, null));
+        cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         cardView.setUseCompatPadding(true);
         cardView.setCardElevation(7);
         cardView.setRadius(15);
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
-        cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.reddit.com" + submission.getPermalink()))));
+        cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.reddit.com" + submission.getPermalink()))));
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
         layoutParams.bottomMargin = 10;
         cardView.addView(createCardLayout(submission));
