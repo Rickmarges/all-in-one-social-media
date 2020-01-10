@@ -16,6 +16,7 @@ import com.example.dash.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DashFragment extends Fragment {
     private static DashFragment instance;
@@ -31,8 +32,6 @@ public class DashFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_dash, container, false);
 
-        linearLayout = rootView.findViewById(R.id.dashLayout);
-
         swipeLayout = rootView.findViewById(R.id.swipe);
         swipeLayout.setOnRefreshListener(this::updateCards);
 
@@ -46,7 +45,6 @@ public class DashFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        createUI();
         instance = this;
     }
 
@@ -58,7 +56,12 @@ public class DashFragment extends Fragment {
 
     private void updateCards() {
         RedditFragment.getInstance().updateReddit();
-        TwitterFragment.getInstance().update();
+
+        TwitterFragment twitterFragment = TwitterFragment.getInstance();
+        if (twitterFragment == null) {
+            twitterFragment = new TwitterFragment();
+        }
+        twitterFragment.updateTwitter();
     }
 
     void setRedditCards(List<CardView> redditCards) {
@@ -68,18 +71,19 @@ public class DashFragment extends Fragment {
 
     void setTwitterCards(List<CardView> twitterCards) {
         this.twitterCards = twitterCards;
+        createUI();
     }
 
     private void createUI() {
+        linearLayout = getActivity().findViewById(R.id.dashLayout);
         List<CardView> allCards = new ArrayList<>();
 
         if (linearLayout == null) {
-            linearLayout = getActivity().findViewById(R.id.dashLayout);
+            linearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.dashLayout);
         }
 
         if (linearLayout.getChildCount() > 0) {
             linearLayout.removeAllViews();
-            allCards.clear();
         }
 
         if (redditCards.size() == 0 && twitterCards.size() == 0) {

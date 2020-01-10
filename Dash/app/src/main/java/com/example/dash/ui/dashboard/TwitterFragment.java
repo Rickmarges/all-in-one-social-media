@@ -170,5 +170,7 @@ public class TwitterFragment extends Fragment {
 
     public void update() {
 
+    void updateTwitter(){
+
     }
 }

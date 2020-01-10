@@ -36,26 +36,22 @@
             app:tabTextColor="@color/colorPrimaryDark">
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/dash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dash" />
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/reddit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/reddit"
                 android:visibility="gone"/>
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/twitter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/twitter" />
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/trends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/trends" />

@@ -14,7 +14,8 @@
         android:noHistory="true"
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="@xml/backup_descriptor">
         <meta-data
             android:name="net.dean.jraw.android.REDDIT_USERNAME"
             android:value="geruth" />

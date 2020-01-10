@@ -9,8 +9,8 @@
     </style>
 
     <style name="strokeColor">
-        <item name="android:paddingLeft">4px</item>
-        <item name="android:paddingBottom">4px</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">20sp</item>
         <item name="android:shadowColor">#000000</item>

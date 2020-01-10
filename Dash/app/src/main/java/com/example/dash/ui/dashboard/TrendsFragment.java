@@ -70,15 +70,10 @@ public class TrendsFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         try {
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(((DashboardActivity) getActivity()).getEncryptedEmail(), Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(DashboardActivity.getEncryptedEmail(), Context.MODE_PRIVATE);
             countryCode = sharedPreferences.getString("Country", "US");
         } catch (Exception e) {
             Log.d("Warning", "Couldn't load preferences!");
@@ -215,7 +210,6 @@ public class TrendsFragment extends Fragment {
 
             String description = rssItem.getDescription();
             description = description.substring(0, 1).toUpperCase() + description.substring(1);
-            ;
 
             textViewDesc.setText(description);
             textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));

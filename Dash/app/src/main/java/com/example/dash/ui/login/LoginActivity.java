@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         if (backCounter < 1 || (System.currentTimeMillis() - startTime) / 1000 > 3) {
             startTime = System.currentTimeMillis();
             Toast.makeText(getApplicationContext(), "Press again to exit", Toast.LENGTH_SHORT).show();
@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         backCounter = 0;
     }
@@ -111,28 +111,27 @@ public class LoginActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             return;
         }
-        
+
         hideButtons();
 
         mAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(task -> {
-                progressBar.setVisibility(View.GONE);
-                if (task.isSuccessful()) {
-                    if (Objects.requireNonNull(mAuth.getCurrentUser()).isEmailVerified()) {
-                        startActivity(new Intent(this, DashboardActivity.class));
+                .addOnCompleteListener(task -> {
+                    progressBar.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        if (Objects.requireNonNull(mAuth.getCurrentUser()).isEmailVerified()) {
+                            startActivity(new Intent(this, DashboardActivity.class));
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Email is not verified", Toast.LENGTH_LONG).show();
+                            mAuth.signOut();
+                            showButtons();
+                        }
                     } else {
-                        Toast.makeText(getApplicationContext(), "Email is not verified", Toast.LENGTH_LONG).show();
-                        mAuth.signOut();
                         showButtons();
+                        Toast.makeText(getApplicationContext(), "Login failed! Please try again", Toast.LENGTH_LONG).show();
+                        Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
+                        loginBtn.startAnimation(animShake);
                     }
-                } else {
-                    showButtons();
-                    Toast.makeText(getApplicationContext(), "Login failed! Please try again", Toast.LENGTH_LONG).show();
-                    Animation animShake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.hshake);
-                    loginBtn.startAnimation(animShake);
-                }
-            }
-        );
+                });
     }
 
     private void initializeUI() {
@@ -145,13 +144,13 @@ public class LoginActivity extends AppCompatActivity {
         showButtons();
     }
 
-    private void hideButtons(){
+    private void hideButtons() {
         loginBtn.setVisibility(View.GONE);
         registerBtn.setVisibility(View.GONE);
         forgotBtn.setVisibility(View.GONE);
     }
 
-    private void showButtons(){
+    private void showButtons() {
         loginBtn.setVisibility(View.VISIBLE);
         registerBtn.setVisibility(View.VISIBLE);
         forgotBtn.setVisibility(View.VISIBLE);
