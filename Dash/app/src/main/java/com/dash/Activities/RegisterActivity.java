@@ -38,6 +38,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
+/**
+ * Creates the register activity to register an account for Dash.
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText mEmailET, mPasswordET, mPasswordCheckET;
@@ -46,6 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private String mEmail, mPassword, mPasswordCheck;
 
+    /**
+     * Creates this activity, the register page.
+     * @param savedInstanceState saved instance of this activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +69,18 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(new Intent(this, LoginActivity.class)));
     }
 
+    /**
+     * Returns to the previous activity if the back button is pressed.
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(this, LoginActivity.class));
     }
 
+    /**
+     * Sends a verification email to the registered mail.
+     */
     private void sendEmailVerification() {
         Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).sendEmailVerification()
                 .addOnCompleteListener(task -> {
@@ -81,6 +94,9 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Registers the new user into the Firebase Authentication
+     */
     private void registerNewUser() {
         mProgressBar.setVisibility(View.VISIBLE);
 
@@ -93,6 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        //Creates the user in the Firebase Authentication
         mFirebaseAuth.createUserWithEmailAndPassword(mEmail, mPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -110,33 +127,44 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Checks if the register fields are valid.
+     * @return Returns true if all the fields are valid and false if one of the fields does not
+     * meet the requirements.
+     */
     private boolean checkValidFields() {
         Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
+        //Check if the email field is not empty
         if (TextUtils.isEmpty(mEmail)) {
             mEmailET.setError("Required");
             mEmailET.startAnimation(animShake);
             return true;
         }
+        //Check if the email contains an at sign and a dot
         if (!mEmail.contains("@") && !mEmail.contains(".")) {
             mEmailET.setError("Please enter a valid email");
             mEmailET.startAnimation(animShake);
             return true;
         }
+        //Check if the password field is not empty
         if (TextUtils.isEmpty(mPassword)) {
             mPasswordET.setError("Required");
             mPasswordET.startAnimation(animShake);
             return true;
         }
+        //Check if the password is more than six characters long
         if (mPassword.length() < 6) {
             mPasswordET.setError("Minimum password length is 6");
             mPasswordET.startAnimation(animShake);
             return true;
         }
+        //Check if the password check field is not empty
         if (TextUtils.isEmpty(mPasswordCheck)) {
             mPasswordCheckET.setError("Required");
             mPasswordCheckET.startAnimation(animShake);
             return true;
         }
+        //Check is the password check field is the same as the password field
         if (!mPassword.equals(mPasswordCheck)) {
             mPasswordET.setError("Doesn't match");
             mPasswordCheckET.setError("Doesn't match");
@@ -147,6 +175,10 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Initializes the input fields and the buttons in the layout and links them to their
+     * corresponding layout elements.
+     */
     private void init() {
         mEmailET = findViewById(R.id.emailregister);
         mPasswordET = findViewById(R.id.passwordregister);

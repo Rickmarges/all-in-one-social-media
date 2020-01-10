@@ -34,11 +34,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dash.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Creates the reset password activity to reset the password for an account if the user forgot its password
+ */
 public class ResetPasswordActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private EditText mEmailET;
     private Button mResetPasswordBtn;
 
+    /**
+     * Creates this activity, the reset password activity.
+     * @param savedInstanceState saved instance of this activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +59,16 @@ public class ResetPasswordActivity extends AppCompatActivity {
         mResetPasswordBtn.setOnClickListener(view -> resetPassword());
     }
 
+    /**
+     * Reset the password and replaces the old password in Firebase with the new password
+     */
     private void resetPassword() {
+        //Check if the email field is left empty
         if (TextUtils.isEmpty(mEmailET.getText().toString())) {
             mEmailET.setError("Required");
             mEmailET.startAnimation(AnimationUtils.loadAnimation(this, R.anim.hshake));
         } else {
+            //Send the password reset email from Firebase
             mFirebaseAuth.sendPasswordResetEmail(mEmailET.getText().toString())
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -71,6 +83,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initializes the input field and the button in the layout and links them to their
+     * corresponding layout elements.
+     */
     private void init() {
         mResetPasswordBtn = findViewById(R.id.resetPassword);
         mEmailET = findViewById(R.id.emailReset);

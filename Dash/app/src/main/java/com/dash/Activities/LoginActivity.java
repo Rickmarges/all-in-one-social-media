@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Creates this activity, the login page.
-     * It checks if the login data is correct and then logs the user in.
+     * It checks if the user has logged in before, if true it logs the user in.
      * @param savedInstanceState saved instance of this activity
      */
     @Override
