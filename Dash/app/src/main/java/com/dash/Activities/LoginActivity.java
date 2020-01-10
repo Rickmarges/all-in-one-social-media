@@ -128,7 +128,6 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Logs the user in if the correct login data has been filled in.
      */
-    // TODO comments en aanpassen
     private void loginUserAccount() {
         mProgressBar.setVisibility(View.VISIBLE);
 
