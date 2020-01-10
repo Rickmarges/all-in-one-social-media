@@ -53,7 +53,7 @@ public class TwitterFragment extends Fragment {
 
         TwitterRepository.InitializeTwitter(getActivity().getApplicationContext());
         try {
-            TwitterRepository.TwitterSingleton.GetHomeTimeline(50, this);
+            TwitterRepository.GetSingleton().GetHomeTimeline(50, this);
         } catch (InterruptedException e) {
             Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT);
         }
@@ -71,7 +71,7 @@ public class TwitterFragment extends Fragment {
             linearLayout.removeAllViews();
         }
         for (Tweet tweet : tweets) {
-            if (tweet.user.id == TwitterRepository.getCurrentUserId()) continue;
+            //if (tweet.user.id == TwitterRepository.getCurrentUserId()) continue;
             linearLayout.addView(createCardView(tweet));
             cardList.add(createCardView(tweet));
         }

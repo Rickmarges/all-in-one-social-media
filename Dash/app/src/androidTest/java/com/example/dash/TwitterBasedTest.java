@@ -8,12 +8,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.dash.data.TwitterRepository;
 import com.twitter.sdk.android.core.SessionManager;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.internal.persistence.PreferenceStore;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +54,11 @@ public class TwitterBasedTest {
         session = getInstance().getSessionManager();
         session.setSession(123, twitterSession);
         session.setActiveSession(twitterSession);
+    }
+
+    @After
+    public void setDown(){
+        TwitterCore.getInstance().getSessionManager().clearActiveSession();
     }
 
     //Security tests

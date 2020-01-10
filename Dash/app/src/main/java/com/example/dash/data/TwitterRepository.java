@@ -129,12 +129,12 @@ public class TwitterRepository extends AppCompatActivity {
             public void failure(TwitterException exception) {
                 //clears the session
                 Toast.makeText(context, "Authentication failed try again...", Toast.LENGTH_SHORT).show();
-                TwitterRepository.TwitterSingleton.clearSession();
+                TwitterRepository.GetSingleton().clearSession();
             }
         });
     }
 
     static public long getCurrentUserId() {
-        return TwitterRepository.TwitterSingleton.getActiveSession().getUserId();
+        return TwitterRepository.GetSingleton().getActiveSession().getUserId();
     }
 }
