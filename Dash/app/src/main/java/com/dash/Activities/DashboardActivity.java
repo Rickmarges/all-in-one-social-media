@@ -48,8 +48,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 /**
- * This is the main Activity you see when you are currently authenticated as a FireBaseUser
- * It shows a tablayout of currenctly 4 tabs: Dash, Reddit, Twitter, Trends.
+ * Creates the main Activity you see when you are currently authenticated as a FireBaseUser
+ * It shows a tablayout of currently 4 tabs: Dash, Reddit, Twitter, Trends.
  * It displays a dropdown menu in the top right.
  * In this activity the authentication of the different social media account is checked.
  */
@@ -63,7 +63,7 @@ public class DashboardActivity extends AppCompatActivity {
     private static String sEncryptedEmail;
 
     /**
-     * The creation of this activity, The main Tab of the Dash app.
+     * Creates this activity, The main Tab of the Dash app.
      * It checks if you are authenticated. if you are not authenticated you will be redirected to the LoginActivity
      * If you are authenticated you will stay on this activity to navigate through the tabs and the dropdown menu in the top right.
      *
@@ -98,7 +98,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * If the back button is pressed twice in the span of 3 seconds the app will close.
+     * Closes the app if the back button is pressed twice in the span of 3 seconds.
      */
     @Override
     public void onBackPressed() {
@@ -114,7 +114,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * It returns the encrypted email from the currently authenticated FireBaseUser.
+     * Returns the encrypted email from the currently authenticated FireBaseUser.
      *
      * @return returns the encrypted email from the currently authenticated FireBaseUser
      * @throws IllegalStateException if the encyptedEmailString returns empty
@@ -148,7 +148,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Check if there is a authenticated FireBaseUser if there isn't redirect to LoginActivity
+     * Checks if there is a authenticated FireBaseUser if there isn't redirect to LoginActivity.
      */
     private void checkLoggedIn() {
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -158,14 +158,14 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Redirection to the Settings page when the button is clicked in the popupmenu.
+     * Redirects to the Settings page when the button is clicked in the popup menu.
      */
     private void settings() {
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
     /**
-     * Redirection to the Account page when the button is clicked in the popupmenu.
+     * Redirects to the Account page when the button is clicked in the popup menu.
      */
     private void account() {
         startActivity(new Intent(this, AccountActivity.class));
@@ -253,7 +253,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Check if the currently authenticated FireBaseUser is authenticated for reddit and when the user is,
+     * Checks if the currently authenticated FireBaseUser is authenticated for reddit and when the user is,
      * executes ReauthenticationTask
      */
     private void checkReddit() {
@@ -279,7 +279,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Aysnctask to retrieve the frontpage of the currently authenticated RedditUser to show the Reddit Frontpage on Dash
+     * Retrieves the frontpage of the currently authenticated RedditUser to show the Reddit Frontpage on Dash.
      */
     private static class ReauthenticationTask extends AsyncTask<String, Void, Void> {
         @Override
@@ -290,7 +290,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Method to encrypt a custom string
+     * Encrypts a custom string.
      *
      * @param string The string thats requires encrypting
      * @return Returns the string but encrypted, unless there is no string to encypt, or when this
