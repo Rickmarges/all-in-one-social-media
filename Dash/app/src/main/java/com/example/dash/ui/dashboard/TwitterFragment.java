@@ -51,8 +51,9 @@ public class TwitterFragment extends Fragment {
 
         instance = this;
 
+        TwitterRepository.InitializeTwitter(getActivity().getApplicationContext());
         try {
-            TwitterRepository.TwitterSingleton.GetHomeTimeline(20, this);
+            TwitterRepository.TwitterSingleton.GetHomeTimeline(50, this);
         } catch (InterruptedException e) {
             Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT);
         }
@@ -70,6 +71,7 @@ public class TwitterFragment extends Fragment {
             linearLayout.removeAllViews();
         }
         for (Tweet tweet : tweets) {
+            if (tweet.user.id == TwitterRepository.getCurrentUserId()) continue;
             linearLayout.addView(createCardView(tweet));
             cardList.add(createCardView(tweet));
         }
@@ -89,6 +91,7 @@ public class TwitterFragment extends Fragment {
         // Fill and style author
         String author = " By: @" + tweet.user.screenName;
         textViewInfo.append(author);
+
         // Parse the createdAt format to 'x ago'
         Date date = new Date();
         try {
@@ -106,18 +109,16 @@ public class TwitterFragment extends Fragment {
         textViewTitle.setText(tweet.user.name);
         textViewTitle.setTextAppearance(R.style.strokeColor);
         textViewTitle.setGravity(1);
-        //textViewTitle.setTextColor(getResources().getColor(R.color.colorPrimary, null));
         textViewTitle.setPadding(15, 5, 10, 0);
         textViewTitle.setTextSize(20);
 
         textViewDesc.setText(tweet.text);
         textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
-        textViewDesc.setPadding(25, 5, 150, 5);
+        textViewDesc.setPadding(25, 5, 150, 20);
         textViewDesc.setVerticalScrollBarEnabled(true);
-        textViewDesc.setHeight(250);
 
         // Insert path into Picasso to download image
-        //TODO: Imageloading, adapting to other media if needed
+        //TODO: Possibly adapting to other media if needed (videos etc)
         if (tweet.entities.media.size() != 0) {
             com.squareup.picasso.Picasso.with(this.getContext()).load(tweet.entities.media.get(0).mediaUrlHttps).into(imageView);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -138,10 +139,8 @@ public class TwitterFragment extends Fragment {
         cardView.setOnClickListener(view -> {
             String url;
             // Check if the url is in the media or urls List
-            if (tweet.entities.media.size() != 0) {
-                url = tweet.entities.media.get(0).url;
-            } else if (tweet.entities.urls.size() != 0) {
-                url = tweet.entities.urls.get(0).url;
+            if (tweet.id != 0 && tweet.user.screenName != null) {
+                url = "https://twitter.com/" + tweet.user.screenName + "/status/" + tweet.id;
             } else {
                 Toast.makeText(getContext(), "Unable to open tweet", Toast.LENGTH_SHORT).show();
                 return;
