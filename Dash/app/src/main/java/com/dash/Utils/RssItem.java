@@ -22,6 +22,9 @@ package com.dash.Utils;
 
 import android.graphics.Bitmap;
 
+/**
+ * Creates the standard for an RssItem
+ */
 public class RssItem {
     private String mTitle = "";
     private String mDescription = "";

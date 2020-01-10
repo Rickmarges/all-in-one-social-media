@@ -37,7 +37,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Objects;
 
 /**
- * This activity is for showing which accounts are linked to the Dash account, it shows the
+ * Shows which accounts are linked to the Dash account, it shows the
  * Email from the FirebaseUser and links to pages that let you add different social media accounts.
  */
 
@@ -48,7 +48,7 @@ public class AccountActivity extends AppCompatActivity {
     private TextView mEmailAccountTV;
 
     /**
-     * Creation of the view in the activity, fills textview with FirebaseUser email, and sets
+     * Creates the view in the activity, fills textview with FirebaseUser email, and sets
      * onClickListeners for buttons that let you add social media accounts to your Dash account.
      *
      * @param savedInstanceState saved instance of this activity
@@ -104,9 +104,8 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     /**
-     * When back button is pressed the standard animation is overridden to show our custom animation.
+     * Overrides the standard animation to show our custom animation when the back button is pressed.
      */
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();

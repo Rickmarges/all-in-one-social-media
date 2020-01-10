@@ -45,7 +45,7 @@ import net.dean.jraw.oauth.StatefulAuthHelper;
 import java.lang.ref.WeakReference;
 
 /**
- * This activity is for adding a reddit account to your Dash account. It will open a new activity
+ * Adds a reddit account to your Dash account. It will open a new activity
  * containing a WebView that opens a Authentication URL provided by JRAW. With this authentication
  * URL you can sign in to your reddit account and link it to your Dash account. This activity will
  * be destroyed and will not be accessible again.
@@ -56,7 +56,7 @@ public class AddRedditAccountActivity extends AppCompatActivity {
     private WebView mWebView;
 
     /**
-     * Creation of the view in the activity.
+     * Creates the view in the activity.
      *
      * @param savedInstanceState saved instance of this activity
      */
@@ -70,7 +70,7 @@ public class AddRedditAccountActivity extends AppCompatActivity {
     }
 
     /**
-     * When the activity is created the WebView with the reddit authentication is shown.
+     * Shows the WebView when the activity is created.
      */
     @Override
     protected void onResume() {
@@ -79,7 +79,7 @@ public class AddRedditAccountActivity extends AppCompatActivity {
     }
 
     /**
-     * An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.
+     * Reports the success of authorizing the user and takes a final redirect URL as parameter.
      */
     class AuthenticateTask extends AsyncTask<String, Void, Boolean> {
         // Use a WeakReference so that we don't leak a Context
@@ -92,7 +92,7 @@ public class AddRedditAccountActivity extends AppCompatActivity {
         }
 
         /**
-         * The mStatefulAuthHelper is executed with the auth url provided by JRAW, if it fails an OAUTHException is reported.
+         * Executes the mStatefulAuthHelper with the auth url provided by JRAW and reports an OAUTHException if it fails.
          *
          * @param urls the authentication URL provided by JRAW
          * @return success if authentication is succesfull and an OAUTHException if it isn't.
@@ -109,7 +109,7 @@ public class AddRedditAccountActivity extends AppCompatActivity {
         }
 
         /**
-         * An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.         *
+         * Reports the success of authorizing the user and takes a final redirect URL as parameter.      *
          *
          * @param success boolean describing the result of the authentication
          */
@@ -154,7 +154,7 @@ public class AddRedditAccountActivity extends AppCompatActivity {
     }
 
     /**
-     * An async task that takes a final redirect URL as a parameter and reports the success of authorizing the user.
+     * Creates the Reddit login WebView.
      */
     private void createWebView() {
         mWebView.clearCache(true);
@@ -170,7 +170,7 @@ public class AddRedditAccountActivity extends AppCompatActivity {
         mWebView.setWebViewClient(new WebViewClient() {
 
             /**
-             * If the WebView has loaded the page the WebView stops loading and executes the authentication URL
+             * Stops loading the WebView when it has loaded the page and then executes the authentication URL.
              *
              * @param view The WebView
              * @param url The authentication URL

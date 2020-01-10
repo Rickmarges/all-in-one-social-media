@@ -46,7 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
     private static final String[] sCountries = new String[]{"US", "GB", "NL"};
 
     /**
-     * Creation of the view in the activity.
+     * Creates the view in the activity.
      *
      * @param savedInstanceState saved instance of this activity
      */
@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * If the back button is pressed the app will return to the previous activity.
+     * Returns to the previous activity if the back button is pressed.
      */
     @Override
     public void onBackPressed() {
