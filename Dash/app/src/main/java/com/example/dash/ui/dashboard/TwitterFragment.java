@@ -168,8 +168,6 @@ public class TwitterFragment extends Fragment {
         return instance;
     }
 
-    public void update() {
-
     void updateTwitter(){
 
     }
