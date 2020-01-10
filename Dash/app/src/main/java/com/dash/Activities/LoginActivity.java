@@ -39,7 +39,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
-
+/**
+ * Creates the login Activity you see when starting the application.
+ * It shows the link to the register Activity.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private EditText mEmailET, mPasswordET;
@@ -49,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
     private int mBackCounter;
     private long mStartTime;
 
+    /**
+     * Creates this activity, the login page.
+     * It checks if the login data is correct and then logs the user in.
+     * @param savedInstanceState saved instance of this activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,12 +81,18 @@ public class LoginActivity extends AppCompatActivity {
                 ResetPasswordActivity.class)));
     }
 
+    /**
+     * Initializes the activity when started.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         init();
     }
 
+    /**
+     * Closes the application if the back button is pressed twice in three seconds.
+     */
     @Override
     public void onBackPressed() {
         if (mBackCounter < 1 || (System.currentTimeMillis() - mStartTime) / 1000 > 3) {
@@ -92,12 +106,18 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Resets the back presses when the application is closed
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mBackCounter = 0;
     }
 
+    /**
+     * Checks if a user was already logged in.
+     */
     private void checkLoggedIn() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && checkVerified()) {
@@ -105,6 +125,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Logs the user in if the correct login data has been filled in.
+     */
     // TODO comments en aanpassen
     private void loginUserAccount() {
         mProgressBar.setVisibility(View.VISIBLE);
@@ -113,12 +136,14 @@ public class LoginActivity extends AppCompatActivity {
         email = mEmailET.getText().toString();
         password = mPasswordET.getText().toString();
 
+        //Check if the fields are valid
         if (checkValidFields(email, password)) {
             return;
         }
 
         hideButtons();
 
+        //Use the Firebase authentication to sign in and login to the Dashboard
         mFirebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     mProgressBar.setVisibility(View.GONE);
@@ -143,11 +168,22 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Checks if the email from the user has been verified
+     * @return Returns the boolean, true if the email has been verified and false if the mail has not been verified.
+     */
     private boolean checkVerified() {
         return Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).isEmailVerified();
     }
 
+    /**
+     * Checks if the login fields are correctly entered.
+     * @param email The email which the user wants to login with
+     * @param password The password which the user wants to login with
+     * @return Returns the boolean true if the fields are valid and false if the fields are not correct
+     */
     private boolean checkValidFields(String email, String password) {
+        //Checks if the email field is not left empty
         if (TextUtils.isEmpty(email)) {
             mEmailET.setError("Required");
             Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
@@ -155,6 +191,7 @@ public class LoginActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.GONE);
             return true;
         }
+        //Checks if the email contains an at sign and if it contains a dot
         if (!email.contains("@") && !email.contains(".")) {
             mEmailET.setError("Please enter a valid email");
             Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
@@ -162,6 +199,7 @@ public class LoginActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.GONE);
             return true;
         }
+        //Checks if the password field is not left empty
         if (TextUtils.isEmpty(password)) {
             mPasswordET.setError("Required");
             Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
@@ -172,6 +210,10 @@ public class LoginActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Initializes the input fields and the buttons in the layout and links them to their
+     * corresponding layout elements.
+     */
     private void init() {
         mEmailET = findViewById(R.id.email);
         mPasswordET = findViewById(R.id.password);
@@ -182,12 +224,18 @@ public class LoginActivity extends AppCompatActivity {
         showButtons();
     }
 
+    /**
+     * Hides the login, register and forgot password buttons.
+     */
     private void hideButtons() {
         mLoginBtn.setVisibility(View.GONE);
         mRegisterBtn.setVisibility(View.GONE);
         mForgotBtn.setVisibility(View.GONE);
     }
 
+    /**
+     * Shows the login, register and forgot password buttons.
+     */
     private void showButtons() {
         mLoginBtn.setVisibility(View.VISIBLE);
         mRegisterBtn.setVisibility(View.VISIBLE);
