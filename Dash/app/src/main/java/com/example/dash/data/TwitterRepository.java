@@ -34,7 +34,7 @@ import retrofit2.Call;
 
 // Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki
 public class TwitterRepository extends AppCompatActivity {
-    public static final TwitterRepository TwitterSingleton = new TwitterRepository();
+    public static TwitterRepository TwitterSingleton = null;
     private Twitter instance;
     private String token;
     private String secret;
@@ -44,6 +44,16 @@ public class TwitterRepository extends AppCompatActivity {
         //TwitterAuthToken authToken = session.getAuthToken();
         //token = authToken.token;
         //secret = authToken.secret;
+    }
+
+    public static TwitterRepository GetSingleton(){
+        //TwitterSingleton = new TwitterRepository();
+        if (TwitterSingleton == null) {
+            synchronized(TwitterRepository.class) {
+                TwitterSingleton = new TwitterRepository();
+            }
+        }
+        return TwitterSingleton;
     }
 
     public void createSession(TwitterSession session) {
@@ -108,8 +118,8 @@ public class TwitterRepository extends AppCompatActivity {
                 twitterBtn.setVisibility(View.INVISIBLE);
                 ((Activity) context).finish();
 
-                TwitterSession session = TwitterRepository.TwitterSingleton.getActiveSession();
-                TwitterRepository.TwitterSingleton.createSession(session);
+                TwitterSession session = TwitterRepository.GetSingleton().getActiveSession();
+                TwitterRepository.GetSingleton().createSession(session);
                 textView.setText(session.getUserName());
             }
 
