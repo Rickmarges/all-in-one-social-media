@@ -1,21 +1,11 @@
 package com.example.dash;
 
-import com.twitter.sdk.android.core.internal.persistence.PreferenceStore;
+import java.lang.reflect.Field;
 
-import java.lang.reflect.*;
-
+//Helpfull extensions for unit tests
 public class UnitTestExtension {
-    static void setFinalStatic(Field field, Object newValue) throws Exception {
-        field.setAccessible(true);
-
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
-        field.set(null, newValue);
-    }
-
-    static Object getField(Object object, String fieldName){
+    //Functions to get private access to an object.
+    static Object getField(Object object, String fieldName) {
         Object fieldToGet = null;
         try {
             Field field = object.getClass().getDeclaredField(fieldName);
