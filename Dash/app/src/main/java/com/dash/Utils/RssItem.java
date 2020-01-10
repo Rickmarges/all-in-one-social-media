@@ -22,40 +22,75 @@ package com.dash.Utils;
 
 import android.graphics.Bitmap;
 
+/**
+ * This class creates the standard for an RssItem
+ */
 public class RssItem {
     private String mTitle = "";
     private String mDescription = "";
     private String mLink = "";
     private Bitmap mImage = null;
 
+    /**
+     * Returns the title of the Rss item.
+     * @return Title of the Rss item
+     */
     public String getTitle() {
         return mTitle;
     }
 
+    /**
+     * Returns the description of the Rss item.
+     * @return Description of the Rss item
+     */
     public String getDescription() {
         return mDescription;
     }
 
+    /**
+     * Returns the link of the Rss item.
+     * @return Link of the Rss item
+     */
     public String getLink() {
         return mLink;
     }
 
+    /**
+     * Returns the image of the Rss item.
+     * @return Image of the Rss item
+     */
     public Bitmap getImage() {
         return mImage;
     }
 
+    /**
+     * Sets the title of the Rss item.
+     * @param title Title of the Rss item
+     */
     public void setTitle(String title) {
         this.mTitle = title;
     }
 
+    /**
+     * Sets the link of the Rss item.
+     * @param link Link of the Rss item.
+     */
     public void setLink(String link) {
         this.mLink = link;
     }
 
+    /**
+     * Sets the description of the Rss item.
+     * @param description Description of the Rss item.
+     */
     public void setDescription(String description) {
         this.mDescription = description;
     }
 
+    /**
+     * Sets the image url of the Rss item.
+     * @param imageUrl Image Url of the Rss item.
+     */
     public void setImage(Bitmap imageUrl) {
         this.mImage = imageUrl;
     }
