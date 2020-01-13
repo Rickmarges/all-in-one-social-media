@@ -33,6 +33,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.DashApp;
+import com.dash.Fragments.RedditFragment;
 import com.dash.R;
 import com.dash.Utils.TwitterRepository;
 import com.google.firebase.auth.FirebaseAuth;
@@ -114,6 +115,12 @@ public class AccountActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
+    }
+
     /**
      * Overrides the standard animation to show our custom animation when the back button is pressed.
      */
@@ -144,10 +151,13 @@ public class AccountActivity extends AppCompatActivity {
             TextView textView = findViewById(R.id.addRedditAccount);
             textView.setText(accountHelper.getReddit().getAuthManager().currentUsername());
             removeRedditIB.setOnClickListener(view -> {
+                DashApp.getTokenStore().deleteRefreshToken(accountHelper.getReddit().getAuthManager().currentUsername());
+                DashApp.getTokenStore().deleteLatest(accountHelper.getReddit().getAuthManager().currentUsername());
                 accountHelper.logout();
+                RedditFragment.getInstance().clearUI();
                 removeRedditIB.setVisibility(View.INVISIBLE);
                 mRedditIB.setVisibility(View.VISIBLE);
-                textView.setText(R.string.addTwitter);
+                textView.setText(R.string.add_reddit);
             });
         }
 
@@ -162,7 +172,7 @@ public class AccountActivity extends AppCompatActivity {
                 TwitterRepository.twitterSingleton.clearSession();
                 removeTwitterBtn.setVisibility(View.INVISIBLE);
                 mAddTwitterBtn.setVisibility(View.VISIBLE);
-                textView.setText(R.string.addTwitter);
+                textView.setText(R.string.add_twitter);
             });
         } else {
             mAddTwitterBtn.setVisibility(View.VISIBLE);

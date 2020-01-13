@@ -95,6 +95,7 @@
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorBackgroundSecondary"
         android:contentDescription="@string/reddit"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addReddit"
         app:srcCompat="@drawable/ic_iconmonstr_reddit_1" />
@@ -109,6 +110,7 @@
         android:backgroundTint="@color/colorBackgroundSecondary"
         android:contentDescription="@string/reddit"
         android:scaleType="centerInside"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addReddit"
         app:srcCompat="@drawable/trash" />
@@ -128,7 +130,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:layout_marginTop="108dp"
-        android:text="@string/addTwitter"
+        android:text="@string/add_twitter"
         android:textColor="@color/colorPrimary"
         android:textColorHighlight="@color/colorPrimaryDark"
         android:textSize="22sp"

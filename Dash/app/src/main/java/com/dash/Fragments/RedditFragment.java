@@ -104,7 +104,7 @@ public class RedditFragment extends Fragment {
         }
     }
 
-    static RedditFragment getInstance() {
+    public static RedditFragment getInstance() {
         return sInstance;
     }
 
@@ -267,5 +267,12 @@ public class RedditFragment extends Fragment {
         layoutParams.bottomMargin = 10;
         cardView.addView(createCardLayout(submission));
         return cardView;
+    }
+
+    public void clearUI(){
+        mCardViewList.clear();
+        if (mLinearLayout.getChildCount() > 0) {
+            mLinearLayout.removeAllViews();
+        }
     }
 }
