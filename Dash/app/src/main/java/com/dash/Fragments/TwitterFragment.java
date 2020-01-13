@@ -38,6 +38,15 @@ public class TwitterFragment extends Fragment {
     private List<CardView> mCardList = new ArrayList<>();
     private LinearLayout mLinearLayout;
 
+    /**
+     * Create the View for Twitter
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     *                           The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -61,7 +70,11 @@ public class TwitterFragment extends Fragment {
     }
 
     public void createHomeTimelineView(List<Tweet> tweets) {
-        if (tweets == null) return;
+        // Make sure the rest of the methods are only called it there are tweets
+        if (tweets == null){
+            Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT);
+            return;
+        }
         // Setup a dynamic linearlayout to add frontpage posts
         if (mLinearLayout == null) {
             mLinearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.twitterLayout);
@@ -181,9 +194,8 @@ public class TwitterFragment extends Fragment {
     }
 
     private ImageView createImage(Tweet tweet) {
-        ImageView imageView = new ImageView((getContext()));
         // Insert path into Picasso to download image
-        //TODO: Possibly adapting to other media if needed (videos etc)
+        ImageView imageView = new ImageView(getContext());
         if (tweet.entities.media.size() != 0) {
             com.squareup.picasso.Picasso.with(this.getContext())
                     .load(tweet.entities.media.get(0).mediaUrlHttps).into(imageView);

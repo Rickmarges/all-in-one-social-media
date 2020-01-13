@@ -116,7 +116,7 @@ public class TwitterRepository extends AppCompatActivity {
             public void success(Result<TwitterSession> result) {
                 //resets the buttons
                 Toast.makeText(context, "Authentication succesfull", Toast.LENGTH_SHORT).show();
-                TextView textView = ((Activity) context).findViewById(R.id.textView3);
+                TextView textView = (TextView) ((Activity) context).findViewById(R.id.addTwitterAccount);
                 twitterBtn.setVisibility(View.INVISIBLE);
                 ((Activity) context).finish();
 

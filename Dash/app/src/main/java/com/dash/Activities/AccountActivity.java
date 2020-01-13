@@ -32,12 +32,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.dash.DashApp;
 import com.dash.R;
 import com.dash.Utils.TwitterRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import net.dean.jraw.oauth.AccountHelper;
 
 import java.util.Objects;
 
@@ -65,7 +68,7 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-        // Initialize UI parts
+        // Initialize UI elements
         init();
 
         mSecondClick = false;
@@ -122,31 +125,60 @@ public class AccountActivity extends AppCompatActivity {
 
     /**
      * Initializes the TextViews and Buttons in the layout and links them to their corresponding
-     * layout elements.
+     * layout elements. And checks if there already is an authorized twitter session available,
+     * if so, hide twitter related elements
      */
 
     private void init() {
         mRedditIB = findViewById(R.id.add_reddit_btn);
+        ImageButton removeRedditIB = findViewById(R.id.removeRedditIB);
         mEmailAccountTV = findViewById(R.id.emailAccount);
         mResetBtn = findViewById(R.id.resetpwd);
         mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
         ImageButton removeTwitterBtn = findViewById(R.id.removetwitterbtn);
 
+        AccountHelper accountHelper = DashApp.getAccountHelper();
+        if (accountHelper.isAuthenticated()) {
+            mRedditIB.setVisibility(View.INVISIBLE);
+            removeRedditIB.setVisibility(View.VISIBLE);
+            TextView textView = findViewById(R.id.addRedditAccount);
+            textView.setText(accountHelper.getReddit().getAuthManager().currentUsername());
+            removeRedditIB.setOnClickListener(view -> {
+                accountHelper.logout();
+                removeRedditIB.setVisibility(View.INVISIBLE);
+                mRedditIB.setVisibility(View.VISIBLE);
+                textView.setText(R.string.addTwitter);
+            });
+        }
+
+
         TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         if(session != null){
             mAddTwitterBtn.setVisibility(View.INVISIBLE);
             removeTwitterBtn.setVisibility(View.VISIBLE);
-            TextView textView = findViewById(R.id.textView3);
+            TextView textView = findViewById(R.id.addTwitterAccount);
             textView.setText(session.getUserName());
-            removeTwitterBtn.setOnClickListener(view -> TwitterRepository
-                    .twitterSingleton.clearSession());
-        }else{
+            removeTwitterBtn.setOnClickListener(view -> {
+                TwitterRepository.twitterSingleton.clearSession();
+                removeTwitterBtn.setVisibility(View.INVISIBLE);
+                mAddTwitterBtn.setVisibility(View.VISIBLE);
+                textView.setText(R.string.addTwitter);
+            });
+        } else {
             mAddTwitterBtn.setVisibility(View.VISIBLE);
             removeTwitterBtn.setVisibility(View.INVISIBLE);
             TwitterRepository.setTwitterCallback(this, mAddTwitterBtn);
         }
     }
 
+    /**
+     * Call this method when {@link android.app.Activity#onActivityResult(int, int, Intent)}
+     * is called to complete the authorization flow.
+     *
+     * @param requestCode the request code used for SSO
+     * @param resultCode  the result code returned by the SSO activity
+     * @param data        the result data returned by the SSO activity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

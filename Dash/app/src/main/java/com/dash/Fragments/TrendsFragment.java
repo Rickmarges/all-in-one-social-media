@@ -70,10 +70,19 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class TrendsFragment extends Fragment {
+    private String mCountryCode;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private final String mBaseUrl = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=";
-    private String mCountryCode;
 
+    /**
+     * Create the View for Trends
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     *                           The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

@@ -18,10 +18,10 @@
         android:fullBackupContent="@xml/backup_descriptor">
         <meta-data
             android:name="net.dean.jraw.android.REDDIT_USERNAME"
-            android:value="geruth" />
+            android:value="minorsectestt" />
         <meta-data
             android:name="net.dean.jraw.android.CLIENT_ID"
-            android:value="oXrVL7dWkiIQiw" />
+            android:value="-aZfQJrbYQiGZQ" />
         <meta-data
             android:name="net.dean.jraw.android.REDIRECT_URL"
             android:value="https://www.google.com/" />

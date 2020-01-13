@@ -30,10 +30,17 @@ import com.dash.Fragments.RedditFragment;
 import com.dash.Fragments.TrendsFragment;
 import com.dash.Fragments.TwitterFragment;
 
+/**
+ * Create and sort the Fragments in the Tablayout
+ */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-
     private final Fragment[] mChildFragments;
 
+    /**
+     * Set the different fragments in the tablayout
+     *
+     * @param fragmentManager manager for the fragments
+     */
     public ViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mChildFragments = new Fragment[]{
@@ -44,17 +51,36 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         };
     }
 
+    /**
+     * Return the Fragment associated with a specified position.
+     *
+     * @param position position of the fragment
+     * @return the fragments associated with the specified position
+     */
     @NonNull
     @Override
     public Fragment getItem(int position) {
         return mChildFragments[position];
     }
 
+    /**
+     * Return the number of views available.
+     *
+     * @return the number of fragments
+     */
     @Override
     public int getCount() {
         return mChildFragments.length; //three fragments
     }
 
+    /**
+     * Return a title string to describe the specified page. This method may return null
+     * indicating no title for this page. The default implementation returns null.
+     *
+     * @param position The position of the title requested
+     * @return A title for the requested page where the last the last eight characters, "Fragment",
+     * are cut of the title
+     */
     @Override
     public CharSequence getPageTitle(int position) {
         String title = getItem(position).getClass().getName();
