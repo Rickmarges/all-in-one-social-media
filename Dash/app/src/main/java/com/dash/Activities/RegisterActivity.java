@@ -50,7 +50,9 @@ public class RegisterActivity extends AppCompatActivity {
     private String mEmail, mPassword, mPasswordCheck;
 
     /**
-     * Creates this activity, the register page.
+     * Creates the activity, checks if there is a currenctly authenticated FireBaseUser
+     * Sets onClickListeners on the register button and the back(login) button
+     *
      * @param savedInstanceState saved instance of this activity
      */
     @Override
@@ -61,8 +63,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
+        // Initializes the UI elements
         init();
 
+        // Set onClickListeners to Register and Login Buttons
         mRegBtn.setOnClickListener(view -> registerNewUser());
 
         mLoginBtn.setOnClickListener(view ->
@@ -70,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Returns to the previous activity if the back button is pressed.
+     * Redirects the user to the Loginactivity
      */
     @Override
     public void onBackPressed() {
@@ -95,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Registers the new user into the Firebase Authentication
+     * Registers the new user with the credentials from the EditTexts.
      */
     private void registerNewUser() {
         mProgressBar.setVisibility(View.VISIBLE);
@@ -129,6 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Checks if the register fields are valid.
+     *
      * @return Returns true if all the fields are valid and false if one of the fields does not
      * meet the requirements.
      */
@@ -176,8 +181,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Initializes the input fields and the buttons in the layout and links them to their
-     * corresponding layout elements.
+     * Initializes the EditTexts and Buttons and links them to the corresponding layout elements
      */
     private void init() {
         mEmailET = findViewById(R.id.emailregister);

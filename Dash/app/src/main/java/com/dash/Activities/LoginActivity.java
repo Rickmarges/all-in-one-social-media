@@ -54,7 +54,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Creates this activity, the login page.
-     * It checks if the user has logged in before, if true it logs the user in.
+     * It checks if the login data is correct and then logs the user in.
+     *
      * @param savedInstanceState saved instance of this activity
      */
     @Override
@@ -169,6 +170,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Checks if the email from the user has been verified
+     *
      * @return Returns the boolean, true if the email has been verified and false if the mail has not been verified.
      */
     private boolean checkVerified() {
@@ -177,7 +179,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Checks if the login fields are correctly entered.
-     * @param email The email which the user wants to login with
+     *
+     * @param email    The email which the user wants to login with
      * @param password The password which the user wants to login with
      * @return Returns the boolean true if the fields are valid and false if the fields are not correct
      */

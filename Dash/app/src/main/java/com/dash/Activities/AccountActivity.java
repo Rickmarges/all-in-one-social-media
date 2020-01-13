@@ -22,7 +22,6 @@ package com.dash.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,23 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import com.dash.BuildConfig;
 import com.dash.R;
 import com.dash.Utils.TwitterRepository;
-import com.dash.Activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.twitter.sdk.android.core.DefaultLogger;
-import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
-import com.twitter.sdk.android.tweetui.TweetUi;
 
 import java.util.Objects;
 
@@ -134,7 +123,8 @@ public class AccountActivity extends AppCompatActivity {
 
     /**
      * Initializes the TextViews and Buttons in the layout and links them to their corresponding
-     * layout elements.
+     * layout elements. And checks if there already is an authorized twitter session available,
+     * if so, hide twitter related elements
      */
 
     private void init() {
@@ -161,6 +151,14 @@ public class AccountActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Call this method when {@link android.app.Activity#onActivityResult(int, int, Intent)}
+     * is called to complete the authorization flow.
+     *
+     * @param requestCode the request code used for SSO
+     * @param resultCode the result code returned by the SSO activity
+     * @param data the result data returned by the SSO activity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
