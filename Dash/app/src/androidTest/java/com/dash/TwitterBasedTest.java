@@ -8,7 +8,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.dash.Utils.TwitterRepository;
 import com.twitter.sdk.android.core.SessionManager;
-import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -47,7 +46,7 @@ public class TwitterBasedTest {
     public void setUp() throws Exception {
         //Creates a twitter kit instance
         Context test_context = InstrumentationRegistry.getTargetContext();
-        TwitterRepository.TwitterSingleton.InitializeTwitter(test_context);
+        TwitterRepository.twitterSingleton.InitializeTwitter(test_context);
         TwitterAuthToken twitterAuthToken = new TwitterAuthToken("Token_Test", "Secret_Test");
         //Creating a session to use for the tests
         twitterSession = new TwitterSession(twitterAuthToken, 123, "Username_test");

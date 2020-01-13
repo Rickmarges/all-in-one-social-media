@@ -126,10 +126,9 @@ public class RedditFragment extends Fragment {
                         .build();
 
                 return frontPage.next();
-            } catch (NullPointerException npe) {
+            } catch (NullPointerException | IllegalStateException npe) {
                 // Report failure if an Exception occurs
-                Log.w(Objects.requireNonNull(getContext()).toString(),
-                        "Couldn't load preferences: " + npe.getMessage());
+                Log.w("TEST", "Couldn't load preferences: " + npe.getMessage());
                 return null;
             }
         }
@@ -137,23 +136,31 @@ public class RedditFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Submission> submissions) {
             createUI(submissions);
-            DashFragment.getInstance().setRedditCards(mCardViewList);
+            DashFragment dashFragment = DashFragment.getInstance();
+            if (dashFragment == null) {
+                dashFragment = new DashFragment();
+            }
+            dashFragment.setRedditCards(mCardViewList);
+            dashFragment.setRedditReady(true);
+            dashFragment.createUI();
         }
     }
 
     private void createUI(List<Submission> submissions) {
         // Setup a dynamic linearlayout to add frontpage posts
         if (mLinearLayout == null) {
-            mLinearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.dashLayout);
+            mLinearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.redditLayout);
         }
         if (mLinearLayout.getChildCount() > 0) {
             mLinearLayout.removeAllViews();
             mCardViewList.clear();
         }
         // Loop through submissions from frontpage
-        for (Submission submission : submissions) {
-            mLinearLayout.addView(createCardView(submission));
-            mCardViewList.add(createCardView(submission));
+        if (submissions != null) {
+            for (Submission submission : submissions) {
+                mLinearLayout.addView(createCardView(submission));
+                mCardViewList.add(createCardView(submission));
+            }
         }
         mSwipeRefreshLayout.setRefreshing(false);
     }

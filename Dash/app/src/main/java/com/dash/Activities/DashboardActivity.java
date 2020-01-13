@@ -39,6 +39,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.dash.Adapters.ViewPagerAdapter;
 import com.dash.DashApp;
 import com.dash.R;
+import com.dash.Utils.TwitterRepository;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -141,7 +142,9 @@ public class DashboardActivity extends AppCompatActivity {
         mMenuBtn = findViewById(R.id.menubtn);
 
         ViewPager viewPager = findViewById(R.id.pager);
-        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setOffscreenPageLimit(viewPagerAdapter.getCount());
 
         mTabLayout = findViewById(R.id.tablayout);
         mTabLayout.setupWithViewPager(viewPager);
@@ -210,6 +213,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Logs the currently authenticated RedditUser out.
         DashApp.getAccountHelper().logout();
+
+        // Logs the currently authenticated TwitterUser out.
+        TwitterRepository.GetSingleton().clearSession();
 
         // Redirects the user to LoginActivity
         startActivity(new Intent(this, LoginActivity.class));

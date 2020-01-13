@@ -44,6 +44,8 @@ public class DashFragment extends Fragment {
     private List<CardView> mTwitterCardList = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayout mLinearLayout;
+    private Boolean mRedditReady;
+    private Boolean mTwitterReady;
 
     @Nullable
     @Override
@@ -71,34 +73,42 @@ public class DashFragment extends Fragment {
         sInstance = this;
         mRedditCardList.clear();
         mTwitterCardList.clear();
+        updateCards();
     }
 
     private void updateCards() {
+        mRedditReady = false;
+        mTwitterReady = false;
+
         RedditFragment redditFragment = RedditFragment.getInstance();
-        if (redditFragment == null) {
-            redditFragment = new RedditFragment();
-        }
         redditFragment.updateReddit();
 
         TwitterFragment twitterFragment = TwitterFragment.getInstance();
-        if (twitterFragment == null) {
-            twitterFragment = new TwitterFragment();
-        }
-        twitterFragment.updateTwitter();
+        twitterFragment.updateTwitter(getContext());
     }
 
     void setRedditCards(List<CardView> redditCards) {
-        this.mRedditCardList = redditCards;
-        createUI();
+        mRedditCardList = redditCards;
     }
 
     void setTwitterCards(List<CardView> twitterCards) {
-        this.mTwitterCardList = twitterCards;
-        createUI();
+        mTwitterCardList = twitterCards;
     }
 
-    private void createUI() {
+    void setRedditReady(Boolean bool){
+        mRedditReady = bool;
+    }
+
+    void setTwitterReady(Boolean bool){
+        mTwitterReady = bool;
+    }
+
+    void createUI() {
         List<CardView> cardViewList = new ArrayList<>();
+
+        if (!mRedditReady || !mTwitterReady) {
+            return;
+        }
 
         if (mLinearLayout != null) {
             if (mLinearLayout.getChildCount() > 0) {

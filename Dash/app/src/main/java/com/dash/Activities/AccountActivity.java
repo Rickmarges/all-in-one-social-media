@@ -22,7 +22,6 @@ package com.dash.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,23 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import com.dash.BuildConfig;
 import com.dash.R;
 import com.dash.Utils.TwitterRepository;
-import com.dash.Activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.twitter.sdk.android.core.DefaultLogger;
-import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
-import com.twitter.sdk.android.tweetui.TweetUi;
 
 import java.util.Objects;
 
@@ -61,8 +50,7 @@ public class AccountActivity extends AppCompatActivity {
     private boolean mSecondClick;
     private Button mResetBtn;
     private ImageButton mRedditIB;
-    private TwitterLoginButton addTwitterBtn;
-    private ImageButton removeTwitterBtn;
+    private TwitterLoginButton mAddTwitterBtn;
     private TextView mEmailAccountTV;
 
     /**
@@ -141,29 +129,27 @@ public class AccountActivity extends AppCompatActivity {
         mRedditIB = findViewById(R.id.add_reddit_btn);
         mEmailAccountTV = findViewById(R.id.emailAccount);
         mResetBtn = findViewById(R.id.resetpwd);
-        addTwitterBtn = findViewById(R.id.addtwitterbtn);
-        removeTwitterBtn = findViewById(R.id.removetwitterbtn);
+        mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
+        ImageButton removeTwitterBtn = findViewById(R.id.removetwitterbtn);
 
         TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         if(session != null){
-            addTwitterBtn.setVisibility(View.INVISIBLE);
+            mAddTwitterBtn.setVisibility(View.INVISIBLE);
             removeTwitterBtn.setVisibility(View.VISIBLE);
             TextView textView = findViewById(R.id.textView3);
             textView.setText(session.getUserName());
-            removeTwitterBtn.setOnClickListener(view -> {
-                TwitterRepository.TwitterSingleton.clearSession();
-                finish();
-            });
+            removeTwitterBtn.setOnClickListener(view -> TwitterRepository
+                    .twitterSingleton.clearSession());
         }else{
-            addTwitterBtn.setVisibility(View.VISIBLE);
+            mAddTwitterBtn.setVisibility(View.VISIBLE);
             removeTwitterBtn.setVisibility(View.INVISIBLE);
-            TwitterRepository.setTwitterCallback(this, addTwitterBtn);
+            TwitterRepository.setTwitterCallback(this, mAddTwitterBtn);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        addTwitterBtn.onActivityResult(requestCode, resultCode, data);
+        mAddTwitterBtn.onActivityResult(requestCode, resultCode, data);
     }
 }
