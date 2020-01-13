@@ -161,8 +161,9 @@ public class RedditFragment extends Fragment {
         }
         // Loop through submissions from frontpage
         for (Submission submission : submissions) {
-            mLinearLayout.addView(createCardView(submission));
-            mCardViewList.add(createCardView(submission));
+            CardView cardView = createCardView(submission);
+            mLinearLayout.addView(cardView);
+            mCardViewList.add(cardView);
         }
         mSwipeRefreshLayout.setRefreshing(false);
     }
