@@ -135,7 +135,7 @@ public class AccountActivity extends AppCompatActivity {
         removeTwitterBtn = findViewById(R.id.removetwitterbtn);
 
         TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-        if(session != null){
+        if (session != null) {
             addTwitterBtn.setVisibility(View.INVISIBLE);
             removeTwitterBtn.setVisibility(View.VISIBLE);
             TextView textView = findViewById(R.id.textView3);
@@ -144,7 +144,7 @@ public class AccountActivity extends AppCompatActivity {
                 TwitterRepository.TwitterSingleton.clearSession();
                 finish();
             });
-        }else{
+        } else {
             addTwitterBtn.setVisibility(View.VISIBLE);
             removeTwitterBtn.setVisibility(View.INVISIBLE);
             TwitterRepository.setTwitterCallback(this, addTwitterBtn);
@@ -156,8 +156,8 @@ public class AccountActivity extends AppCompatActivity {
      * is called to complete the authorization flow.
      *
      * @param requestCode the request code used for SSO
-     * @param resultCode the result code returned by the SSO activity
-     * @param data the result data returned by the SSO activity
+     * @param resultCode  the result code returned by the SSO activity
+     * @param data        the result data returned by the SSO activity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -56,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-        //Initialize UI parts
+        //Initialize UI elements
         init();
     }
 
@@ -73,40 +73,42 @@ public class SettingsActivity extends AppCompatActivity {
      * Sets the dropdown menus to a default selection if none was saved before.
      * Saves the selection to the users account.
      */
-    //TODO comments in the method
     @Override
     protected void onResume() {
         super.onResume();
+        // Retrieve the encrypted email from the currenctly authenticated FireBaseUser
         mSharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(),
                 Context.MODE_PRIVATE);
+        // Create an adapter for the spinners
         mCountryAdapter = new ArrayAdapter<>(getApplicationContext(),
                 R.layout.spinner_item, sCountries);
         try {
+            // Retrieve the preference regarding the sorting of the Reddit Frontpage
             int sortsSavedValue = mSharedPreferences.getInt("RedditSort", 0);
-
+            // Retrieve the preference regarding the Country for Google Trends
             String countrySavedValue = mSharedPreferences.getString("Country", "NL");
-
+            // Set spinner to the retrieved preference
             int spinnerPosition = mCountryAdapter.getPosition(countrySavedValue);
-
             mSortingSpinner.setSelection(sortsSavedValue);
             mCountrySpinner.setSelection(spinnerPosition);
         } catch (IllegalStateException ise) {
+            // If preference could not be loaded set spinner to default selection and log warning
             mSortingSpinner.setSelection(0);
             mCountrySpinner.setSelection(0);
             Log.w(getApplicationContext().toString(),
                     "Couldn't load preferences: " + ise.getMessage());
         }
-
+        // Create the spinners
         createSpinners();
     }
 
     /**
      * Creates the options which you can choose in the dropdown menus.
      */
-    //TODO comments in the method
     private void createSpinners() {
+        // Open an editor to save to sharedpreferences
         mEditor = mSharedPreferences.edit();
-
+        // Array of different sorings for Reddit
         String[] sortings = new String[]{
                 "Hot",
                 "Top",
@@ -115,12 +117,20 @@ public class SettingsActivity extends AppCompatActivity {
                 "New",
                 "Rising"
         };
-
+        // Apply style and set the adapter to the Spinner
         ArrayAdapter<String> sortingAdapter = new ArrayAdapter<>(getApplicationContext(),
                 R.layout.spinner_item, sortings);
         sortingAdapter.setDropDownViewResource(R.layout.spinner_item);
         mSortingSpinner.setAdapter(sortingAdapter);
         mSortingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /**
+             * Sets the shared preference to the one the user selects in the dropdownmenu of Reddit
+             *
+             * @param parent The AdapterView where the selection happened
+             * @param view The view within the AdapterView that was clicked
+             * @param position The position of the view in the adapter
+             * @param id The row id of the item that is selected
+             */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
@@ -132,15 +142,29 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
 
+            /**
+             * Invokes callback method when the selection disappears from this view.
+             * The selection can disappear for instance when touch is activated or when the adapter becomes empty.
+             *
+             * @param parent The AdapterView that now contains no selected item.
+             */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-
+        // Apply style and set the adapter to the Spinner
         mCountryAdapter.setDropDownViewResource(R.layout.spinner_item);
         mCountrySpinner.setAdapter(mCountryAdapter);
         mCountrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /**
+             * Sets the shared preference to the one the user selects in the dropdownmenu of Trends
+             *
+             * @param parent The AdapterView where the selection happened
+             * @param view The view within the AdapterView that was clicked
+             * @param position The position of the view in the adapter
+             * @param id The row id of the item that is selected
+             */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
@@ -152,6 +176,12 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
 
+            /**
+             * Invokes callback method when the selection disappears from this view.
+             * The selection can disappear for instance when touch is activated or when the adapter becomes empty.
+             *
+             * @param parent The AdapterView that now contains no selected item.
+             */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 

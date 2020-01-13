@@ -38,13 +38,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Creates and fills the tablayout's leftmost tab
+ */
 public class DashFragment extends Fragment {
-    private static DashFragment sInstance;
+    private LinearLayout mLinearLayout;
     private List<CardView> mRedditCardList = new ArrayList<>();
     private List<CardView> mTwitterCardList = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private LinearLayout mLinearLayout;
+    private static DashFragment sInstance;
 
+    /**
+     * Create the View for dashboard
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     *                           The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -65,6 +77,9 @@ public class DashFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -73,6 +88,9 @@ public class DashFragment extends Fragment {
         mTwitterCardList.clear();
     }
 
+    /**
+     * Update the instances of both Reddit and Twitter fragments
+     */
     private void updateCards() {
         RedditFragment redditFragment = RedditFragment.getInstance();
         if (redditFragment == null) {
@@ -87,16 +105,27 @@ public class DashFragment extends Fragment {
         twitterFragment.updateTwitter();
     }
 
+    /**
+     * Fills a list with cardViews with the Reddit Frontpage
+     *
+     * @param redditCards
+     */
     void setRedditCards(List<CardView> redditCards) {
         this.mRedditCardList = redditCards;
         createUI();
     }
 
+    /**
+     * @param twitterCards
+     */
     void setTwitterCards(List<CardView> twitterCards) {
         this.mTwitterCardList = twitterCards;
         createUI();
     }
 
+    /**
+     * Merge the two cardViewLists you get from Reddit and Twitter fragments.
+     */
     private void createUI() {
         List<CardView> cardViewList = new ArrayList<>();
 

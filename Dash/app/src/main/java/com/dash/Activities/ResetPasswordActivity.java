@@ -44,6 +44,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     /**
      * Creates this activity, the reset password activity.
+     *
      * @param savedInstanceState saved instance of this activity
      */
     @Override
