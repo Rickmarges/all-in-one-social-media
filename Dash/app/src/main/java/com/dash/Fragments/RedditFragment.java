@@ -83,6 +83,7 @@ public class RedditFragment extends Fragment {
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
 
+        // Set onRefreshListener so it shows progressbar
         mSwipeRefreshLayout.setOnRefreshListener(this::updateReddit);
 
         mLinearLayout = rootView.findViewById(R.id.redditLayout);
@@ -92,12 +93,18 @@ public class RedditFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Updates the Reddit Frontpage when the user returns to this fragment
+     */
     @Override
     public void onResume() {
         super.onResume();
         updateReddit();
     }
 
+    /**
+     * Executes an async task to refresh Reddit Frontpage
+     */
     void updateReddit() {
         if (DashApp.getAccountHelper().isAuthenticated()) {
             new GetRedditFrontpage().execute();
@@ -108,7 +115,10 @@ public class RedditFragment extends Fragment {
         return sInstance;
     }
 
-    class GetRedditFrontpage extends AsyncTask<String, Void, List<Submission>> {
+    /**
+     * Executes asynctask to retrieve the Reddit Frontpage based on the sorting stored in the Shared Preferences
+     */
+    class GetRedditFrontpage extends AsyncTask<Void, Void, List<Submission>> {
         final RedditClient redditClient = DashApp.getAccountHelper().getReddit();
 
         final SubredditSort[] sorts = new SubredditSort[]{
@@ -120,8 +130,14 @@ public class RedditFragment extends Fragment {
                 SubredditSort.RISING
         };
 
+        /**
+         * Returns a paginated Reddit Frontpage
+         *
+         * @param voids voids
+         * @return return the next post of the Frontpage
+         */
         @Override
-        protected List<Submission> doInBackground(String... params) {
+        protected List<Submission> doInBackground(Void... voids) {
             try {
                 SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity())
                         .getSharedPreferences(DashboardActivity
@@ -142,6 +158,11 @@ public class RedditFragment extends Fragment {
             }
         }
 
+        /**
+         * Creates the Cardviews holding the Reddit posts after retrieving them
+         *
+         * @param submissions The post retrieved from the Reddit Frontpage
+         */
         @Override
         protected void onPostExecute(List<Submission> submissions) {
             createUI(submissions);
@@ -155,6 +176,11 @@ public class RedditFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates the UI elements holding the Cardviews
+     *
+     * @param submissions The post retrieved from the Reddit Frontpage
+     */
     private void createUI(List<Submission> submissions) {
         // Setup a dynamic linearlayout to add frontpage posts
         if (mLinearLayout == null) {
@@ -174,9 +200,17 @@ public class RedditFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
+    /**
+     * Create TextView holding title of the Reddit post
+     *
+     * @param submission The post retrieved from the Reddit Frontpage
+     * @return the TextView holding the title
+     */
     private TextView createTitle(Submission submission) {
         TextView textView = new TextView(getContext());
+        // Fill TextView with title
         textView.setText(submission.getTitle());
+        // Style TextView
         textView.setTextAppearance(R.style.strokeColor);
         textView.setGravity(1);
         textView.setPadding(15, 5, 10, 0);
@@ -184,22 +218,38 @@ public class RedditFragment extends Fragment {
         return textView;
     }
 
-    // Fill and style author
+    /**
+     * Create TextView holding the author of the Reddit post
+     *
+     * @param submission The post retrieved from the Reddit Frontpage
+     * @return the TextView holding the author
+     */
     private TextView createAuthor(Submission submission) {
         TextView textView = new TextView(getContext());
+        // Style and fill TextView with r/SubReddit
         String subreddit = "In: r/" + submission.getSubreddit();
         textView.append(subreddit);
+        // Append Author after the SubReddit
         String author = " By: u/" + submission.getAuthor();
         textView.append(author);
+        // Style TextView
         textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
         textView.setPadding(20, 5, 150, 5);
         textView.setTypeface(null, Typeface.ITALIC);
         return textView;
     }
 
+    /**
+     * Create Textview holding the description of the Reddit post
+     *
+     * @param submission The post retrieved from the Reddit Frontpage
+     * @return the TextView holding the description
+     */
     private TextView createDesc(Submission submission) {
         TextView textView = new TextView(getContext());
+        // Sets the text to hold description of the post
         textView.setText(submission.getSelfText());
+        // Style TextView
         textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
         textView.setPadding(25, 5, 150, 5);
         textView.setVerticalScrollBarEnabled(true);
@@ -207,51 +257,87 @@ public class RedditFragment extends Fragment {
         return textView;
     }
 
+    /**
+     * Create TextView holding the text "Read More.."
+     *
+     * @return the TextView
+     */
     private TextView createReadMore() {
         TextView textView = new TextView(getContext());
+        // Add text to bottom right of post instead of filling the card with all text
         textView.setText(R.string.read_more);
+        // Style TextView
         textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
         textView.setPadding(25, 5, 150, 5);
         textView.setGravity(800005);
         return textView;
     }
 
+    /**
+     * Create View that divides author from title and rest of the post
+     *
+     * @return the view
+     */
     private View createDivider() {
         // Style end enable divider
         View view = new View(getContext());
+        // Style View
         view.setLayoutParams(new LinearLayout
                 .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5));
         view.setBackgroundResource(R.color.colorBackgroundPrimary);
         return view;
     }
 
+    /**
+     * Create ImageView holding the image of the Reddit post
+     *
+     * @param submission The post retrieved from the Reddit Frontpage
+     * @return the ImageView
+     */
     private ImageView createImage(Submission submission) {
         // Insert path into Picasso to download image
         ImageView imageView = new ImageView(getContext());
         Picasso.with(this.getContext()).load(submission.getUrl()).into(imageView);
+        // Style ImageView
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setPadding(10, 0, 10, 20);
         return imageView;
     }
 
+    /**
+     * Create the LinearLayout holding the CardViews
+     *
+     * @param submission The post retrieved from the Reddit Frontpage
+     * @return the LinearLayout
+     */
     private LinearLayout createCardLayout(Submission submission) {
         LinearLayout linearLayout = new LinearLayout(getContext());
+        // Style LinearLayout
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(createAuthor(submission));
         linearLayout.addView(createDivider());
         linearLayout.addView(createTitle(submission));
+        // If the post has text instead of image TextViews for the description and Read more
         if (submission.isSelfPost()) {
             linearLayout.addView(createDesc(submission));
             linearLayout.addView(createReadMore());
         }
+        // If the post has an image add ImageView
         if (submission.hasThumbnail()) {
             linearLayout.addView(createImage(submission));
         }
         return linearLayout;
     }
 
+    /**
+     * Create and style the CardViews holding the different elements of the Reddit posts
+     *
+     * @param submission The post retrieved from the Reddit Frontpage
+     * @return the cardview
+     */
     private CardView createCardView(Submission submission) {
         CardView cardView = new CardView(Objects.requireNonNull(getContext()));
+        // Style CardView
         cardView.setCardBackgroundColor(getResources()
                 .getColor(R.color.colorBackgroundSecondary, null));
         cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -259,17 +345,21 @@ public class RedditFragment extends Fragment {
         cardView.setUseCompatPadding(true);
         cardView.setCardElevation(7);
         cardView.setRadius(15);
+        CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
+        layoutParams.bottomMargin = 10;
+        // Set onClickListener and add custom animation
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
                 Uri.parse("https://www.reddit.com" + submission.getPermalink()))));
-        CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
-        layoutParams.bottomMargin = 10;
         cardView.addView(createCardLayout(submission));
         return cardView;
     }
 
-    public void clearUI(){
+    /**
+     * Clears UI elements
+     */
+    public void clearUI() {
         mCardViewList.clear();
         if (mLinearLayout.getChildCount() > 0) {
             mLinearLayout.removeAllViews();

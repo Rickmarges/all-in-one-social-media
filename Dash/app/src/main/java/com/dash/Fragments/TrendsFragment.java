@@ -93,6 +93,7 @@ public class TrendsFragment extends Fragment {
         //Set refresh on this page
         mSwipeRefreshLayout = rootView.findViewById(R.id.trendsRefresh);
 
+        // Set onRefreshListener on this page top update the Trends
         mSwipeRefreshLayout.setOnRefreshListener(this::updateRss);
 
         // Change colours of bar and background to match style
@@ -102,6 +103,9 @@ public class TrendsFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -117,7 +121,16 @@ public class TrendsFragment extends Fragment {
         updateRss();
     }
 
+    /**
+     *
+     */
     class RssParser extends AsyncTask<String, Void, List<RssItem>> {
+        /**
+         * Builds document holding RssItems
+         *
+         * @param params params
+         * @return RssItems
+         */
         @Override
         public List<RssItem> doInBackground(String... params) {
             List<RssItem> rssItems;
@@ -146,6 +159,11 @@ public class TrendsFragment extends Fragment {
             return rssItems;
         }
 
+        /**
+         * Populate CardUI with RssItems
+         *
+         * @param rssItems retrieved from RssParser
+         */
         @Override
         protected void onPostExecute(List<RssItem> rssItems) {
             try {
@@ -160,6 +178,9 @@ public class TrendsFragment extends Fragment {
         }
     }
 
+    /**
+     * Update the RSS by executing the RssParser
+     */
     private void updateRss() {
         try {
             new RssParser().execute(mBaseUrl + mCountryCode);
@@ -169,6 +190,12 @@ public class TrendsFragment extends Fragment {
         }
     }
 
+    /**
+     * Retrieve bitmap from an URL
+     *
+     * @param imageUrl url from RssItem from where to download
+     * @return the download bitmap
+     */
     private Bitmap getImageBitmap(String imageUrl) {
         Bitmap bitmap = null;
         try {
@@ -187,24 +214,35 @@ public class TrendsFragment extends Fragment {
         return bitmap;
     }
 
+    /**
+     * Creates a List with RssItems
+     * loops through list to get data from nodes retrieved from excecuting RssParser
+     *
+     * @param nodes nodes retrieved from Asynctask RssParser
+     * @return an RssItem
+     */
     private List<RssItem> createRssItems(NodeList nodes) {
         List<RssItem> rssItems = new ArrayList<>();
+        // Loop through nodes
         for (int i = 0; i < nodes.getLength(); i++) {
             NodeList itemNodes;
             if (nodes.item(i).getNodeName().equals("item")) {
                 RssItem rssItem = new RssItem();
                 itemNodes = nodes.item(i).getChildNodes();
-
+                // Retrieve Title and set it to the Title in RssItem
                 for (int j = 0; j < itemNodes.getLength(); j++) {
                     Node tempNode = itemNodes.item(j);
                     if (tempNode.getNodeName().equals("title")) {
                         rssItem.setTitle(tempNode.getFirstChild().getNodeValue());
                     }
+                    // Retrieve ImageBitmap and set it to the Image in RssItem
                     if (tempNode.getNodeName().equals("ht:picture")) {
                         rssItem.setImage(getImageBitmap(tempNode.getFirstChild().getNodeValue()));
                     }
+                    // Retrieve NewsItem
                     if (tempNode.getNodeName().equals("ht:news_item")) {
                         Node newsNode = tempNode.getFirstChild();
+                        // Retrieve the description and put it in Description in RssItem, after stripping HTML character from it
                         while (newsNode.getNextSibling() != null) {
                             if (newsNode.getNodeName().equals("ht:news_item_title")
                                     && rssItem.getDescription().equals("")) {
@@ -217,6 +255,7 @@ public class TrendsFragment extends Fragment {
                                 }
                                 rssItem.setDescription(description);
                             }
+                            // Retrieve the URL and set it to Link in RssItem
                             if (newsNode.getNodeName().equals("ht:news_item_url")
                                     && rssItem.getLink().equals("")) {
                                 rssItem.setLink(newsNode.getFirstChild().getNodeValue());
@@ -230,7 +269,6 @@ public class TrendsFragment extends Fragment {
         }
         return rssItems;
     }
-
 
     /**
      * Creates the UI based on CardView from a list of RssItems/nodes.
@@ -246,7 +284,6 @@ public class TrendsFragment extends Fragment {
         for (RssItem rssItem : rssItems) {
             RelativeLayout cardLayout = new RelativeLayout(getContext());
             CardView cardView = createCard(rssItem.getLink());
-
             cardLayout.addView(createTitle(rssItem.getTitle()));
             cardLayout.addView(createDesc(rssItem.getDescription()));
             cardLayout.addView(createImage(rssItem.getImage()));
@@ -255,20 +292,35 @@ public class TrendsFragment extends Fragment {
         }
     }
 
+    /**
+     * Create TextView holding title of the RssItem
+     *
+     * @param title title retrieved from the RssItem
+     * @return the TextView holding the title
+     */
     private TextView createTitle(String title) {
         TextView textView = new TextView(getContext());
+        // Fill Textview with title
         textView.setText(title);
+        // Style TextView
         textView.setTextColor(getResources().getColor(R.color.colorPrimary, null));
         textView.setPadding(15, 5, 220, 5);
         textView.setTextSize(19);
         return textView;
     }
 
+    /**
+     * Create TextView holding description of the RssItem
+     *
+     * @param description title retrieved from the RssItem
+     * @return the TextView holding the description
+     */
     private TextView createDesc(String description) {
         TextView textView = new TextView(getContext());
+        // Fill Textview with escription and make first character uppercase
         description = description.substring(0, 1).toUpperCase() + description.substring(1);
-
         textView.setText(description);
+        // Style TextView
         textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
         textView.setPadding(15, 5, 220, 10);
         textView.setLayoutParams(new RelativeLayout
@@ -278,21 +330,35 @@ public class TrendsFragment extends Fragment {
         return textView;
     }
 
+    /**
+     * Create ImageView holding bitmap of the RssItem
+     *
+     * @param bitmap bitmap retrieved from the RssItem
+     * @return the ImageView holding the bitmap
+     */
     private ImageView createImage(Bitmap bitmap) {
         ImageView imageView = new ImageView(getContext());
-        RelativeLayout.LayoutParams imageParams;
-        imageParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        imageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        // Fill ImageView with bitmap
         imageView.setImageBitmap(bitmap);
+        // Style ImageView
+        RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(RelativeLayout
+                .LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        imageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         imageView.setLayoutParams(imageParams);
         imageView.setMinimumHeight(200);
         imageView.setMinimumWidth(200);
         return imageView;
     }
 
+    /**
+     * Create TextView holding url of the RssItem
+     *
+     * @param link url retrieved from the RssItem
+     * @return the TextView holding the url
+     */
     private CardView createCard(String link) {
         CardView cardView = new CardView(Objects.requireNonNull(getContext()));
+        // Style CardView
         cardView.setCardBackgroundColor(getResources()
                 .getColor(R.color.colorBackgroundSecondary, null));
         cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -300,13 +366,14 @@ public class TrendsFragment extends Fragment {
         cardView.setUseCompatPadding(true);
         cardView.setCardElevation(7);
         cardView.setRadius(15);
+        CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
+        layoutParams.height = 220;
+        layoutParams.bottomMargin = 10;
+        // Set onClickListener and add custom animation
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
                 Uri.parse(link))));
-        CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
-        layoutParams.height = 220;
-        layoutParams.bottomMargin = 10;
         return cardView;
     }
 }
