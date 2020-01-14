@@ -159,7 +159,7 @@ public class AccountActivity extends AppCompatActivity {
             removeRedditIB.setOnClickListener(view -> {
                 DashApp.getTokenStore().deleteRefreshToken(accountHelper.getReddit().getAuthManager().currentUsername());
                 DashApp.getTokenStore().deleteLatest(accountHelper.getReddit().getAuthManager().currentUsername());
-                accountHelper.logout(); 
+                accountHelper.logout();
                 RedditFragment.getInstance().clearUI();
                 removeRedditIB.setVisibility(View.INVISIBLE);
                 redditUserTextView.setVisibility(View.INVISIBLE);

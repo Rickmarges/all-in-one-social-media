@@ -1,3 +1,23 @@
+/*
+ * Copyright 2019 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Furthermore this project is licensed under the firebase.google.com/terms and
+ * firebase.google.com/terms/crashlytics.
+ *
+ */
+
 package com.dash.Utils;
 
 import android.app.Activity;
@@ -31,10 +51,13 @@ import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 import com.twitter.sdk.android.tweetui.TweetUi;
 
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 
-// Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki
+/**
+ * Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki
+ */
 public class TwitterRepository extends AppCompatActivity {
     public static TwitterRepository twitterSingleton = null;
     private Twitter instance;
@@ -42,10 +65,17 @@ public class TwitterRepository extends AppCompatActivity {
     private String secret;
     public TwitterSession userSession;
 
+    /**
+     *
+     */
     public TwitterRepository() {
     }
 
-    //Creates a singlton of the twitterinstance
+    /**
+     * Creates a singlton of the twitterinstance
+     *
+     * @return a twitterSingleton
+     */
     public static TwitterRepository GetSingleton() {
         //twitterSingleton = new TwitterRepository();
         if (twitterSingleton == null) {
@@ -56,7 +86,11 @@ public class TwitterRepository extends AppCompatActivity {
         return twitterSingleton;
     }
 
-    //Creates a twitter session in the singleton
+    /**
+     * Creates a twitter session in the singleton
+     *
+     * @param session the twitter session
+     */
     public void createSession(TwitterSession session) {
         twitterSingleton.userSession = session;
         TwitterAuthToken authToken = session.getAuthToken();
@@ -68,6 +102,9 @@ public class TwitterRepository extends AppCompatActivity {
         return TwitterCore.getInstance();
     }
 
+    /**
+     * Clears the currenctly active session
+     */
     public void clearSession() {
         TwitterCore.getInstance().getSessionManager().clearActiveSession();
     }
@@ -76,6 +113,12 @@ public class TwitterRepository extends AppCompatActivity {
         return TwitterCore.getInstance().getSessionManager().getActiveSession();
     }
 
+    /**
+     * Retrieves the hometimeline of the currenctly authenticated WwitterUser
+     *
+     * @param amount   the amount of tweets to be retrieved
+     * @param fragment the fragment the cards will be placed in
+     */
     public void GetHomeTimeline(int amount, TwitterFragment fragment) {
         //Gets the twitter api and calls the api to get the hometimeline
         TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
@@ -84,6 +127,11 @@ public class TwitterRepository extends AppCompatActivity {
         //For some reason a call with count 20 will get 18 results. So 22 is 20.
         Call<List<Tweet>> call = statusesService.homeTimeline(amount + 2, null, null, null, false, null, null);
         call.enqueue(new Callback<List<Tweet>>() {
+            /**
+             * Fills fragment with the result of the call
+             *
+             * @param result the result of the call
+             */
             @Override
             public void success(Result<List<Tweet>> result) {
                 //Creates the timeline in the twitter fragment
@@ -91,7 +139,13 @@ public class TwitterRepository extends AppCompatActivity {
                 fragment.createHomeTimelineView(t);
             }
 
-            public void failure(TwitterException exception) {
+            /**
+             * Reports failure
+             *
+             * @param te the exception thrown
+             */
+            public void failure(TwitterException te) {
+                Log.w(Objects.requireNonNull(getApplicationContext()).toString(), "Unable to retrieve Timeline: " + te.getMessage());
             }
         });
     }
@@ -109,9 +163,19 @@ public class TwitterRepository extends AppCompatActivity {
         TweetUi.getInstance();
     }
 
-    //Sets the twittercallback for the login button of twitter.
+    /**
+     * Sets the twittercallback for the login button of twitter.
+     *
+     * @param context    the view
+     * @param twitterBtn the button used to authenticate
+     */
     static public void setTwitterCallback(Context context, TwitterLoginButton twitterBtn) {
         twitterBtn.setCallback(new Callback<TwitterSession>() {
+            /**
+             *Reports if authentication was succesfull
+             *
+             * @param result the result of the session
+             */
             @Override
             public void success(Result<TwitterSession> result) {
                 //resets the buttons
@@ -125,12 +189,18 @@ public class TwitterRepository extends AppCompatActivity {
                 TwitterRepository.GetSingleton().createSession(session);
                 textView.setText(session.getUserName());
 
+                // Clear all cookies of webview
                 CookieManager.getInstance().removeAllCookies(null);
                 CookieManager.getInstance().flush();
             }
 
+            /**
+             * Reports if authentication failed
+             *
+             * @param te the exception thrown
+             */
             @Override
-            public void failure(TwitterException exception) {
+            public void failure(TwitterException te) {
                 //clears the session
                 Toast.makeText(context, "Authentication failed try again...", Toast.LENGTH_SHORT).show();
                 TwitterRepository.GetSingleton().clearSession();
