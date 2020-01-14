@@ -115,6 +115,9 @@ public class AccountActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Reinitialize when the user returns to this activity
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -150,12 +153,16 @@ public class AccountActivity extends AppCompatActivity {
             removeRedditIB.setVisibility(View.VISIBLE);
             TextView textView = findViewById(R.id.addRedditAccount);
             textView.setText(accountHelper.getReddit().getAuthManager().currentUsername());
+            TextView redditUserTextView = findViewById(R.id.redditUsername);
+            redditUserTextView.setVisibility(View.VISIBLE);
+            redditUserTextView.setText(R.string.redditUsername);
             removeRedditIB.setOnClickListener(view -> {
                 DashApp.getTokenStore().deleteRefreshToken(accountHelper.getReddit().getAuthManager().currentUsername());
                 DashApp.getTokenStore().deleteLatest(accountHelper.getReddit().getAuthManager().currentUsername());
                 accountHelper.logout();
                 RedditFragment.getInstance().clearUI();
                 removeRedditIB.setVisibility(View.INVISIBLE);
+                redditUserTextView.setVisibility(View.INVISIBLE);
                 mRedditIB.setVisibility(View.VISIBLE);
                 textView.setText(R.string.add_reddit);
             });
@@ -167,10 +174,14 @@ public class AccountActivity extends AppCompatActivity {
             removeTwitterBtn.setVisibility(View.VISIBLE);
             TextView textView = findViewById(R.id.addTwitterAccount);
             textView.setText(session.getUserName());
+            TextView twitterUserTextView = findViewById(R.id.twitterUsername);
+            twitterUserTextView.setVisibility(View.VISIBLE);
+            twitterUserTextView.setText(R.string.twitterUsername);
             removeTwitterBtn.setOnClickListener(view -> {
                 TwitterRepositoryActivity.twitterSingleton.clearSession();
                 TwitterFragment.getInstance().clearUI();
                 removeTwitterBtn.setVisibility(View.INVISIBLE);
+                twitterUserTextView.setVisibility(View.INVISIBLE);
                 mAddTwitterBtn.setVisibility(View.VISIBLE);
                 textView.setText(R.string.add_twitter);
             });

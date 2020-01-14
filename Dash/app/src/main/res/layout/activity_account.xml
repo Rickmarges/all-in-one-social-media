@@ -15,11 +15,11 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="175dp"
-        android:layout_height="175dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="@dimen/imageWidth"
+        android:layout_height="@dimen/imageWidth"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:contentDescription="@string/dash_logo"
         android:foreground="@drawable/rounded_logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:gravity="center_horizontal"
         android:text="@string/account"
         android:textColor="@color/colorPrimaryDark"
@@ -59,7 +59,7 @@
         android:id="@+id/usrAccount"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:background="?android:attr/listDivider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -68,16 +68,29 @@
         android:id="@+id/addReddit"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:background="?android:attr/listDivider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailAccount" />
 
     <TextView
+        android:id="@+id/redditUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/tw__composer_char_count_height"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/colorPrimary"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addReddit" />
+
+    <TextView
         android:id="@+id/addRedditAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="37dp"
+        android:layout_marginStart="@dimen/tw__composer_char_count_height"
         android:layout_marginTop="28dp"
         android:text="@string/add_reddit"
         android:textColor="@color/colorPrimary"
@@ -91,8 +104,8 @@
         style="@style/Base.TextAppearance.AppCompat.Widget.Button"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/paddingImage"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:backgroundTint="@color/colorBackgroundSecondary"
         android:contentDescription="@string/reddit"
         android:visibility="visible"
@@ -103,10 +116,10 @@
     <ImageButton
         android:id="@+id/removeRedditIB"
         style="@style/Widget.AppCompat.ImageButton"
-        android:layout_width="54dp"
+        android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/paddingImage"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:backgroundTint="@color/colorBackgroundSecondary"
         android:contentDescription="@string/reddit"
         android:scaleType="centerInside"
@@ -125,39 +138,51 @@
         app:layout_constraintTop_toBottomOf="@id/addReddit" />
 
     <TextView
+        android:id="@+id/twitterUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/tw__composer_char_count_height"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/colorPrimary"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addTwitter" />
+
+    <TextView
         android:id="@+id/addTwitterAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="108dp"
+        android:layout_marginStart="@dimen/tw__composer_char_count_height"
+        android:layout_marginTop="28dp"
         android:text="@string/add_twitter"
         android:textColor="@color/colorPrimary"
         android:textColorHighlight="@color/colorPrimaryDark"
         android:textSize="22sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addReddit" />
+        app:layout_constraintTop_toBottomOf="@+id/addTwitter" />
 
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/addtwitterbtn"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/paddingImage"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addReddit" />
+        app:layout_constraintTop_toBottomOf="@+id/addTwitter" />
 
     <ImageButton
         android:id="@+id/removetwitterbtn"
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/paddingImage"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:backgroundTint="@color/colorBackgroundSecondary"
         android:contentDescription="@string/reddit"
-        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addReddit"
+        app:layout_constraintTop_toBottomOf="@+id/addTwitter"
         app:srcCompat="@drawable/trash" />
 
     <View
@@ -182,7 +207,7 @@
         android:id="@+id/resetpwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:backgroundTint="@color/colorBackgroundSecondary"
         android:foreground="@drawable/custom_ripple"
         android:text="@string/reset_password"
@@ -198,8 +223,5 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider5" />
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
