@@ -34,8 +34,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.DashApp;
 import com.dash.Fragments.RedditFragment;
+import com.dash.Fragments.TwitterFragment;
 import com.dash.R;
-import com.dash.Utils.TwitterRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -74,7 +74,7 @@ public class AccountActivity extends AppCompatActivity {
 
         mSecondClick = false;
 
-        TwitterRepository.InitializeTwitter(getApplicationContext());
+        TwitterRepositoryActivity.InitializeTwitter(getApplicationContext());
 
         // Get user email and encrypt that email so it can be used for storage
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -161,7 +161,6 @@ public class AccountActivity extends AppCompatActivity {
             });
         }
 
-
         TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
         if(session != null){
             mAddTwitterBtn.setVisibility(View.INVISIBLE);
@@ -169,7 +168,8 @@ public class AccountActivity extends AppCompatActivity {
             TextView textView = findViewById(R.id.addTwitterAccount);
             textView.setText(session.getUserName());
             removeTwitterBtn.setOnClickListener(view -> {
-                TwitterRepository.twitterSingleton.clearSession();
+                TwitterRepositoryActivity.twitterSingleton.clearSession();
+                TwitterFragment.getInstance().clearUI();
                 removeTwitterBtn.setVisibility(View.INVISIBLE);
                 mAddTwitterBtn.setVisibility(View.VISIBLE);
                 textView.setText(R.string.add_twitter);
@@ -177,7 +177,7 @@ public class AccountActivity extends AppCompatActivity {
         } else {
             mAddTwitterBtn.setVisibility(View.VISIBLE);
             removeTwitterBtn.setVisibility(View.INVISIBLE);
-            TwitterRepository.setTwitterCallback(this, mAddTwitterBtn);
+            TwitterRepositoryActivity.setTwitterCallback(this, mAddTwitterBtn);
         }
     }
 

@@ -20,8 +20,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.dash.Activities.TwitterRepositoryActivity;
 import com.dash.R;
-import com.dash.Utils.TwitterRepository;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.text.ParseException;
@@ -35,7 +35,7 @@ import java.util.Objects;
 public class TwitterFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private static TwitterFragment sInstance;
-    private List<CardView> mCardList = new ArrayList<>();
+    private final List<CardView> mCardList = new ArrayList<>();
     private LinearLayout mLinearLayout;
 
     /**
@@ -71,8 +71,9 @@ public class TwitterFragment extends Fragment {
 
     public void createHomeTimelineView(List<Tweet> tweets) {
         // Make sure the rest of the methods are only called it there are tweets
+        mCardList.clear();
         if (tweets == null){
-            Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT);
+            Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT).show();
             return;
         }
         // Setup a dynamic linearlayout to add frontpage posts
@@ -205,12 +206,23 @@ public class TwitterFragment extends Fragment {
         return imageView;
     }
 
-    static TwitterFragment getInstance() {
+    public static TwitterFragment getInstance() {
         return sInstance;
     }
 
     void updateTwitter(Context context) {
-        TwitterRepository.InitializeTwitter(context);
-        TwitterRepository.GetSingleton().GetHomeTimeline(25, this);
+        TwitterRepositoryActivity.InitializeTwitter(context);
+        TwitterRepositoryActivity.GetSingleton().GetHomeTimeline(25);
+    }
+
+    public void setRefreshing(boolean bool) {
+        mSwipeRefreshLayout.setRefreshing(bool);
+    }
+
+    public void clearUI(){
+        mCardList.clear();
+        if (mLinearLayout.getChildCount() > 0) {
+            mLinearLayout.removeAllViews();
+        }
     }
 }

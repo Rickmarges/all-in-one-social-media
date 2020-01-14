@@ -95,8 +95,8 @@ public class DashFragment extends Fragment {
      * Update the instances of both Reddit and Twitter fragments
      */
     private void updateCards() {
-        mRedditReady = false;
-        mTwitterReady = false;
+        setRedditReady(false);
+        setTwitterReady(false);
 
         RedditFragment redditFragment = RedditFragment.getInstance();
         redditFragment.updateReddit();
@@ -105,20 +105,10 @@ public class DashFragment extends Fragment {
         twitterFragment.updateTwitter(getContext());
     }
 
-    /**
-     * Fills a list with cardViews with the Reddit Frontpage
-     *
-     * @param redditCards a list with Cards from the Reddit Frontpage
-     */
     void setRedditCards(List<CardView> redditCards) {
         mRedditCardList = redditCards;
     }
 
-    /**
-     * Fills a list with cardViews with the Twitter timeline
-     *
-     * @param twitterCards a list with Cards from the Twitter timeline
-     */
     void setTwitterCards(List<CardView> twitterCards) {
         mTwitterCardList = twitterCards;
     }
@@ -127,7 +117,7 @@ public class DashFragment extends Fragment {
         mRedditReady = bool;
     }
 
-    void setTwitterReady(Boolean bool){
+    public void setTwitterReady(Boolean bool){
         mTwitterReady = bool;
     }
 
@@ -137,7 +127,13 @@ public class DashFragment extends Fragment {
     void createUI() {
         List<CardView> cardViewList = new ArrayList<>();
 
-        if (!mRedditReady || !mTwitterReady) {
+        if (!mRedditReady && !mTwitterReady) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            return;
+        }
+
+        if (mRedditCardList.size() == 0 && mTwitterCardList.size() == 0) {
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
 
@@ -145,10 +141,6 @@ public class DashFragment extends Fragment {
             if (mLinearLayout.getChildCount() > 0) {
                 mLinearLayout.removeAllViews();
             }
-        }
-
-        if (mRedditCardList.size() == 0 && mTwitterCardList.size() == 0) {
-            return;
         }
 
         int i = 0;
@@ -171,7 +163,19 @@ public class DashFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    static DashFragment getInstance() {
+    public void clearUI() {
+        mRedditCardList.clear();
+        mTwitterCardList.clear();
+        if (mLinearLayout.getChildCount() > 0) {
+            mLinearLayout.removeAllViews();
+        }
+    }
+
+    public void setRefreshing(boolean bool) {
+        mSwipeRefreshLayout.setRefreshing(bool);
+    }
+
+    public static DashFragment getInstance() {
         return sInstance;
     }
 }

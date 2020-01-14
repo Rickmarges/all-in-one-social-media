@@ -3,10 +3,10 @@ package com.dash;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.test.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.dash.Utils.TwitterRepository;
+import com.dash.Activities.TwitterRepositoryActivity;
 import com.twitter.sdk.android.core.SessionManager;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterAuthToken;
@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 import okhttp3.HttpUrl;
 import retrofit2.Retrofit;
@@ -39,14 +40,14 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class TwitterBasedTest {
-    SessionManager<TwitterSession> session = null;
-    TwitterSession twitterSession = null;
+    private SessionManager<TwitterSession> session = null;
+    private TwitterSession twitterSession = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         //Creates a twitter kit instance
-        Context test_context = InstrumentationRegistry.getTargetContext();
-        TwitterRepository.twitterSingleton.InitializeTwitter(test_context);
+        Context test_context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        TwitterRepositoryActivity.InitializeTwitter(test_context);
         TwitterAuthToken twitterAuthToken = new TwitterAuthToken("Token_Test", "Secret_Test");
         //Creating a session to use for the tests
         twitterSession = new TwitterSession(twitterAuthToken, 123, "Username_test");
@@ -79,8 +80,8 @@ public class TwitterBasedTest {
         }
 
         //gets the sharedprefence
-        SharedPreferences sharedPreferences = preferenceStore.get();
-        Boolean b = sharedPreferences.contains("active_twittersession");
+        SharedPreferences sharedPreferences = Objects.requireNonNull(preferenceStore).get();
+        boolean b = sharedPreferences.contains("active_twittersession");
         String activeSession = sharedPreferences.getString("active_twittersession", "user_name");
         assertTrue(b);
         assertTrue(activeSession.contains("Token_Test"));

@@ -101,6 +101,10 @@ public class RedditFragment extends Fragment {
     void updateReddit() {
         if (DashApp.getAccountHelper().isAuthenticated()) {
             new GetRedditFrontpage().execute();
+        } else {
+            mSwipeRefreshLayout.setRefreshing(false);
+            DashFragment.getInstance().setRedditReady(false);
+            DashFragment.getInstance().setRefreshing(false);
         }
     }
 

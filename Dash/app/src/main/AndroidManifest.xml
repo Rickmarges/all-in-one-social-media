@@ -50,6 +50,9 @@
             android:name=".Activities.SettingsActivity"
             android:noHistory="true" />
         <activity
+            android:name=".Activities.TwitterRepositoryActivity"
+            android:noHistory="true" />
+        <activity
             android:name=".Activities.ResetPasswordActivity"
             android:noHistory="true" />
         <activity android:name=".Activities.AddRedditAccountActivity" />

@@ -38,15 +38,22 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.dash.Adapters.ViewPagerAdapter;
 import com.dash.DashApp;
+import com.dash.Fragments.DashFragment;
+import com.dash.Fragments.RedditFragment;
+import com.dash.Fragments.TwitterFragment;
 import com.dash.R;
-import com.dash.Utils.TwitterRepository;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterSession;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Creates the main Activity you see when you are currently authenticated as a FireBaseUser
@@ -92,10 +99,10 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
         checkLoggedIn();
         sEncryptedEmail = encryptString(mFirebaseUser.getEmail());
         checkReddit();
+        checkTwitter();
     }
 
     /**
@@ -183,9 +190,6 @@ public class DashboardActivity extends AppCompatActivity {
         mFirebaseUser = null;
         FirebaseAuth.getInstance().signOut();
 
-        // Sets current tab in the Dashboard tablayout to the leftmost tab to reset
-        Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
-
         // Clear the different LinearLayouts from Trends, Reddit, Twitter and Dash respectively or throws an NPE if there is nothing to delete
         try {
             LinearLayout linearLayout = findViewById(R.id.trendsLayout);
@@ -195,27 +199,20 @@ public class DashboardActivity extends AppCompatActivity {
                     "No Trend views to delete." + npe.getMessage());
         }
 
-        try {
-            LinearLayout linearLayout = findViewById(R.id.redditLayout);
-            linearLayout.removeAllViews();
-        } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(),
-                    "No Reddit views to delete." + npe.getMessage());
-        }
+        TwitterFragment.getInstance().clearUI();
 
-        try {
-            LinearLayout linearLayout = findViewById(R.id.dashLayout);
-            linearLayout.removeAllViews();
-        } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(),
-                    "No views in dashboard to delete." + npe.getMessage());
-        }
+        RedditFragment.getInstance().clearUI();
+
+        DashFragment.getInstance().clearUI();
 
         // Logs the currently authenticated RedditUser out.
         DashApp.getAccountHelper().logout();
 
         // Logs the currently authenticated TwitterUser out.
-        TwitterRepository.GetSingleton().clearSession();
+        TwitterRepositoryActivity.GetSingleton().clearSession();
+
+        // Sets current tab in the Dashboard tablayout to the leftmost tab to reset
+        Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
 
         // Redirects the user to LoginActivity
         startActivity(new Intent(this, LoginActivity.class));
@@ -278,6 +275,37 @@ public class DashboardActivity extends AppCompatActivity {
                     return;
                 }
             }
+        } catch (NullPointerException npe) {
+            Log.w(getApplicationContext().toString(),
+                    "No such user found." + npe.getMessage());
+        }
+    }
+
+    private void checkTwitter() {
+        try {
+            SharedPreferences sharedPreferences = getSharedPreferences(getEncryptedEmail(),
+                    Context.MODE_PRIVATE);
+
+            Set<String> authTokenSet = sharedPreferences.getStringSet("Twitter token", new HashSet<>());
+            String twitterUsername = sharedPreferences.getString("Twitter username", "");
+            long twitterId = sharedPreferences.getLong("Twitter id", 0);
+
+           Object authSecret;
+           Object authToken;
+
+            Object[] authTokenArray = authTokenSet.toArray();
+            if (authTokenArray.length > 0 && !twitterUsername.equals("") && twitterId != 0) {
+                authSecret = authTokenArray[0];
+                authToken = authTokenArray[1];
+
+                TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken.toString(), authSecret.toString());
+
+                TwitterRepositoryActivity.InitializeTwitter(this);
+
+                TwitterSession twitterSession = new TwitterSession(twitterAuthToken, twitterId, twitterUsername);
+                TwitterCore.getInstance().getSessionManager().setActiveSession(twitterSession);
+            }
+
         } catch (NullPointerException npe) {
             Log.w(getApplicationContext().toString(),
                     "No such user found." + npe.getMessage());
