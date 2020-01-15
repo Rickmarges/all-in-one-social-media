@@ -53,19 +53,10 @@ import com.twitter.sdk.android.core.services.StatusesService;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 import com.twitter.sdk.android.tweetui.TweetUi;
 
-import java.sql.Date;
-import java.text.DateFormat;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
 
 import retrofit2.Call;
-
-import static com.dash.Activities.DashboardActivity.getFilename;
 
 /**
  * Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki

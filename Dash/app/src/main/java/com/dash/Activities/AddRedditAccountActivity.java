@@ -38,7 +38,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dash.DashApp;
 import com.dash.R;
 import com.securepreferences.SecurePreferences;
-import com.tozny.crypto.android.AesCbcWithIntegrity;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.oauth.OAuthException;
