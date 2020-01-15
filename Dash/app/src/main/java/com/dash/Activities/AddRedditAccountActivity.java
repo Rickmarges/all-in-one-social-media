@@ -142,7 +142,7 @@ public class AddRedditAccountActivity extends AppCompatActivity {
                     .currentUsername());
 
             SharedPreferences sharedPreferences = getSharedPreferences(
-                    DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
+                    DashboardActivity.getFilename(), MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putString("Reddit", redditUsername);

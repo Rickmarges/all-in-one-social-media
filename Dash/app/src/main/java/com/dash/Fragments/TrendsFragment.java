@@ -111,7 +111,7 @@ public class TrendsFragment extends Fragment {
         super.onResume();
         try {
             SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity())
-                    .getSharedPreferences(DashboardActivity.getEncryptedEmail(),
+                    .getSharedPreferences(DashboardActivity.getFilename(),
                             Context.MODE_PRIVATE);
             mCountryCode = sharedPreferences.getString("Country", "US");
         } catch (NullPointerException npe) {

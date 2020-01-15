@@ -77,7 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Retrieve the encrypted email from the currenctly authenticated FireBaseUser
-        mSharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(),
+        mSharedPreferences = getSharedPreferences(DashboardActivity.getFilename(),
                 Context.MODE_PRIVATE);
         // Create an adapter for the spinners
         mCountryAdapter = new ArrayAdapter<>(getApplicationContext(),

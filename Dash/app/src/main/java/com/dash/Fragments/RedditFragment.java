@@ -145,7 +145,7 @@ public class RedditFragment extends Fragment {
             try {
                 SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity())
                         .getSharedPreferences(DashboardActivity
-                                .getEncryptedEmail(), Context.MODE_PRIVATE);
+                                .getFilename(), Context.MODE_PRIVATE);
                 int savedValue = sharedPreferences.getInt("RedditSort", 0);
 
                 // frontPage() returns a Paginator.Builder

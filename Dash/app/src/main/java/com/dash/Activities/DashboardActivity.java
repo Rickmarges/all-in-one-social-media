@@ -45,6 +45,7 @@ import com.dash.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.twitter.sdk.android.core.SessionManager;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
@@ -64,11 +65,10 @@ import java.util.Set;
 @SuppressLint("ClickableViewAccessibility")
 public class DashboardActivity extends AppCompatActivity {
     private Button mMenuBtn;
-    private FirebaseUser mFirebaseUser;
+    private static FirebaseUser mFirebaseUser;
     private TabLayout mTabLayout;
     private int mBackCounter;
     private long mStartTime;
-    private static String sEncryptedEmail;
 
     /**
      * Creates this activity, The main Tab of the Dash app.
@@ -100,7 +100,6 @@ public class DashboardActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         checkLoggedIn();
-        sEncryptedEmail = encryptString(mFirebaseUser.getEmail());
         checkReddit();
         checkTwitter();
     }
@@ -122,14 +121,15 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Returns the encrypted email from the currently authenticated FireBaseUser.
+     * Returns the Firebase user id as filename String from the currently authenticated FireBaseUser.
      *
-     * @return returns the encrypted email from the currently authenticated FireBaseUser
-     * @throws IllegalStateException if the encyptedEmailString returns empty
+     * @return Returns the Firebase user id as String
+     * @throws IllegalStateException if the Firebase user id is empty
      */
-    public static String getEncryptedEmail() throws IllegalStateException {
-        if (!sEncryptedEmail.equals("")) {
-            return sEncryptedEmail;
+    public static String getFilename() throws IllegalStateException {
+        String filename = mFirebaseUser.getUid();
+        if (!filename.equals("")) {
+            return filename;
         } else {
             throw new IllegalStateException();
         }
@@ -209,7 +209,7 @@ public class DashboardActivity extends AppCompatActivity {
         DashApp.getAccountHelper().logout();
 
         // Logs the currently authenticated TwitterUser out.
-        TwitterRepositoryActivity.GetSingleton().clearSession();
+        TwitterRepositoryActivity.GetSingleton().getSession().getSessionManager().clearActiveSession();
 
         // Sets current tab in the Dashboard tablayout to the leftmost tab to reset
         Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
@@ -261,7 +261,7 @@ public class DashboardActivity extends AppCompatActivity {
      */
     private void checkReddit() {
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences(getEncryptedEmail(),
+            SharedPreferences sharedPreferences = getSharedPreferences(getFilename(),
                     Context.MODE_PRIVATE);
 
             String redditUsername = sharedPreferences.getString("Reddit", "");
@@ -283,7 +283,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void checkTwitter() {
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences(getEncryptedEmail(),
+            SharedPreferences sharedPreferences = getSharedPreferences(getFilename(),
                     Context.MODE_PRIVATE);
 
             Set<String> authTokenSet = sharedPreferences.getStringSet("Twitter token", new HashSet<>());
@@ -303,7 +303,10 @@ public class DashboardActivity extends AppCompatActivity {
                 TwitterRepositoryActivity.InitializeTwitter(this);
 
                 TwitterSession twitterSession = new TwitterSession(twitterAuthToken, twitterId, twitterUsername);
-                TwitterCore.getInstance().getSessionManager().setActiveSession(twitterSession);
+
+                SessionManager<TwitterSession> sessionManager = TwitterCore.getInstance().getSessionManager();
+                sessionManager.setSession(twitterId, twitterSession);
+                sessionManager.setActiveSession(twitterSession);
             }
 
         } catch (NullPointerException npe) {

@@ -58,7 +58,7 @@ import java.util.Set;
 
 import retrofit2.Call;
 
-import static com.dash.Activities.DashboardActivity.getEncryptedEmail;
+import static com.dash.Activities.DashboardActivity.getFilename;
 
 /**
  * Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki
@@ -90,13 +90,13 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
             String username = twitterSession.getUserName();
             long userId = twitterSession.getUserId();
 
-            authTokenSet.add(twitterSession.getAuthToken().secret);
             authTokenSet.add(twitterSession.getAuthToken().token);
+            authTokenSet.add(twitterSession.getAuthToken().secret);
 
             SharedPreferences sharedPreferences = Objects.requireNonNull(TwitterFragment
                     .getInstance()
                     .getActivity())
-                    .getSharedPreferences(getEncryptedEmail(), Context.MODE_PRIVATE);
+                    .getSharedPreferences(getFilename(), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putStringSet("Twitter token", authTokenSet);
