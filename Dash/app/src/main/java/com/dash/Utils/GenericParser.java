@@ -1,4 +1,4 @@
-package com.example.dash.ui;
+package com.dash.Utils;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -6,11 +6,11 @@ import java.net.URL;
 
 public class GenericParser {
 
-    static public boolean isValidUrl(String url){
+    static public boolean isValidUrl(String url) {
         URL u;
 
-        // Check if URL is includes https protocol
-        if (!url.matches("^https://")){
+        // Check if URL is includes https protocol and fits the regex of a regular url
+        if (!url.matches("^(https:)//(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_+.~#?&//=]*)")) {
             return false;
         }
 
@@ -31,7 +31,7 @@ public class GenericParser {
         return true;
     }
 
-    static public boolean isValidImage(){
+    static public boolean isValidImage() {
         return false;
     }
 }
