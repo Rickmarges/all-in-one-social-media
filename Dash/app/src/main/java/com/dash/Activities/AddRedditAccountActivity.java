@@ -37,6 +37,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.DashApp;
 import com.dash.R;
+import com.securepreferences.SecurePreferences;
+import com.tozny.crypto.android.AesCbcWithIntegrity;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.oauth.OAuthException;
@@ -137,12 +139,10 @@ public class AddRedditAccountActivity extends AppCompatActivity {
     private void addSharedPreferences() {
         try {
             RedditClient redditClient = DashApp.getAccountHelper().getReddit();
-            String redditUsername = DashboardActivity.encryptString(redditClient
-                    .getAuthManager()
-                    .currentUsername());
+            String redditUsername = redditClient.getAuthManager().currentUsername();
 
-            SharedPreferences sharedPreferences = getSharedPreferences(
-                    DashboardActivity.getFilename(), MODE_PRIVATE);
+            SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                    "", DashboardActivity.getFilename());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putString("Reddit", redditUsername);

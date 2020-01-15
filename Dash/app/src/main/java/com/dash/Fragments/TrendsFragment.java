@@ -49,6 +49,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.dash.Activities.DashboardActivity;
 import com.dash.R;
 import com.dash.Utils.RssItem;
+import com.securepreferences.SecurePreferences;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -110,9 +111,8 @@ public class TrendsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         try {
-            SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity())
-                    .getSharedPreferences(DashboardActivity.getFilename(),
-                            Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = new SecurePreferences(getActivity().getApplicationContext(),
+                    "", DashboardActivity.getFilename());
             mCountryCode = sharedPreferences.getString("Country", "US");
         } catch (NullPointerException npe) {
             Log.w(Objects.requireNonNull(getContext()).toString(),

@@ -45,13 +45,17 @@ import com.dash.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.securepreferences.SecurePreferences;
 import com.twitter.sdk.android.core.SessionManager;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import java.nio.file.SecureDirectoryStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.SecureRandomSpi;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -261,19 +265,13 @@ public class DashboardActivity extends AppCompatActivity {
      */
     private void checkReddit() {
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences(getFilename(),
-                    Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                    "", DashboardActivity.getFilename());
 
             String redditUsername = sharedPreferences.getString("Reddit", "");
 
-            for (int i = 0; i < DashApp.getTokenStore().getUsernames().size(); i++) {
-                String tempUser = DashApp.getTokenStore().getUsernames().get(i);
-                String tempString = encryptString(tempUser);
-
-                if (tempString.equals(redditUsername) && !tempUser.equals("")) {
-                    new ReauthenticationTask().execute(tempUser);
-                    return;
-                }
+            if (!redditUsername.equals("")) {
+                new ReauthenticationTask().execute(redditUsername);
             }
         } catch (NullPointerException npe) {
             Log.w(getApplicationContext().toString(),
@@ -283,8 +281,8 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void checkTwitter() {
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences(getFilename(),
-                    Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                    "", DashboardActivity.getFilename());
 
             Set<String> authTokenSet = sharedPreferences.getStringSet("Twitter token", new HashSet<>());
             String twitterUsername = sharedPreferences.getString("Twitter username", "");

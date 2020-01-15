@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.dash.Activities.DashboardActivity;
 import com.dash.DashApp;
 import com.dash.R;
+import com.securepreferences.SecurePreferences;
 import com.squareup.picasso.Picasso;
 
 import net.dean.jraw.RedditClient;
@@ -51,6 +53,7 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.pagination.DefaultPaginator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -143,9 +146,8 @@ public class RedditFragment extends Fragment {
         @Override
         protected List<Submission> doInBackground(Void... voids) {
             try {
-                SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity())
-                        .getSharedPreferences(DashboardActivity
-                                .getFilename(), Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = new SecurePreferences(getContext(),
+                        "", DashboardActivity.getFilename());
                 int savedValue = sharedPreferences.getInt("RedditSort", 0);
 
                 // frontPage() returns a Paginator.Builder
@@ -157,7 +159,11 @@ public class RedditFragment extends Fragment {
                 return frontPage.next();
             } catch (NullPointerException | IllegalStateException npe) {
                 // Report failure if an Exception occurs
-                Log.w("TEST", "Couldn't load preferences: " + npe.getMessage());
+                if (Build.VERSION.SDK_INT >= 26) {
+                    Log.w("Reddit warning", "Unable to retrieve frontpage: " + npe.getMessage() + " " + LocalDateTime.now());
+                } else {
+                    Log.w("Reddit warning", "Unable to retrieve frontpage: " + npe.getMessage());
+                }
                 return null;
             }
         }

@@ -23,6 +23,7 @@ package com.dash.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -35,6 +36,7 @@ import com.dash.BuildConfig;
 import com.dash.Fragments.DashFragment;
 import com.dash.Fragments.TwitterFragment;
 import com.dash.R;
+import com.securepreferences.SecurePreferences;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Result;
@@ -51,6 +53,9 @@ import com.twitter.sdk.android.core.services.StatusesService;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 import com.twitter.sdk.android.tweetui.TweetUi;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -93,10 +98,8 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
             authTokenSet.add(twitterSession.getAuthToken().token);
             authTokenSet.add(twitterSession.getAuthToken().secret);
 
-            SharedPreferences sharedPreferences = Objects.requireNonNull(TwitterFragment
-                    .getInstance()
-                    .getActivity())
-                    .getSharedPreferences(getFilename(), Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                    "", DashboardActivity.getFilename());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putStringSet("Twitter token", authTokenSet);
@@ -157,7 +160,11 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
                 TwitterFragment.getInstance().setRefreshing(false);
                 DashFragment.getInstance().setTwitterReady(false);
                 DashFragment.getInstance().setRefreshing(false);
-                Log.w("Twitter warning", "Unable to retrieve Timeline: " + te.getMessage());
+                if (Build.VERSION.SDK_INT >= 26) {
+                    Log.w("Twitter warning", "Unable to retrieve Timeline: " + te.getMessage() + " " + LocalDateTime.now());
+                } else {
+                    Log.w("Twitter warning", "Unable to retrieve Timeline: " + te.getMessage());
+                }
             }
         });
     }
