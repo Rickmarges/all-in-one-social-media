@@ -51,7 +51,9 @@ import com.twitter.sdk.android.core.TwitterSession;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -286,19 +288,15 @@ public class DashboardActivity extends AppCompatActivity {
             SharedPreferences sharedPreferences = getSharedPreferences(getEncryptedEmail(),
                     Context.MODE_PRIVATE);
 
-            Set<String> authTokenSet = sharedPreferences.getStringSet("Twitter token", new HashSet<>());
+            String authToken = sharedPreferences.getString("Twitter token", null);
+            String authSecret = sharedPreferences.getString("Twitter secret", null);
+
+
             String twitterUsername = sharedPreferences.getString("Twitter username", "");
             long twitterId = sharedPreferences.getLong("Twitter id", 0);
 
-           Object authSecret;
-           Object authToken;
-
-            Object[] authTokenArray = authTokenSet.toArray();
-            if (authTokenArray.length > 0 && !twitterUsername.equals("") && twitterId != 0) {
-                authSecret = authTokenArray[0];
-                authToken = authTokenArray[1];
-
-                TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken.toString(), authSecret.toString());
+            if (authToken != null && authSecret != null && !twitterUsername.equals("") && twitterId != 0) {
+                TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken, authSecret);
 
                 TwitterRepositoryActivity.InitializeTwitter(this);
 
