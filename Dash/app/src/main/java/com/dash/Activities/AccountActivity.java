@@ -34,7 +34,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.DashApp;
-import com.dash.Fragments.DashFragment;
 import com.dash.Fragments.RedditFragment;
 import com.dash.Fragments.TwitterFragment;
 import com.dash.R;
@@ -71,12 +70,12 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
+        TwitterRepositoryActivity.InitializeTwitter(getApplicationContext());
+
         // Initialize UI elements
         init();
 
         mSecondClick = false;
-
-        TwitterRepositoryActivity.InitializeTwitter(getApplicationContext());
 
         // Get user email and encrypt that email so it can be used for storage
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -180,7 +179,7 @@ public class AccountActivity extends AppCompatActivity {
             twitterUserTextView.setVisibility(View.VISIBLE);
             twitterUserTextView.setText(R.string.twitterUsername);
             removeTwitterBtn.setOnClickListener(view -> {
-                SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getFilename(), MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.remove("Twitter token");
                 editor.remove("Twitter username");
