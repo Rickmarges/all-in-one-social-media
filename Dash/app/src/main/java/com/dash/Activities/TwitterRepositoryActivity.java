@@ -87,9 +87,6 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
             String username = twitterSession.getUserName();
             long userId = twitterSession.getUserId();
 
-            authTokenSet.add(twitterSession.getAuthToken().token);
-            authTokenSet.add(twitterSession.getAuthToken().secret);
-
             SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
                     "", DashboardActivity.getFilename());
             SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -83,6 +83,8 @@ public class SettingsActivity extends AppCompatActivity {
         mCountryAdapter = new ArrayAdapter<>(getApplicationContext(),
                 R.layout.spinner_item, sCountries);
         try {
+            // Create the spinners
+            createSpinners();
             // Retrieve the preference regarding the sorting of the Reddit Frontpage
             int sortsSavedValue = mSharedPreferences.getInt("RedditSort", 0);
             // Retrieve the preference regarding the Country for Google Trends
@@ -98,8 +100,6 @@ public class SettingsActivity extends AppCompatActivity {
             Log.w(getApplicationContext().toString(),
                     "Couldn't load preferences: " + ise.getMessage());
         }
-        // Create the spinners
-        createSpinners();
     }
 
     /**

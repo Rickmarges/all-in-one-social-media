@@ -151,6 +151,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (checkVerified()) {
                             startActivity(new Intent(this, DashboardActivity.class));
                         } else {
+                            Objects.requireNonNull(mFirebaseAuth.getCurrentUser())
+                                    .sendEmailVerification();
                             Toast.makeText(getApplicationContext(), "Email is not verified",
                                     Toast.LENGTH_LONG)
                                     .show();
