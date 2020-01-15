@@ -21,6 +21,7 @@
 package com.dash.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.DashApp;
+import com.dash.Fragments.DashFragment;
 import com.dash.Fragments.RedditFragment;
 import com.dash.Fragments.TwitterFragment;
 import com.dash.R;
@@ -178,7 +180,15 @@ public class AccountActivity extends AppCompatActivity {
             twitterUserTextView.setVisibility(View.VISIBLE);
             twitterUserTextView.setText(R.string.twitterUsername);
             removeTwitterBtn.setOnClickListener(view -> {
+                SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("Twitter token");
+                editor.remove("Twitter username");
+                editor.remove("Twitter id");
+                editor.apply();
+
                 TwitterRepositoryActivity.twitterSingleton.clearSession();
+                TwitterRepositoryActivity.setTwitterCallback(this, mAddTwitterBtn);
                 TwitterFragment.getInstance().clearUI();
                 removeTwitterBtn.setVisibility(View.INVISIBLE);
                 twitterUserTextView.setVisibility(View.INVISIBLE);

@@ -151,13 +151,13 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
             /**
              * Reports failure
              *
-             * @param te the exception thrown
+             * @param te the TwitterException thrown
              */
             public void failure(TwitterException te) {
                 TwitterFragment.getInstance().setRefreshing(false);
                 DashFragment.getInstance().setTwitterReady(false);
                 DashFragment.getInstance().setRefreshing(false);
-                Log.w(Objects.requireNonNull(getApplicationContext()).toString(), "Unable to retrieve Timeline: " + te.getMessage());
+                Log.w("Twitter warning", "Unable to retrieve Timeline: " + te.getMessage());
             }
         });
     }

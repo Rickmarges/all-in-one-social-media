@@ -86,8 +86,6 @@ public class DashFragment extends Fragment {
     public void onResume() {
         super.onResume();
         sInstance = this;
-        mRedditCardList.clear();
-        mTwitterCardList.clear();
         updateCards();
     }
 
@@ -95,6 +93,9 @@ public class DashFragment extends Fragment {
      * Update the instances of both Reddit and Twitter fragments
      */
     private void updateCards() {
+        mRedditCardList.clear();
+        mTwitterCardList.clear();
+
         setRedditReady(false);
         setTwitterReady(false);
 
