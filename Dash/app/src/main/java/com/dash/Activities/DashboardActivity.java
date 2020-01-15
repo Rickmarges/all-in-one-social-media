@@ -21,7 +21,6 @@
 package com.dash.Activities;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -51,14 +50,9 @@ import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
-import java.nio.file.SecureDirectoryStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.SecureRandomSpi;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Creates the main Activity you see when you are currently authenticated as a FireBaseUser
@@ -284,19 +278,15 @@ public class DashboardActivity extends AppCompatActivity {
             SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
                     "", DashboardActivity.getFilename());
 
-            Set<String> authTokenSet = sharedPreferences.getStringSet("Twitter token", new HashSet<>());
+            String authToken = sharedPreferences.getString("Twitter token", null);
+            String authSecret = sharedPreferences.getString("Twitter secret", null);
+
+
             String twitterUsername = sharedPreferences.getString("Twitter username", "");
             long twitterId = sharedPreferences.getLong("Twitter id", 0);
 
-           Object authSecret;
-           Object authToken;
-
-            Object[] authTokenArray = authTokenSet.toArray();
-            if (authTokenArray.length > 0 && !twitterUsername.equals("") && twitterId != 0) {
-                authSecret = authTokenArray[0];
-                authToken = authTokenArray[1];
-
-                TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken.toString(), authSecret.toString());
+            if (authToken != null && authSecret != null && !twitterUsername.equals("") && twitterId != 0) {
+                TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken, authSecret);
 
                 TwitterRepositoryActivity.InitializeTwitter(this);
 

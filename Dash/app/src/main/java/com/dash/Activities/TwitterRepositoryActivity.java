@@ -57,9 +57,11 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
 
 import retrofit2.Call;
 
@@ -91,7 +93,6 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
 
     private void savePreferences(TwitterSession twitterSession) {
         try {
-            Set<String> authTokenSet = new HashSet<>();
             String username = twitterSession.getUserName();
             long userId = twitterSession.getUserId();
 
@@ -102,7 +103,8 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
                     "", DashboardActivity.getFilename());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            editor.putStringSet("Twitter token", authTokenSet);
+            editor.putString("Twitter token", twitterSession.getAuthToken().token);
+            editor.putString("Twitter secret", twitterSession.getAuthToken().secret);
             editor.putString("Twitter username", username);
             editor.putLong("Twitter id", userId);
             editor.apply();
