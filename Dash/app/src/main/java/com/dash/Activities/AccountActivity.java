@@ -38,6 +38,7 @@ import com.dash.Fragments.RedditFragment;
 import com.dash.Fragments.TwitterFragment;
 import com.dash.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.securepreferences.SecurePreferences;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
@@ -179,7 +180,8 @@ public class AccountActivity extends AppCompatActivity {
             twitterUserTextView.setVisibility(View.VISIBLE);
             twitterUserTextView.setText(R.string.twitterUsername);
             removeTwitterBtn.setOnClickListener(view -> {
-                SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.getFilename(), MODE_PRIVATE);
+                SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                        "", DashboardActivity.getFilename());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.remove("Twitter token");
                 editor.remove("Twitter username");
