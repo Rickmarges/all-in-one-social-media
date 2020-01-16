@@ -53,6 +53,7 @@ import com.squareup.picasso.Picasso;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.SubmissionPreview;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.pagination.DefaultPaginator;
 
@@ -314,7 +315,9 @@ public class RedditFragment extends Fragment {
     private ImageView createImage(Submission submission) {
         // Insert path into Picasso to download image
         ImageView imageView = new ImageView(getContext());
-        Picasso.with(this.getContext()).load(submission.getUrl()).into(imageView);
+
+        List<SubmissionPreview.Variation> resolutions = submission.getPreview().getImages().get(0).getResolutions();
+        Picasso.with(this.getContext()).load(resolutions.get(resolutions.size() - 1).getUrl()).into(imageView);
         // Style ImageView
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setAdjustViewBounds(true);
@@ -366,7 +369,7 @@ public class RedditFragment extends Fragment {
             linearLayout.addView(createReadMore());
         }
         // If the post has an image add ImageView
-        if (submission.hasThumbnail()) {
+        if (submission.getPreview() != null) {
             linearLayout.addView(createImage(submission));
         }
         return linearLayout;
