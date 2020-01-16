@@ -22,6 +22,8 @@ package com.dash.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -71,6 +73,7 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
+        // Initialize Twitter so we can retrieve twitter data
         TwitterRepositoryActivity.InitializeTwitter(getApplicationContext());
 
         // Initialize UI elements
@@ -91,7 +94,6 @@ public class AccountActivity extends AppCompatActivity {
         // If the button is pressed it will send the user to a reset email and it shows a popup if
         // it succeeds and another popup if it fails
         Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
-
         mResetBtn.setOnClickListener(view -> {
             if (!mSecondClick) {
                 mResetBtn.setText(R.string.confirm);
@@ -148,6 +150,7 @@ public class AccountActivity extends AppCompatActivity {
         mResetBtn = findViewById(R.id.resetpwd);
         mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
         ImageButton removeTwitterBtn = findViewById(R.id.removetwitterbtn);
+        mAddTwitterBtn.setPadding(16, 0,0,0);
 
         AccountHelper accountHelper = DashApp.getAccountHelper();
         if (accountHelper.isAuthenticated()) {
@@ -216,4 +219,5 @@ public class AccountActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         mAddTwitterBtn.onActivityResult(requestCode, resultCode, data);
     }
+
 }
