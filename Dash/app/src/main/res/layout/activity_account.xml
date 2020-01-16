@@ -183,6 +183,7 @@
         android:layout_marginTop="@dimen/paddingImage"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:backgroundTint="@color/colorBackgroundSecondary"
+        android:scaleType="centerInside"
         android:contentDescription="@string/reddit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addTwitter"
