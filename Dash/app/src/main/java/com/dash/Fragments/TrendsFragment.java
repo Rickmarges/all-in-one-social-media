@@ -182,6 +182,9 @@ public class TrendsFragment extends Fragment {
      * Update the RSS by executing the RssParser
      */
     private void updateRss() {
+        if (!DashFragment.getInstance().checkConnection()) {
+            return;
+        }
         try {
             new RssParser().execute(mBaseUrl + mCountryCode);
         } catch (NullPointerException npe) {

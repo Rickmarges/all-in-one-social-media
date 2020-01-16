@@ -211,6 +211,9 @@ public class TwitterFragment extends Fragment {
     }
 
     void updateTwitter(Context context) {
+        if (!DashFragment.getInstance().checkConnection()) {
+            return;
+        }
         TwitterRepositoryActivity.InitializeTwitter(context);
         TwitterRepositoryActivity.GetSingleton().GetHomeTimeline(25);
     }
