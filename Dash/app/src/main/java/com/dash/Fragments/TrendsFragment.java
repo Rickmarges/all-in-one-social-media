@@ -48,6 +48,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dash.Activities.DashboardActivity;
 import com.dash.R;
+import com.dash.Utils.GenericParser;
 import com.dash.Utils.RssItem;
 
 import org.w3c.dom.Document;
@@ -120,30 +121,34 @@ public class TrendsFragment extends Fragment {
     class RssParser extends AsyncTask<String, Void, List<RssItem>> {
         @Override
         public List<RssItem> doInBackground(String... params) {
-            List<RssItem> rssItems;
-            Node node;
-            NodeList nodes;
-            try {
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
+            String urlString = mBaseUrl + mCountryCode;
+            if (GenericParser.isSecureUrl(urlString)){
+                List<RssItem> rssItems;
+                Node node;
+                NodeList nodes;
+                try {
+                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder builder = factory.newDocumentBuilder();
 
-                URL url = new URL(mBaseUrl + mCountryCode);
-                Document document = builder.parse(url.openStream());
-                document.getDocumentElement().normalize();
+                    URL url = new URL(urlString);
+                    Document document = builder.parse(url.openStream());
+                    document.getDocumentElement().normalize();
 
-                Element root = document.getDocumentElement();
+                    Element root = document.getDocumentElement();
 
-                // channel node
-                node = root.getFirstChild().getNextSibling();
-                nodes = node.getChildNodes();
+                    // channel node
+                    node = root.getFirstChild().getNextSibling();
+                    nodes = node.getChildNodes();
 
-                rssItems = createRssItems(nodes);
-            } catch (ParserConfigurationException | IOException | SAXException e) {
-                rssItems = null;
-                Log.w(Objects.requireNonNull(getContext()).toString(),
-                        "Unable to parse RSS: " + e.getMessage());
+                    rssItems = createRssItems(nodes);
+                } catch (ParserConfigurationException | IOException | SAXException e) {
+                    rssItems = null;
+                    Log.w(Objects.requireNonNull(getContext()).toString(),
+                            "Unable to parse RSS: " + e.getMessage());
+                }
+                return rssItems;
             }
-            return rssItems;
+            return null;
         }
 
         @Override
@@ -171,18 +176,20 @@ public class TrendsFragment extends Fragment {
 
     private Bitmap getImageBitmap(String imageUrl) {
         Bitmap bitmap = null;
-        try {
-            URL url = new URL(imageUrl);
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.connect();
-            InputStream inputStream = urlConnection.getInputStream();
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-            bitmap = BitmapFactory.decodeStream(bufferedInputStream);
-            bufferedInputStream.close();
-            inputStream.close();
-        } catch (IOException ioe) {
-            Log.w(Objects.requireNonNull(getContext()).toString(),
-                    "Error getting bitmap: " + ioe.getMessage());
+        if (GenericParser.isValidUrl(imageUrl)) {
+            try {
+                URL url = new URL(imageUrl);
+                URLConnection urlConnection = url.openConnection();
+                urlConnection.connect();
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+                bitmap = BitmapFactory.decodeStream(bufferedInputStream);
+                bufferedInputStream.close();
+                inputStream.close();
+            } catch (IOException ioe) {
+                Log.w(Objects.requireNonNull(getContext()).toString(),
+                        "Error getting bitmap: " + ioe.getMessage());
+            }
         }
         return bitmap;
     }
@@ -219,7 +226,10 @@ public class TrendsFragment extends Fragment {
                             }
                             if (newsNode.getNodeName().equals("ht:news_item_url")
                                     && rssItem.getLink().equals("")) {
-                                rssItem.setLink(newsNode.getFirstChild().getNodeValue());
+                                String url = newsNode.getFirstChild().getNodeValue();
+                                if (GenericParser.isValidUrl(url)) {
+                                    rssItem.setLink(url);
+                                }
                             }
                             newsNode = newsNode.getNextSibling();
                         }
@@ -302,8 +312,11 @@ public class TrendsFragment extends Fragment {
         cardView.setRadius(15);
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
-        cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse(link))));
+        cardView.setOnClickListener(view -> {
+
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(link)));
+        });
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
         layoutParams.height = 220;
         layoutParams.bottomMargin = 10;

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dash.R;
+import com.dash.Utils.GenericParser;
 import com.dash.Utils.TwitterRepository;
 import com.twitter.sdk.android.core.models.Tweet;
 
@@ -73,7 +74,7 @@ public class TwitterFragment extends Fragment {
 
     public void createHomeTimelineView(List<Tweet> tweets) {
         // Make sure the rest of the methods are only called it there are tweets
-        if (tweets == null){
+        if (tweets == null) {
             Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT);
             return;
         }
@@ -177,12 +178,15 @@ public class TwitterFragment extends Fragment {
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> {
-            String url;
             // Check if the url is in the media or urls List
             if (tweet.id != 0 && tweet.user.screenName != null) {
-                url = "https://twitter.com/" + tweet.user.screenName + "/status/" + tweet.id;
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(browserIntent);
+                String url = "https://www.twitter.com/" + tweet.user.screenName + "/status/" + tweet.id;
+                if (GenericParser.isSecureUrl(url)) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(browserIntent);
+                } else {
+                    Toast.makeText(getContext(), "Unsecured URL", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(getContext(), "Unable to open tweet", Toast.LENGTH_SHORT).show();
             }

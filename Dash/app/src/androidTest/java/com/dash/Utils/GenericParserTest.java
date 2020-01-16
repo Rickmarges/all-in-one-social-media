@@ -23,4 +23,18 @@ public class GenericParserTest {
         assertEquals(GenericParser.isValidUrl("https://www.te-iets-st.co.uk"), true);
 
     }
+
+    @Test
+    public void isSecureUrl() {
+        // Test correct connection
+        assertEquals(GenericParser.isSecureUrl("https://www.test.com"), true);
+        assertEquals(GenericParser.isSecureUrl("http://www.test.com"), true);
+        assertEquals(GenericParser.isSecureUrl("www.test.com"), false);
+        // This URLs certificate's match and therefore 'secure' (http is filtered before this check)
+        assertEquals(GenericParser.isSecureUrl("http://www.verkeersschoolnijland.nl/"), true);
+
+        // Test a domain without https using https in the url
+        assertEquals(GenericParser.isSecureUrl("https://www.verkeersschoolnijland.nl/"), false);
+        assertEquals(GenericParser.isSecureUrl("www.verkeersschoolnijland.nl"), false);
+    }
 }

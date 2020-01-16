@@ -44,6 +44,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.dash.Activities.DashboardActivity;
 import com.dash.DashApp;
 import com.dash.R;
+import com.dash.Utils.GenericParser;
 import com.squareup.picasso.Picasso;
 
 import net.dean.jraw.RedditClient;
@@ -255,8 +256,12 @@ public class RedditFragment extends Fragment {
         cardView.setRadius(15);
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
-        cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("https://www.reddit.com" + submission.getPermalink()))));
+        cardView.setOnClickListener(view -> {
+            String url = "https://www.reddit.com" + submission.getPermalink();
+            if (GenericParser.isSecureUrl(url)) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            }
+        });
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
         layoutParams.bottomMargin = 10;
         cardView.addView(createCardLayout(submission));
