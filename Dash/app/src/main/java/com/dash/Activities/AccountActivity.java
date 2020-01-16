@@ -22,6 +22,7 @@ package com.dash.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.dash.DashApp;
 import com.dash.Fragments.RedditFragment;
@@ -97,6 +99,8 @@ public class AccountActivity extends AppCompatActivity {
         mResetBtn.setOnClickListener(view -> {
             if (!mSecondClick) {
                 mResetBtn.setText(R.string.confirm);
+                mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                        .getColor(this, R.color.tw__composer_red)));
                 mResetBtn.setAnimation(animShake);
             }
             if (mSecondClick) {
@@ -112,6 +116,8 @@ public class AccountActivity extends AppCompatActivity {
                                         Toast.LENGTH_LONG).show();
                             }
                             mResetBtn.setText(R.string.reset_password);
+                            mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                                    .getColor(this, R.color.colorBackgroundSecondary)));
                             mSecondClick = false;
                         });
             }
