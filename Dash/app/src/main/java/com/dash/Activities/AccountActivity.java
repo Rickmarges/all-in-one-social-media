@@ -22,6 +22,8 @@ package com.dash.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -73,6 +75,7 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
+        // Initialize Twitter so we can retrieve twitter data
         TwitterRepositoryActivity.InitializeTwitter(getApplicationContext());
 
         // Initialize UI elements
@@ -146,7 +149,7 @@ public class AccountActivity extends AppCompatActivity {
         mEmailAccountTV = findViewById(R.id.emailAccount);
         mResetBtn = findViewById(R.id.resetpwd);
         mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
-        mRemoveTwitterBtn = findViewById(R.id.removetwitterbtn);
+        mAddTwitterBtn.setPadding(16, 0,0,0);
 
         checkReddit();
 
@@ -253,4 +256,5 @@ public class AccountActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         mAddTwitterBtn.onActivityResult(requestCode, resultCode, data);
     }
+
 }

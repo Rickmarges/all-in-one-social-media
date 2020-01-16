@@ -126,7 +126,9 @@
         android:scaleType="centerInside"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addReddit"/>
+        app:layout_constraintTop_toBottomOf="@+id/addReddit"
+        app:srcCompat="@drawable/ic_delete_24px"
+        android:tint="@color/tw__composer_red"/>
 
     <View
         android:id="@+id/addTwitter"
@@ -166,10 +168,10 @@
 
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/addtwitterbtn"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginTop="@dimen/paddingImage"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addTwitter" />
 
@@ -183,7 +185,9 @@
         android:backgroundTint="@color/colorBackgroundSecondary"
         android:contentDescription="@string/reddit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addTwitter"/>
+        app:layout_constraintTop_toBottomOf="@+id/addTwitter"
+        app:srcCompat="@drawable/ic_delete_24px"
+        android:tint="@color/tw__composer_red" />
 
     <View
         android:id="@+id/addTrends"
