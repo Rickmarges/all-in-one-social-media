@@ -99,7 +99,8 @@ public class AccountActivity extends AppCompatActivity {
         mResetBtn.setOnClickListener(view -> {
             if (!mSecondClick) {
                 mResetBtn.setText(R.string.confirm);
-                mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.tw__composer_red)));
+                mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                        .getColor(this, R.color.tw__composer_red)));
                 mResetBtn.setAnimation(animShake);
             }
             if (mSecondClick) {
@@ -115,7 +116,8 @@ public class AccountActivity extends AppCompatActivity {
                                         Toast.LENGTH_LONG).show();
                             }
                             mResetBtn.setText(R.string.reset_password);
-                            mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorBackgroundSecondary)));
+                            mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                                    .getColor(this, R.color.colorBackgroundSecondary)));
                             mSecondClick = false;
                         });
             }
