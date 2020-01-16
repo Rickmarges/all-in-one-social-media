@@ -199,7 +199,7 @@ public class TrendsFragment extends Fragment {
      */
     private Bitmap getImageBitmap(String imageUrl) {
         Bitmap bitmap;
-        if (!imageUrl.matches("https://t[0-9].gstatic.com/images\\?q=tbn:[a-zA-Z0-9-_]{80}")) {
+        if (!imageUrl.matches("https://t[0-9].gstatic.com/images\\?q=tbn:[a-zA-Z0-9-_]{80,85}")) {
             return setDefault();
         }
         try {
