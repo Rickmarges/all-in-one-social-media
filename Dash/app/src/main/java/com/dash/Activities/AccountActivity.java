@@ -146,6 +146,7 @@ public class AccountActivity extends AppCompatActivity {
     private void init() {
         mRedditIB = findViewById(R.id.add_reddit_btn);
         mRemoveRedditIB = findViewById(R.id.removeRedditIB);
+        mRemoveTwitterBtn = findViewById(R.id.removetwitterbtn);
         mEmailAccountTV = findViewById(R.id.emailAccount);
         mResetBtn = findViewById(R.id.resetpwd);
         mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
