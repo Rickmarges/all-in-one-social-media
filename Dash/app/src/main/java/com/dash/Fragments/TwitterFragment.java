@@ -1,5 +1,6 @@
 package com.dash.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -10,12 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dash.Activities.TwitterRepositoryActivity;
 import com.dash.R;
 import com.dash.Utils.GenericParser;
-import com.dash.Utils.TwitterRepository;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.text.ParseException;
@@ -23,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -32,10 +35,10 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class TwitterFragment extends Fragment {
-    private LinearLayout linearLayout;
-    private List<CardView> cardList = new ArrayList<>();
-    private SwipeRefreshLayout swipeLayout;
-    private static TwitterFragment instance;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private static TwitterFragment sInstance;
+    private final List<CardView> mCardList = new ArrayList<>();
+    private LinearLayout mLinearLayout;
 
     /**
      * Create the View for Twitter
@@ -48,126 +51,60 @@ public class TwitterFragment extends Fragment {
      */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_twitter, container, false);
 
         //Set refresh on this page
-        swipeLayout = rootView.findViewById(R.id.twitterRefresh);
+        mSwipeRefreshLayout = rootView.findViewById(R.id.twitterRefresh);
         // Change colours of bar and background to match style
-        swipeLayout.setColorSchemeResources(R.color.colorPrimaryDark);
-        swipeLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackgroundPrimary);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(
+                R.color.colorBackgroundPrimary);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> updateTwitter(getContext()));
 
-        linearLayout = rootView.findViewById(R.id.twitterLayout);
+        mLinearLayout = rootView.findViewById(R.id.twitterLayout);
 
-        instance = this;
-
-        TwitterRepository.InitializeTwitter(getActivity().getApplicationContext());
-        try {
-            TwitterRepository.GetSingleton().GetHomeTimeline(50, this);
-        } catch (InterruptedException e) {
-            Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT);
-        }
+        sInstance = this;
 
         return rootView;
     }
 
     public void createHomeTimelineView(List<Tweet> tweets) {
         // Make sure the rest of the methods are only called it there are tweets
+        mCardList.clear();
         if (tweets == null) {
-            Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT);
+            Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT).show();
             return;
         }
         // Setup a dynamic linearlayout to add frontpage posts
-        if (linearLayout == null) {
-            linearLayout = getActivity().findViewById(R.id.dashLayout);
+        if (mLinearLayout == null) {
+            mLinearLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.twitterLayout);
         }
-        if (linearLayout.getChildCount() > 0) {
-            linearLayout.removeAllViews();
-            cardList.clear();
+        if (mLinearLayout.getChildCount() > 0) {
+            mLinearLayout.removeAllViews();
         }
         for (Tweet tweet : tweets) {
-            if (tweet.user.id == TwitterRepository.getCurrentUserId()) continue;
-            CardView cardView = createCardView(tweet);
-            linearLayout.addView(cardView);
-            cardList.add(cardView);
+            mLinearLayout.addView(createCardView(tweet));
+            mCardList.add(createCardView(tweet));
         }
-        swipeLayout.setRefreshing(false);
-    }
-
-    private TextView createTitle(Tweet tweet) {
-        TextView textView = new TextView(getContext());
-        textView.setText(tweet.user.name);
-        textView.setTextAppearance(R.style.strokeColor);
-        textView.setGravity(1);
-        textView.setPadding(15, 5, 10, 0);
-        textView.setTextSize(20);
-        return textView;
-    }
-
-    // Fill and style author
-    private TextView createAuthor(Tweet tweet) {
-        TextView textView = new TextView(getContext());
-        String author = " By: @" + tweet.user.screenName;
-        textView.append(author);
-
-        // Parse the createdAt format to 'x ago'
-        Date date = new Date();
-        try {
-            date = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy").parse(tweet.createdAt);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        DashFragment dashFragment = DashFragment.getInstance();
+        if (dashFragment == null) {
+            dashFragment = new DashFragment();
         }
-        String time = " " + DateUtils.getRelativeTimeSpanString(date.getTime());
-        textView.append(time);
-        textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
-        textView.setPadding(20, 5, 150, 5);
-        textView.setTypeface(null, Typeface.ITALIC);
-        return textView;
-    }
-
-    private TextView createText(Tweet tweet) {
-        TextView textView = new TextView(getContext());
-        textView.setText(tweet.text);
-        textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
-        textView.setPadding(25, 5, 150, 20);
-        textView.setVerticalScrollBarEnabled(true);
-        return textView;
-    }
-
-    private View createDivider() {
-        // Style end enable divider
-        View view = new View(getContext());
-        view.setLayoutParams(new LinearLayout
-                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5));
-        view.setBackgroundResource(R.color.colorBackgroundPrimary);
-        return view;
-    }
-
-    private ImageView createImage(Tweet tweet) {
-        // Insert path into Picasso to download image
-        ImageView imageView = new ImageView(getContext());
-        if (tweet.entities.media.size() != 0) {
-            com.squareup.picasso.Picasso.with(this.getContext()).load(tweet.entities.media.get(0).mediaUrlHttps).into(imageView);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            imageView.setPadding(10, 0, 10, 20);
-        }
-        return imageView;
-    }
-
-    private LinearLayout createCardLayout(Tweet tweet) {
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.addView(createAuthor(tweet));
-        linearLayout.addView(createDivider());
-        linearLayout.addView(createTitle(tweet));
-        linearLayout.addView(createText(tweet));
-        linearLayout.addView(createImage(tweet));
-        return linearLayout;
+        dashFragment.setTwitterCards(mCardList);
+        dashFragment.setTwitterReady(true);
+        dashFragment.createUI();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private CardView createCardView(Tweet tweet) {
+        // Initialize the dynamic linearlayout with fields
+        LinearLayout cardLayout = new LinearLayout(getContext());
         CardView cardView = new CardView(Objects.requireNonNull(getContext()));
+
+        // Style cardview
         cardView.setCardBackgroundColor(getResources()
                 .getColor(R.color.colorBackgroundSecondary, null));
         cardView.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -175,7 +112,6 @@ public class TwitterFragment extends Fragment {
         cardView.setUseCompatPadding(true);
         cardView.setCardElevation(7);
         cardView.setRadius(15);
-        cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> {
             // Check if the url is in the media or urls List
@@ -191,17 +127,127 @@ public class TwitterFragment extends Fragment {
                 Toast.makeText(getContext(), "Unable to open tweet", Toast.LENGTH_SHORT).show();
             }
         });
+        cardLayout.setOrientation(LinearLayout.VERTICAL);
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
         layoutParams.bottomMargin = 10;
-        cardView.addView(createCardLayout(tweet));
+
+        RelativeLayout relativeLayout = new RelativeLayout(getContext());
+
+        relativeLayout.addView(createInfo(tweet));
+        relativeLayout.addView(createLogo());
+
+        cardLayout.addView(relativeLayout);
+        cardLayout.addView(createDivider());
+        cardLayout.addView(createTitle(tweet));
+        cardLayout.addView(createDesc(tweet));
+        cardLayout.addView(createImage(tweet));
+        cardView.addView(cardLayout);
+
         return cardView;
     }
 
-    public static TwitterFragment getInstance() {
-        return instance;
+    private TextView createInfo(Tweet tweet) {
+        TextView textViewInfo = new TextView(getContext());
+
+        // Fill and style author
+        String author = " By: @" + tweet.user.screenName;
+        textViewInfo.append(author);
+
+        // Parse the createdAt format to 'x ago'
+        Date date = new Date();
+        try {
+            date = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US)
+                    .parse(tweet.createdAt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String time = null;
+        if (date != null) {
+            time = " " + DateUtils.getRelativeTimeSpanString(date.getTime());
+        }
+
+
+        textViewInfo.append(time);
+        textViewInfo.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
+        textViewInfo.setPadding(70, 5, 150, 5);
+        textViewInfo.setTypeface(null, Typeface.ITALIC);
+        return textViewInfo;
     }
 
-    void updateTwitter() {
+    private View createDivider() {
+        View divider = new View(getContext());
+        // Style end enable divider
+        divider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                5));
+        divider.setBackgroundResource(R.color.colorTextPrimary);
+        return divider;
+    }
 
+    private TextView createTitle(Tweet tweet) {
+        TextView textViewTitle = new TextView(getContext());
+        // Fill and style title
+        textViewTitle.setText(tweet.user.name);
+        //textViewTitle.setTextAppearance(R.style.strokeColor);
+        textViewTitle.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
+        textViewTitle.setGravity(1);
+        textViewTitle.setPadding(15, 5, 10, 0);
+        textViewTitle.setTextSize(20);
+        return textViewTitle;
+    }
+
+    private TextView createDesc(Tweet tweet) {
+        TextView textViewDesc = new TextView(getContext());
+        textViewDesc.setText(tweet.text);
+        textViewDesc.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
+        textViewDesc.setPadding(25, 5, 150, 20);
+        textViewDesc.setVerticalScrollBarEnabled(true);
+        return textViewDesc;
+    }
+
+    private ImageView createImage(Tweet tweet) {
+        // Insert path into Picasso to download image
+        ImageView imageView = new ImageView(getContext());
+        if (tweet.entities.media.size() != 0) {
+            com.squareup.picasso.Picasso.with(this.getContext())
+                    .load(tweet.entities.media.get(0).mediaUrlHttps).into(imageView);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setAdjustViewBounds(true);
+            imageView.setPadding(10, 0, 10, 20);
+        }
+        return imageView;
+    }
+
+    private ImageView createLogo() {
+        // Insert path into Picasso to download image
+        ImageView imageView = new ImageView(getContext());
+        com.squareup.picasso.Picasso.with(this.getContext())
+                .load(com.twitter.sdk.android.R.drawable.tw__ic_logo_blue).into(imageView);
+        imageView.setScaleType(ImageView.ScaleType.FIT_END);
+        imageView.setPadding(20, 20, 10, 20);
+
+        return imageView;
+    }
+
+    public static TwitterFragment getInstance() {
+        return sInstance;
+    }
+
+    void updateTwitter(Context context) {
+        if (!DashFragment.getInstance().checkConnection()) {
+            return;
+        }
+        TwitterRepositoryActivity.InitializeTwitter(context);
+        TwitterRepositoryActivity.GetSingleton().GetHomeTimeline(25);
+    }
+
+    public void setRefreshing(boolean bool) {
+        mSwipeRefreshLayout.setRefreshing(bool);
+    }
+
+    public void clearUI() {
+        mCardList.clear();
+        if (mLinearLayout.getChildCount() > 0) {
+            mLinearLayout.removeAllViews();
+        }
     }
 }

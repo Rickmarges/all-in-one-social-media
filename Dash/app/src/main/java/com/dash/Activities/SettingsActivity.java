@@ -20,7 +20,6 @@
 
 package com.dash.Activities;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +31,7 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.R;
+import com.securepreferences.SecurePreferences;
 
 /**
  * This activity is for showing the current settings of the account and for changing these settings.
@@ -77,12 +77,14 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Retrieve the encrypted email from the currenctly authenticated FireBaseUser
-        mSharedPreferences = getSharedPreferences(DashboardActivity.getEncryptedEmail(),
-                Context.MODE_PRIVATE);
+        mSharedPreferences = new SecurePreferences(getApplicationContext(),
+                "", DashboardActivity.getFilename());
         // Create an adapter for the spinners
         mCountryAdapter = new ArrayAdapter<>(getApplicationContext(),
                 R.layout.spinner_item, sCountries);
         try {
+            // Create the spinners
+            createSpinners();
             // Retrieve the preference regarding the sorting of the Reddit Frontpage
             int sortsSavedValue = mSharedPreferences.getInt("RedditSort", 0);
             // Retrieve the preference regarding the Country for Google Trends
@@ -98,8 +100,6 @@ public class SettingsActivity extends AppCompatActivity {
             Log.w(getApplicationContext().toString(),
                     "Couldn't load preferences: " + ise.getMessage());
         }
-        // Create the spinners
-        createSpinners();
     }
 
     /**

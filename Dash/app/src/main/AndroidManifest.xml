@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.dash">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".DashApp"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/logo_round"
         android:label="@string/app_name"
         android:noHistory="true"
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:fullBackupContent="@xml/backup_descriptor">
+        tools:ignore="InnerclassSeparator">         <!-- To surpress Kotlin warning in Java Code -->
         <meta-data
             android:name="net.dean.jraw.android.REDDIT_USERNAME"
             android:value="minorsectestt" />
@@ -35,6 +37,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -43,11 +46,13 @@
             android:noHistory="true" />
         <activity
             android:name=".Activities.DashboardActivity"
-            android:launchMode="singleTask"/>
-        <activity
-            android:name=".Activities.AccountActivity" />
+            android:launchMode="singleTask" />
+        <activity android:name=".Activities.AccountActivity" />
         <activity
             android:name=".Activities.SettingsActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".Activities.TwitterRepositoryActivity"
             android:noHistory="true" />
         <activity
             android:name=".Activities.ResetPasswordActivity"

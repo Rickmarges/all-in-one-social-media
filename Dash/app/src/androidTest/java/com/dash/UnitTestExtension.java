@@ -3,7 +3,7 @@ package com.dash;
 import java.lang.reflect.Field;
 
 //Helpfull extensions for unit tests
-public class UnitTestExtension {
+class UnitTestExtension {
     //Functions to get private access to an object.
     static Object getField(Object object, String fieldName) {
         Object fieldToGet = null;

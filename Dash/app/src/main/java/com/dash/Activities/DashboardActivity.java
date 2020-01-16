@@ -24,6 +24,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,13 +40,19 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.dash.Adapters.ViewPagerAdapter;
 import com.dash.DashApp;
+import com.dash.Fragments.DashFragment;
+import com.dash.Fragments.RedditFragment;
+import com.dash.Fragments.TwitterFragment;
 import com.dash.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.securepreferences.SecurePreferences;
+import com.twitter.sdk.android.core.SessionManager;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterSession;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 /**
@@ -56,11 +64,10 @@ import java.util.Objects;
 @SuppressLint("ClickableViewAccessibility")
 public class DashboardActivity extends AppCompatActivity {
     private Button mMenuBtn;
-    private FirebaseUser mFirebaseUser;
+    private static FirebaseUser mFirebaseUser;
     private TabLayout mTabLayout;
     private int mBackCounter;
     private long mStartTime;
-    private static String sEncryptedEmail;
 
     /**
      * Creates this activity, The main Tab of the Dash app.
@@ -74,6 +81,8 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        checkConnection();
 
         checkLoggedIn();
 
@@ -91,10 +100,10 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
+        checkConnection();
         checkLoggedIn();
-        sEncryptedEmail = encryptString(mFirebaseUser.getEmail());
         checkReddit();
+        checkTwitter();
     }
 
     /**
@@ -113,15 +122,28 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    private void checkConnection() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager)
+                .getActiveNetworkInfo();
+        if (networkInfo == null) {
+            mFirebaseUser = null;
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+    }
+
     /**
-     * Returns the encrypted email from the currently authenticated FireBaseUser.
+     * Returns the Firebase user id as filename String from the currently authenticated FireBaseUser.
      *
-     * @return returns the encrypted email from the currently authenticated FireBaseUser
-     * @throws IllegalStateException if the encyptedEmailString returns empty
+     * @return Returns the Firebase user id as String
+     * @throws IllegalStateException if the Firebase user id is empty
      */
-    public static String getEncryptedEmail() throws IllegalStateException {
-        if (!sEncryptedEmail.equals("")) {
-            return sEncryptedEmail;
+    public static String getFilename() throws IllegalStateException {
+        String filename = mFirebaseUser.getUid();
+        if (!filename.equals("")) {
+            return filename;
         } else {
             throw new IllegalStateException();
         }
@@ -133,15 +155,20 @@ public class DashboardActivity extends AppCompatActivity {
      * and links them to the corresponding layout elements
      */
     private void init() {
+        // Set a counter that keeps track of the amount of back presses
         mBackCounter = 0;
 
+        // Retrieve the linearlayout and set focus to it, so no tabs will be selected
         LinearLayout linearLayout = findViewById(R.id.linearlayout);
         linearLayout.requestFocus();
 
         mMenuBtn = findViewById(R.id.menubtn);
 
+        // Make a Viewpager for the Tablayout
         ViewPager viewPager = findViewById(R.id.pager);
-        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setOffscreenPageLimit(viewPagerAdapter.getCount());
 
         mTabLayout = findViewById(R.id.tablayout);
         mTabLayout.setupWithViewPager(viewPager);
@@ -180,9 +207,6 @@ public class DashboardActivity extends AppCompatActivity {
         mFirebaseUser = null;
         FirebaseAuth.getInstance().signOut();
 
-        // Sets current tab in the Dashboard tablayout to the leftmost tab to reset
-        Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
-
         // Clear the different LinearLayouts from Trends, Reddit, Twitter and Dash respectively or throws an NPE if there is nothing to delete
         try {
             LinearLayout linearLayout = findViewById(R.id.trendsLayout);
@@ -192,24 +216,23 @@ public class DashboardActivity extends AppCompatActivity {
                     "No Trend views to delete." + npe.getMessage());
         }
 
-        try {
-            LinearLayout linearLayout = findViewById(R.id.redditLayout);
-            linearLayout.removeAllViews();
-        } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(),
-                    "No Reddit views to delete." + npe.getMessage());
-        }
+        // Clear the UI on the Twitter tab
+        TwitterFragment.getInstance().clearUI();
 
-        try {
-            LinearLayout linearLayout = findViewById(R.id.dashLayout);
-            linearLayout.removeAllViews();
-        } catch (NullPointerException npe) {
-            Log.w(getApplicationContext().toString(),
-                    "No views in dashboard to delete." + npe.getMessage());
-        }
+        // Clear the UI on the Reddit tab
+        RedditFragment.getInstance().clearUI();
+
+        // Clear the UI on the Dash tab
+        DashFragment.getInstance().clearUI();
 
         // Logs the currently authenticated RedditUser out.
         DashApp.getAccountHelper().logout();
+
+        // Logs the currently authenticated TwitterUser out.
+        TwitterRepositoryActivity.GetSingleton().getSession().getSessionManager().clearActiveSession();
+
+        // Sets current tab in the Dashboard tablayout to the leftmost tab to reset
+        Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
 
         // Redirects the user to LoginActivity
         startActivity(new Intent(this, LoginActivity.class));
@@ -258,19 +281,50 @@ public class DashboardActivity extends AppCompatActivity {
      */
     private void checkReddit() {
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences(getEncryptedEmail(),
-                    Context.MODE_PRIVATE);
-
+            // Retrieve the Secure Preference file and read the Reddit username
+            SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                    "", getFilename());
             String redditUsername = sharedPreferences.getString("Reddit", "");
 
-            for (int i = 0; i < DashApp.getTokenStore().getUsernames().size(); i++) {
-                String tempUser = DashApp.getTokenStore().getUsernames().get(i);
-                String tempString = encryptString(tempUser);
+            // If the username is not empty, reauthenticate the user
+            if (!redditUsername.equals("")) {
+                new ReauthenticationTask().execute(redditUsername);
+            }
+        } catch (NullPointerException npe) {
+            Log.w(getApplicationContext().toString(),
+                    "No such user found." + npe.getMessage());
+        }
+    }
 
-                if (tempString.equals(redditUsername) && !tempUser.equals("")) {
-                    new ReauthenticationTask().execute(tempUser);
-                    return;
-                }
+    /**
+     * Checks if the currently authenticated FireBaseUser is authenticated for Twitter and when the user is,
+     * reauthenticate the user
+     */
+    private void checkTwitter() {
+        try {
+            // Retrieve the Secure Preference file and Twitter tokens and id's
+            SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                    "", DashboardActivity.getFilename());
+
+            String authToken = sharedPreferences.getString("Twitter token", null);
+            String authSecret = sharedPreferences.getString("Twitter secret", null);
+            String twitterUsername = sharedPreferences.getString("Twitter username", "");
+            long twitterId = sharedPreferences.getLong("Twitter id", 0);
+
+            // Check if the tokens, id's and username is not empty
+            if (authToken != null && authSecret != null && !twitterUsername.equals("") && twitterId != 0) {
+                TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken, authSecret);
+
+                // Initialize Twitter before making a new session
+                TwitterRepositoryActivity.InitializeTwitter(this);
+
+                // Make a new Twitter session
+                TwitterSession twitterSession = new TwitterSession(twitterAuthToken, twitterId, twitterUsername);
+
+                // Pass the Twitter session to the SessionManager and make it the active session
+                SessionManager<TwitterSession> sessionManager = TwitterCore.getInstance().getSessionManager();
+                sessionManager.setSession(twitterId, twitterSession);
+                sessionManager.setActiveSession(twitterSession);
             }
         } catch (NullPointerException npe) {
             Log.w(getApplicationContext().toString(),
@@ -284,26 +338,12 @@ public class DashboardActivity extends AppCompatActivity {
     private static class ReauthenticationTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... usernames) {
-            DashApp.getAccountHelper().switchToUser(usernames[0]);
+            try {
+                DashApp.getAccountHelper().switchToUser(usernames[0]);
+            } catch (IllegalStateException ise) {
+                Log.w("Warning", "Unable to switch user: " + ise.getMessage());
+            }
             return null;
-        }
-    }
-
-    /**
-     * Encrypts a custom string.
-     *
-     * @param string The string thats requires encrypting
-     * @return Returns the string but encrypted, unless there is no string to encypt, or when this
-     * particular cryptographic algorithm is requested but is not available in the environment
-     */
-    public static String encryptString(String string) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = messageDigest.digest(string.getBytes());
-            return new String(encodedhash);
-        } catch (NullPointerException | NoSuchAlgorithmException e) {
-            Log.w("Warinng", "Error encrypting string: " + e.getMessage());
-            return "";
         }
     }
 }

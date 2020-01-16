@@ -20,7 +20,10 @@
 
 package com.dash.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -64,20 +67,27 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
+        checkConnection();
+
         // Obtain the Firebase Authentication instance
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         mBackCounter = 0;
 
+        // Check if a user was already logged in.
         checkLoggedIn();
 
+        // Initialize the UI
         init();
 
+        // Add an onClickListener to the login button which executes the login method
         mLoginBtn.setOnClickListener(view -> loginUserAccount());
 
+        // Add an onClickListener to the register button which redirects the user to the register page
         mRegisterBtn.setOnClickListener(view -> startActivity(new Intent(this,
                 RegisterActivity.class)));
 
+        // Add an onClickListener to the forgot password button which redirects the user to the forgot password page
         mForgotBtn.setOnClickListener(view -> startActivity(new Intent(this,
                 ResetPasswordActivity.class)));
     }
@@ -88,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        checkConnection();
+        // Initialize the UI
         init();
     }
 
@@ -116,6 +128,17 @@ public class LoginActivity extends AppCompatActivity {
         mBackCounter = 0;
     }
 
+    private void checkConnection() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager)
+                .getActiveNetworkInfo();
+        if (networkInfo == null) {
+            Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
     /**
      * Checks if a user was already logged in.
      */
@@ -132,6 +155,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUserAccount() {
         mProgressBar.setVisibility(View.VISIBLE);
 
+        // Set email and password from the input fields
         String email, password;
         email = mEmailET.getText().toString();
         password = mPasswordET.getText().toString();
@@ -141,16 +165,22 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Hide the buttons for login, register and forgot password so they can't be clicked during loading
         hideButtons();
 
         //Use the Firebase authentication to sign in and login to the Dashboard
         mFirebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     mProgressBar.setVisibility(View.GONE);
+                    // Check if the task is successful. If it is the user is logged in
                     if (task.isSuccessful()) {
+                        // Check if the user has verified his/her email account
                         if (checkVerified()) {
+                            // If
                             startActivity(new Intent(this, DashboardActivity.class));
                         } else {
+                            Objects.requireNonNull(mFirebaseAuth.getCurrentUser())
+                                    .sendEmailVerification();
                             Toast.makeText(getApplicationContext(), "Email is not verified",
                                     Toast.LENGTH_LONG)
                                     .show();

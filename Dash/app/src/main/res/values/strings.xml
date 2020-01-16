@@ -9,6 +9,7 @@
     <string name="register_btn">Register</string>
     <string name="settings">Settings</string>
     <string name="account">Account</string>
+    <string name="twitterUsername">Twitter username:</string>
 
     <!-- String only related to login -->
     <string name="forgot_password">Forgot Password?</string>
@@ -26,10 +27,11 @@
 
     <!-- String only related to account -->
     <string name="add_reddit">Add a Reddit Account</string>
-    <string name="addTwitter">Add a Twitter Account</string>
+    <string name="add_twitter">Add a Twitter Account</string>
     <string name="reset_password">Reset Password</string>
     <string name="confirm">Confirm</string>
 
     <!-- String only related to reddit -->
     <string name="read_more">Read More..</string>
+    <string name="redditUsername">Reddit username:</string>
 </resources>

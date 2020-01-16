@@ -37,8 +37,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.DashApp;
 import com.dash.R;
+import com.securepreferences.SecurePreferences;
 
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
@@ -102,8 +104,9 @@ public class AddRedditAccountActivity extends AppCompatActivity {
             try {
                 mStatefulAuthHelper.onUserChallenge(urls[0]);
                 return true;
-            } catch (OAuthException e) {
+            } catch (OAuthException | NetworkException e) {
                 // Report failure if an OAuthException occurs
+                Log.w("Warning", "Unable to authenticate: " + e.getMessage());
                 return false;
             }
         }
@@ -136,15 +139,16 @@ public class AddRedditAccountActivity extends AppCompatActivity {
      */
     private void addSharedPreferences() {
         try {
+            // Retrieve the Reddit username
             RedditClient redditClient = DashApp.getAccountHelper().getReddit();
-            String redditUsername = DashboardActivity.encryptString(redditClient
-                    .getAuthManager()
-                    .currentUsername());
+            String redditUsername = redditClient.getAuthManager().currentUsername();
 
-            SharedPreferences sharedPreferences = getSharedPreferences(
-                    DashboardActivity.getEncryptedEmail(), MODE_PRIVATE);
+            // Retrieve the Secure Preference file
+            SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                    "", DashboardActivity.getFilename());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
+            // Add the Reddit username to the Secure Preferences
             editor.putString("Reddit", redditUsername);
             editor.apply();
         } catch (NullPointerException npe) {
@@ -157,9 +161,11 @@ public class AddRedditAccountActivity extends AppCompatActivity {
      * Creates the Reddit login WebView.
      */
     private void createWebView() {
+        // Remove all cache and history from the Webview
         mWebView.clearCache(true);
         mWebView.clearHistory();
 
+        // Remove all cookies from the Webview
         CookieManager.getInstance().removeAllCookies(null);
         CookieManager.getInstance().flush();
 

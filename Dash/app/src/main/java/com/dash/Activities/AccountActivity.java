@@ -21,6 +21,10 @@
 package com.dash.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -31,13 +35,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.dash.DashApp;
+import com.dash.Fragments.RedditFragment;
+import com.dash.Fragments.TwitterFragment;
 import com.dash.R;
-import com.dash.Utils.TwitterRepository;
 import com.google.firebase.auth.FirebaseAuth;
+import com.securepreferences.SecurePreferences;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import net.dean.jraw.oauth.AccountHelper;
 
 import java.util.Objects;
 
@@ -50,9 +60,10 @@ public class AccountActivity extends AppCompatActivity {
     private boolean mSecondClick;
     private Button mResetBtn;
     private ImageButton mRedditIB;
-    private TwitterLoginButton addTwitterBtn;
-    private ImageButton removeTwitterBtn;
+    private TwitterLoginButton mAddTwitterBtn;
     private TextView mEmailAccountTV;
+    private ImageButton mRemoveRedditIB;
+    private ImageButton mRemoveTwitterBtn;
 
     /**
      * Creates the view in the activity, fills textview with FirebaseUser email, and sets
@@ -66,12 +77,13 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-        // Initialize UI parts
+        // Initialize Twitter so we can retrieve twitter data
+        TwitterRepositoryActivity.InitializeTwitter(getApplicationContext());
+
+        // Initialize UI elements
         init();
 
         mSecondClick = false;
-
-        TwitterRepository.InitializeTwitter(getApplicationContext());
 
         // Get user email and encrypt that email so it can be used for storage
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -82,14 +94,13 @@ public class AccountActivity extends AppCompatActivity {
         mRedditIB.setOnClickListener(view -> startActivity(new Intent(this,
                 AddRedditAccountActivity.class)));
 
-        // Add an OnClickListener to the sendPasswordRessetEmail
-        // If the button is pressed it will send the user to a reset email and it shows a popup if
-        // it succeeds and another popup if it fails
+        // Add an OnClickListener to the mResetBtn to send the user a reset password email and it shows a popup if it succeeds or fails
         Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
-
         mResetBtn.setOnClickListener(view -> {
             if (!mSecondClick) {
                 mResetBtn.setText(R.string.confirm);
+                mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                        .getColor(this, R.color.tw__composer_red)));
                 mResetBtn.setAnimation(animShake);
             }
             if (mSecondClick) {
@@ -105,11 +116,23 @@ public class AccountActivity extends AppCompatActivity {
                                         Toast.LENGTH_LONG).show();
                             }
                             mResetBtn.setText(R.string.reset_password);
+                            mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                                    .getColor(this, R.color.colorBackgroundSecondary)));
                             mSecondClick = false;
                         });
             }
             mSecondClick = true;
         });
+    }
+
+    /**
+     * Reinitialize when the user returns to this activity
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
+        mSecondClick = false;
     }
 
     /**
@@ -126,28 +149,104 @@ public class AccountActivity extends AppCompatActivity {
      * layout elements. And checks if there already is an authorized twitter session available,
      * if so, hide twitter related elements
      */
-
     private void init() {
         mRedditIB = findViewById(R.id.add_reddit_btn);
+        mRemoveRedditIB = findViewById(R.id.removeRedditIB);
+        mRemoveTwitterBtn = findViewById(R.id.removetwitterbtn);
         mEmailAccountTV = findViewById(R.id.emailAccount);
         mResetBtn = findViewById(R.id.resetpwd);
-        addTwitterBtn = findViewById(R.id.addtwitterbtn);
-        removeTwitterBtn = findViewById(R.id.removetwitterbtn);
+        mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
+        mAddTwitterBtn.setPadding(16, 0,0,0);
 
+        checkReddit();
+
+        checkTwitter();
+    }
+
+    /**
+     * Checks if there is an active Reddit account
+     */
+    private void checkReddit() {
+        // Retrieve the Reddit accounthelper
+        AccountHelper accountHelper = DashApp.getAccountHelper();
+
+        // Check if there is an authenticated Reddit user
+        if (accountHelper.isAuthenticated()) {
+            // Switch button visibility
+            mRedditIB.setVisibility(View.INVISIBLE);
+            mRemoveRedditIB.setVisibility(View.VISIBLE);
+
+            // Set active username in a textview
+            TextView textView = findViewById(R.id.addRedditAccount);
+            textView.setText(accountHelper.getReddit().getAuthManager().currentUsername());
+
+            // Make "Reddit username:" textview visible
+            TextView redditUserTextView = findViewById(R.id.redditUsername);
+            redditUserTextView.setVisibility(View.VISIBLE);
+
+            // Add an OnClickListener to the remove Reddit button
+            mRemoveRedditIB.setOnClickListener(view -> {
+                // Delete the user tokens
+                DashApp.getTokenStore().deleteRefreshToken(accountHelper.getReddit().getAuthManager().currentUsername());
+                DashApp.getTokenStore().deleteLatest(accountHelper.getReddit().getAuthManager().currentUsername());
+                accountHelper.logout();
+
+                // Clear the UI and make the right items visible
+                RedditFragment.getInstance().clearUI();
+                mRemoveRedditIB.setVisibility(View.INVISIBLE);
+                redditUserTextView.setVisibility(View.INVISIBLE);
+                mRedditIB.setVisibility(View.VISIBLE);
+                textView.setText(R.string.add_reddit);
+            });
+        }
+    }
+
+    /**
+     * Checks if there is an active Twitter account
+     */
+    private void checkTwitter() {
+        // Retrieve the active Twitter session
         TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+
+        // Check if there is an active session
         if (session != null) {
-            addTwitterBtn.setVisibility(View.INVISIBLE);
-            removeTwitterBtn.setVisibility(View.VISIBLE);
-            TextView textView = findViewById(R.id.textView3);
+            // Switch button visibility
+            mAddTwitterBtn.setVisibility(View.INVISIBLE);
+            mRemoveTwitterBtn.setVisibility(View.VISIBLE);
+
+            // Set active username in a textview
+            TextView textView = findViewById(R.id.addTwitterAccount);
             textView.setText(session.getUserName());
-            removeTwitterBtn.setOnClickListener(view -> {
-                TwitterRepository.TwitterSingleton.clearSession();
-                finish();
+
+            // Make "Twitter username:" textview visible
+            TextView twitterUserTextView = findViewById(R.id.twitterUsername);
+            twitterUserTextView.setVisibility(View.VISIBLE);
+
+            // Add an OnClickListener to the remove Twitter button
+            mRemoveTwitterBtn.setOnClickListener(view -> {
+                // Delete the user tokens
+                SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
+                        "", DashboardActivity.getFilename());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("Twitter token");
+                editor.remove("Twitter username");
+                editor.remove("Twitter id");
+                editor.apply();
+                TwitterRepositoryActivity.twitterSingleton.clearSession();
+                TwitterRepositoryActivity.setTwitterCallback(this, mAddTwitterBtn);
+
+                // Clear the UI and make the right items visible
+                TwitterFragment.getInstance().clearUI();
+                mRemoveTwitterBtn.setVisibility(View.INVISIBLE);
+                twitterUserTextView.setVisibility(View.INVISIBLE);
+                mAddTwitterBtn.setVisibility(View.VISIBLE);
+                textView.setText(R.string.add_twitter);
             });
         } else {
-            addTwitterBtn.setVisibility(View.VISIBLE);
-            removeTwitterBtn.setVisibility(View.INVISIBLE);
-            TwitterRepository.setTwitterCallback(this, addTwitterBtn);
+            // If there is not an active session set the right visibility to the buttons
+            mAddTwitterBtn.setVisibility(View.VISIBLE);
+            mRemoveTwitterBtn.setVisibility(View.INVISIBLE);
+            TwitterRepositoryActivity.setTwitterCallback(this, mAddTwitterBtn);
         }
     }
 
@@ -162,6 +261,7 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        addTwitterBtn.onActivityResult(requestCode, resultCode, data);
+        mAddTwitterBtn.onActivityResult(requestCode, resultCode, data);
     }
+
 }
