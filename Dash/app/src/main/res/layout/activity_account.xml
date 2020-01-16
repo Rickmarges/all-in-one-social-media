@@ -81,6 +81,7 @@
         android:layout_marginTop="16dp"
         android:textColor="@color/colorPrimary"
         android:textColorHighlight="@color/colorPrimaryDark"
+        android:text="@string/redditUsername"
         android:textSize="12sp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,8 +126,7 @@
         android:scaleType="centerInside"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addReddit"
-        app:srcCompat="@drawable/trash" />
+        app:layout_constraintTop_toBottomOf="@+id/addReddit"/>
 
     <View
         android:id="@+id/addTwitter"
@@ -145,6 +145,7 @@
         android:layout_marginTop="16dp"
         android:textColor="@color/colorPrimary"
         android:textColorHighlight="@color/colorPrimaryDark"
+        android:text="@string/twitterUsername"
         android:textSize="12sp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
@@ -182,8 +183,7 @@
         android:backgroundTint="@color/colorBackgroundSecondary"
         android:contentDescription="@string/reddit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addTwitter"
-        app:srcCompat="@drawable/trash" />
+        app:layout_constraintTop_toBottomOf="@+id/addTwitter"/>
 
     <View
         android:id="@+id/addTrends"

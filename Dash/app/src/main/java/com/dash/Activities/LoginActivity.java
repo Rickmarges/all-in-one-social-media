@@ -69,15 +69,20 @@ public class LoginActivity extends AppCompatActivity {
 
         mBackCounter = 0;
 
+        // Check if a user was already logged in.
         checkLoggedIn();
 
+        // Initialize the UI
         init();
 
+        // Add an onClickListener to the login button which executes the login method
         mLoginBtn.setOnClickListener(view -> loginUserAccount());
 
+        // Add an onClickListener to the register button which redirects the user to the register page
         mRegisterBtn.setOnClickListener(view -> startActivity(new Intent(this,
                 RegisterActivity.class)));
 
+        // Add an onClickListener to the forgot password button which redirects the user to the forgot password page
         mForgotBtn.setOnClickListener(view -> startActivity(new Intent(this,
                 ResetPasswordActivity.class)));
     }
@@ -88,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Initialize the UI
         init();
     }
 
@@ -132,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUserAccount() {
         mProgressBar.setVisibility(View.VISIBLE);
 
+        // Set email and password from the input fields
         String email, password;
         email = mEmailET.getText().toString();
         password = mPasswordET.getText().toString();
@@ -141,14 +148,18 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Hide the buttons for login, register and forgot password so they can't be clicked during loading
         hideButtons();
 
         //Use the Firebase authentication to sign in and login to the Dashboard
         mFirebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     mProgressBar.setVisibility(View.GONE);
+                    // Check if the task is successful. If it is the user is logged in
                     if (task.isSuccessful()) {
+                        // Check if the user has verified his/her email account
                         if (checkVerified()) {
+                            // If
                             startActivity(new Intent(this, DashboardActivity.class));
                         } else {
                             Objects.requireNonNull(mFirebaseAuth.getCurrentUser())

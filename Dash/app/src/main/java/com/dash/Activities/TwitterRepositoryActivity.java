@@ -82,19 +82,22 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
         return twitterSingleton;
     }
 
+    /**
+     * Saves the Twitter token so a new session can be made when the apps starts again
+     * @param twitterSession The Twittersession created when Twitter is linked to the app
+     */
     private void savePreferences(TwitterSession twitterSession) {
         try {
-            String username = twitterSession.getUserName();
-            long userId = twitterSession.getUserId();
-
+            // Retrieve the Secure Preference file for the current user
             SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
                     "", DashboardActivity.getFilename());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
+            // Add strings to the Secure Preferences
             editor.putString("Twitter token", twitterSession.getAuthToken().token);
             editor.putString("Twitter secret", twitterSession.getAuthToken().secret);
-            editor.putString("Twitter username", username);
-            editor.putLong("Twitter id", userId);
+            editor.putString("Twitter username", twitterSession.getUserName());
+            editor.putLong("Twitter id", twitterSession.getUserId());
             editor.apply();
         } catch (NullPointerException npe) {
             Log.w("Warning", "Couldn't save preferences: " + npe.getMessage());
@@ -159,7 +162,10 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
         });
     }
 
-    //Initialize the twitter config
+    /**
+     * Initializes Twitter
+     * @param context The current context from where the method is called
+     */
     static public void InitializeTwitter(Context context) {
         TwitterConfig config = new TwitterConfig.Builder(context)
                 .logger(new DefaultLogger(Log.DEBUG))
@@ -202,6 +208,7 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
                 CookieManager.getInstance().removeAllCookies(null);
                 CookieManager.getInstance().flush();
 
+                // Save the current Twitter user tokens
                 TwitterRepositoryActivity.GetSingleton().savePreferences(result.data);
             }
 
