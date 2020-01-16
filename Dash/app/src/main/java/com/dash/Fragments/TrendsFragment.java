@@ -20,6 +20,7 @@
 
 package com.dash.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -190,13 +191,17 @@ public class TrendsFragment extends Fragment {
     }
 
     /**
+     * Check url to make sure the picture is from the right website
      * Retrieve bitmap from an URL
      *
      * @param imageUrl url from RssItem from where to download
      * @return the download bitmap
      */
     private Bitmap getImageBitmap(String imageUrl) {
-        Bitmap bitmap = null;
+        Bitmap bitmap;
+        if (!imageUrl.matches("https://t[0-9].gstatic.com/images\\?q=tbn:[a-zA-Z0-9-_]{80}")) {
+            return setDefault();
+        }
         try {
             URL url = new URL(imageUrl);
             URLConnection urlConnection = url.openConnection();
@@ -209,8 +214,14 @@ public class TrendsFragment extends Fragment {
         } catch (IOException ioe) {
             Log.w(Objects.requireNonNull(getContext()).toString(),
                     "Error getting bitmap: " + ioe.getMessage());
+            return setDefault();
         }
         return bitmap;
+    }
+
+    private Bitmap setDefault() {
+        Bitmap defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.no_photo_found);
+        return Bitmap.createScaledBitmap(defaultBitmap, 200, 200, false);
     }
 
     /**

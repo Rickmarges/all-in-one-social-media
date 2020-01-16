@@ -137,13 +137,16 @@ public class AddRedditAccountActivity extends AppCompatActivity {
      */
     private void addSharedPreferences() {
         try {
+            // Retrieve the Reddit username
             RedditClient redditClient = DashApp.getAccountHelper().getReddit();
             String redditUsername = redditClient.getAuthManager().currentUsername();
 
+            // Retrieve the Secure Preference file
             SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
                     "", DashboardActivity.getFilename());
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
+            // Add the Reddit username to the Secure Preferences
             editor.putString("Reddit", redditUsername);
             editor.apply();
         } catch (NullPointerException npe) {
@@ -156,9 +159,11 @@ public class AddRedditAccountActivity extends AppCompatActivity {
      * Creates the Reddit login WebView.
      */
     private void createWebView() {
+        // Remove all cache and history from the Webview
         mWebView.clearCache(true);
         mWebView.clearHistory();
 
+        // Remove all cookies from the Webview
         CookieManager.getInstance().removeAllCookies(null);
         CookieManager.getInstance().flush();
 

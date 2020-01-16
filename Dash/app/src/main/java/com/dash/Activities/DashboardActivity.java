@@ -50,8 +50,6 @@ import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 /**
@@ -139,13 +137,16 @@ public class DashboardActivity extends AppCompatActivity {
      * and links them to the corresponding layout elements
      */
     private void init() {
+        // Set a counter that keeps track of the amount of back presses
         mBackCounter = 0;
 
+        // Retrieve the linearlayout and set focus to it, so no tabs will be selected
         LinearLayout linearLayout = findViewById(R.id.linearlayout);
         linearLayout.requestFocus();
 
         mMenuBtn = findViewById(R.id.menubtn);
 
+        // Make a Viewpager for the Tablayout
         ViewPager viewPager = findViewById(R.id.pager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
@@ -197,10 +198,13 @@ public class DashboardActivity extends AppCompatActivity {
                     "No Trend views to delete." + npe.getMessage());
         }
 
+        // Clear the UI on the Twitter tab
         TwitterFragment.getInstance().clearUI();
 
+        // Clear the UI on the Reddit tab
         RedditFragment.getInstance().clearUI();
 
+        // Clear the UI on the Dash tab
         DashFragment.getInstance().clearUI();
 
         // Logs the currently authenticated RedditUser out.
@@ -259,11 +263,12 @@ public class DashboardActivity extends AppCompatActivity {
      */
     private void checkReddit() {
         try {
+            // Retrieve the Secure Preference file and read the Reddit username
             SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
-                    "", DashboardActivity.getFilename());
-
+                    "", getFilename());
             String redditUsername = sharedPreferences.getString("Reddit", "");
 
+            // If the username is not empty, reauthenticate the user
             if (!redditUsername.equals("")) {
                 new ReauthenticationTask().execute(redditUsername);
             }
@@ -273,30 +278,36 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if the currently authenticated FireBaseUser is authenticated for Twitter and when the user is,
+     * reauthenticate the user
+     */
     private void checkTwitter() {
         try {
+            // Retrieve the Secure Preference file and Twitter tokens and id's
             SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
                     "", DashboardActivity.getFilename());
 
             String authToken = sharedPreferences.getString("Twitter token", null);
             String authSecret = sharedPreferences.getString("Twitter secret", null);
-
-
             String twitterUsername = sharedPreferences.getString("Twitter username", "");
             long twitterId = sharedPreferences.getLong("Twitter id", 0);
 
+            // Check if the tokens, id's and username is not empty
             if (authToken != null && authSecret != null && !twitterUsername.equals("") && twitterId != 0) {
                 TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken, authSecret);
 
+                // Initialize Twitter before making a new session
                 TwitterRepositoryActivity.InitializeTwitter(this);
 
+                // Make a new Twitter session
                 TwitterSession twitterSession = new TwitterSession(twitterAuthToken, twitterId, twitterUsername);
 
+                // Pass the Twitter session to the SessionManager and make it the active session
                 SessionManager<TwitterSession> sessionManager = TwitterCore.getInstance().getSessionManager();
                 sessionManager.setSession(twitterId, twitterSession);
                 sessionManager.setActiveSession(twitterSession);
             }
-
         } catch (NullPointerException npe) {
             Log.w(getApplicationContext().toString(),
                     "No such user found." + npe.getMessage());
@@ -311,24 +322,6 @@ public class DashboardActivity extends AppCompatActivity {
         protected Void doInBackground(String... usernames) {
             DashApp.getAccountHelper().switchToUser(usernames[0]);
             return null;
-        }
-    }
-
-    /**
-     * Encrypts a custom string.
-     *
-     * @param string The string thats requires encrypting
-     * @return Returns the string but encrypted, unless there is no string to encypt, or when this
-     * particular cryptographic algorithm is requested but is not available in the environment
-     */
-    public static String encryptString(String string) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = messageDigest.digest(string.getBytes());
-            return new String(encodedhash);
-        } catch (NullPointerException | NoSuchAlgorithmException e) {
-            Log.w("Warinng", "Error encrypting string: " + e.getMessage());
-            return "";
         }
     }
 }

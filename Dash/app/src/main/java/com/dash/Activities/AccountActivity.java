@@ -60,6 +60,8 @@ public class AccountActivity extends AppCompatActivity {
     private ImageButton mRedditIB;
     private TwitterLoginButton mAddTwitterBtn;
     private TextView mEmailAccountTV;
+    private ImageButton mRemoveRedditIB;
+    private ImageButton mRemoveTwitterBtn;
 
     /**
      * Creates the view in the activity, fills textview with FirebaseUser email, and sets
@@ -90,9 +92,7 @@ public class AccountActivity extends AppCompatActivity {
         mRedditIB.setOnClickListener(view -> startActivity(new Intent(this,
                 AddRedditAccountActivity.class)));
 
-        // Add an OnClickListener to the sendPasswordRessetEmail
-        // If the button is pressed it will send the user to a reset email and it shows a popup if
-        // it succeeds and another popup if it fails
+        // Add an OnClickListener to the mResetBtn to send the user a reset password email and it shows a popup if it succeeds or fails
         Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
         mResetBtn.setOnClickListener(view -> {
             if (!mSecondClick) {
@@ -126,6 +126,7 @@ public class AccountActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         init();
+        mSecondClick = false;
     }
 
     /**
@@ -142,47 +143,81 @@ public class AccountActivity extends AppCompatActivity {
      * layout elements. And checks if there already is an authorized twitter session available,
      * if so, hide twitter related elements
      */
-
     private void init() {
         mRedditIB = findViewById(R.id.add_reddit_btn);
-        ImageButton removeRedditIB = findViewById(R.id.removeRedditIB);
+        mRemoveRedditIB = findViewById(R.id.removeRedditIB);
         mEmailAccountTV = findViewById(R.id.emailAccount);
         mResetBtn = findViewById(R.id.resetpwd);
         mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
-        ImageButton removeTwitterBtn = findViewById(R.id.removetwitterbtn);
         mAddTwitterBtn.setPadding(16, 0,0,0);
 
+        checkReddit();
+
+        checkTwitter();
+    }
+
+    /**
+     * Checks if there is an active Reddit account
+     */
+    private void checkReddit() {
+        // Retrieve the Reddit accounthelper
         AccountHelper accountHelper = DashApp.getAccountHelper();
+
+        // Check if there is an authenticated Reddit user
         if (accountHelper.isAuthenticated()) {
+            // Switch button visibility
             mRedditIB.setVisibility(View.INVISIBLE);
-            removeRedditIB.setVisibility(View.VISIBLE);
+            mRemoveRedditIB.setVisibility(View.VISIBLE);
+
+            // Set active username in a textview
             TextView textView = findViewById(R.id.addRedditAccount);
             textView.setText(accountHelper.getReddit().getAuthManager().currentUsername());
+
+            // Make "Reddit username:" textview visible
             TextView redditUserTextView = findViewById(R.id.redditUsername);
             redditUserTextView.setVisibility(View.VISIBLE);
-            redditUserTextView.setText(R.string.redditUsername);
-            removeRedditIB.setOnClickListener(view -> {
+
+            // Add an OnClickListener to the remove Reddit button
+            mRemoveRedditIB.setOnClickListener(view -> {
+                // Delete the user tokens
                 DashApp.getTokenStore().deleteRefreshToken(accountHelper.getReddit().getAuthManager().currentUsername());
                 DashApp.getTokenStore().deleteLatest(accountHelper.getReddit().getAuthManager().currentUsername());
                 accountHelper.logout();
+
+                // Clear the UI and make the right items visible
                 RedditFragment.getInstance().clearUI();
-                removeRedditIB.setVisibility(View.INVISIBLE);
+                mRemoveRedditIB.setVisibility(View.INVISIBLE);
                 redditUserTextView.setVisibility(View.INVISIBLE);
                 mRedditIB.setVisibility(View.VISIBLE);
                 textView.setText(R.string.add_reddit);
             });
         }
+    }
 
+    /**
+     * Checks if there is an active Twitter account
+     */
+    private void checkTwitter() {
+        // Retrieve the active Twitter session
         TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-        if(session != null){
+
+        // Check if there is an active session
+        if (session != null) {
+            // Switch button visibility
             mAddTwitterBtn.setVisibility(View.INVISIBLE);
-            removeTwitterBtn.setVisibility(View.VISIBLE);
+            mRemoveTwitterBtn.setVisibility(View.VISIBLE);
+
+            // Set active username in a textview
             TextView textView = findViewById(R.id.addTwitterAccount);
             textView.setText(session.getUserName());
+
+            // Make "Twitter username:" textview visible
             TextView twitterUserTextView = findViewById(R.id.twitterUsername);
             twitterUserTextView.setVisibility(View.VISIBLE);
-            twitterUserTextView.setText(R.string.twitterUsername);
-            removeTwitterBtn.setOnClickListener(view -> {
+
+            // Add an OnClickListener to the remove Twitter button
+            mRemoveTwitterBtn.setOnClickListener(view -> {
+                // Delete the user tokens
                 SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
                         "", DashboardActivity.getFilename());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -190,18 +225,20 @@ public class AccountActivity extends AppCompatActivity {
                 editor.remove("Twitter username");
                 editor.remove("Twitter id");
                 editor.apply();
-
                 TwitterRepositoryActivity.twitterSingleton.clearSession();
                 TwitterRepositoryActivity.setTwitterCallback(this, mAddTwitterBtn);
+
+                // Clear the UI and make the right items visible
                 TwitterFragment.getInstance().clearUI();
-                removeTwitterBtn.setVisibility(View.INVISIBLE);
+                mRemoveTwitterBtn.setVisibility(View.INVISIBLE);
                 twitterUserTextView.setVisibility(View.INVISIBLE);
                 mAddTwitterBtn.setVisibility(View.VISIBLE);
                 textView.setText(R.string.add_twitter);
             });
         } else {
+            // If there is not an active session set the right visibility to the buttons
             mAddTwitterBtn.setVisibility(View.VISIBLE);
-            removeTwitterBtn.setVisibility(View.INVISIBLE);
+            mRemoveTwitterBtn.setVisibility(View.INVISIBLE);
             TwitterRepositoryActivity.setTwitterCallback(this, mAddTwitterBtn);
         }
     }
