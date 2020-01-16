@@ -331,7 +331,7 @@ public class TrendsFragment extends Fragment {
         description = description.substring(0, 1).toUpperCase() + description.substring(1);
         textView.setText(description);
         // Style TextView
-        textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
+        textView.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
         textView.setPadding(15, 5, 220, 10);
         textView.setLayoutParams(new RelativeLayout
                 .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

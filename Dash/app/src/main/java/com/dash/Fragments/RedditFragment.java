@@ -22,7 +22,10 @@ package com.dash.Fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -33,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -221,6 +225,7 @@ public class RedditFragment extends Fragment {
         textView.setText(submission.getTitle());
         // Style TextView
         textView.setTextAppearance(R.style.strokeColor);
+        textView.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
         textView.setGravity(1);
         textView.setPadding(15, 5, 10, 0);
         textView.setTextSize(20);
@@ -242,8 +247,8 @@ public class RedditFragment extends Fragment {
         String author = " By: u/" + submission.getAuthor();
         textView.append(author);
         // Style TextView
-        textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
-        textView.setPadding(20, 5, 150, 5);
+        textView.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
+        textView.setPadding(70, 5, 150, 5);
         textView.setTypeface(null, Typeface.ITALIC);
         return textView;
     }
@@ -259,7 +264,7 @@ public class RedditFragment extends Fragment {
         // Sets the text to hold description of the post
         textView.setText(submission.getSelfText());
         // Style TextView
-        textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
+        textView.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
         textView.setPadding(25, 5, 150, 5);
         textView.setVerticalScrollBarEnabled(true);
         textView.setHeight(250);
@@ -293,7 +298,7 @@ public class RedditFragment extends Fragment {
         // Style View
         view.setLayoutParams(new LinearLayout
                 .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5));
-        view.setBackgroundResource(R.color.colorBackgroundPrimary);
+        view.setBackgroundResource(R.color.colorTextPrimary);
         return view;
     }
 
@@ -309,7 +314,27 @@ public class RedditFragment extends Fragment {
         Picasso.with(this.getContext()).load(submission.getUrl()).into(imageView);
         // Style ImageView
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageView.setAdjustViewBounds(true);
         imageView.setPadding(10, 0, 10, 20);
+        return imageView;
+    }
+
+    /**
+     * Create Logo holding the image of Reddit
+     *
+     * @param submission The post retrieved from the Reddit Frontpage
+     * @return the ImageView
+     */
+    private ImageView createLogo() {
+        // Insert path into Picasso to download image
+        ImageView imageView = new ImageView(getContext());
+        //Picasso.with(this.getContext()).load(R.drawable.ic_iconmonstr_reddit_1).into(imageView);
+        // Style ImageView
+        Drawable background = getResources().getDrawable(R.drawable.ic_iconmonstr_reddit_1);
+        imageView.setBackground(background);
+        imageView.setVisibility(View.VISIBLE);
+        imageView.setScaleX(0.8f);
+        imageView.setScaleY(0.8f);
         return imageView;
     }
 
@@ -323,7 +348,13 @@ public class RedditFragment extends Fragment {
         LinearLayout linearLayout = new LinearLayout(getContext());
         // Style LinearLayout
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.addView(createAuthor(submission));
+
+        RelativeLayout relativeLayout = new RelativeLayout(getContext());
+        relativeLayout.setPadding(15,10,0,10);
+        relativeLayout.addView(createLogo());
+        relativeLayout.addView(createAuthor(submission));
+
+        linearLayout.addView(relativeLayout);
         linearLayout.addView(createDivider());
         linearLayout.addView(createTitle(submission));
         // If the post has text instead of image TextViews for the description and Read more

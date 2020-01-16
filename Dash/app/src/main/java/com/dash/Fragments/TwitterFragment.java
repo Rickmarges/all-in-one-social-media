@@ -6,12 +6,15 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TextView.*;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dash.Activities.TwitterRepositoryActivity;
 import com.dash.R;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.text.ParseException;
@@ -128,8 +132,12 @@ public class TwitterFragment extends Fragment {
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
         layoutParams.bottomMargin = 10;
 
-        // Add views to cardlayour and linearlayout
-        cardLayout.addView(createInfo(tweet));
+        RelativeLayout relativeLayout = new RelativeLayout(getContext());
+
+        relativeLayout.addView(createInfo(tweet));
+        relativeLayout.addView(createLogo());
+
+        cardLayout.addView(relativeLayout);
         cardLayout.addView(createDivider());
         cardLayout.addView(createTitle(tweet));
         cardLayout.addView(createDesc(tweet));
@@ -158,9 +166,11 @@ public class TwitterFragment extends Fragment {
         if (date != null) {
             time = " " + DateUtils.getRelativeTimeSpanString(date.getTime());
         }
+
+
         textViewInfo.append(time);
-        textViewInfo.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
-        textViewInfo.setPadding(20, 5, 150, 5);
+        textViewInfo.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
+        textViewInfo.setPadding(70, 5, 150, 5);
         textViewInfo.setTypeface(null, Typeface.ITALIC);
         return textViewInfo;
     }
@@ -170,7 +180,7 @@ public class TwitterFragment extends Fragment {
         // Style end enable divider
         divider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 5));
-        divider.setBackgroundResource(R.color.colorBackgroundPrimary);
+        divider.setBackgroundResource(R.color.colorTextPrimary);
         return divider;
     }
 
@@ -178,7 +188,8 @@ public class TwitterFragment extends Fragment {
         TextView textViewTitle = new TextView(getContext());
         // Fill and style title
         textViewTitle.setText(tweet.user.name);
-        textViewTitle.setTextAppearance(R.style.strokeColor);
+        //textViewTitle.setTextAppearance(R.style.strokeColor);
+        textViewTitle.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
         textViewTitle.setGravity(1);
         textViewTitle.setPadding(15, 5, 10, 0);
         textViewTitle.setTextSize(20);
@@ -188,7 +199,7 @@ public class TwitterFragment extends Fragment {
     private TextView createDesc(Tweet tweet) {
         TextView textViewDesc = new TextView(getContext());
         textViewDesc.setText(tweet.text);
-        textViewDesc.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
+        textViewDesc.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
         textViewDesc.setPadding(25, 5, 150, 20);
         textViewDesc.setVerticalScrollBarEnabled(true);
         return textViewDesc;
@@ -201,8 +212,20 @@ public class TwitterFragment extends Fragment {
             com.squareup.picasso.Picasso.with(this.getContext())
                     .load(tweet.entities.media.get(0).mediaUrlHttps).into(imageView);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setAdjustViewBounds(true);
             imageView.setPadding(10, 0, 10, 20);
         }
+        return imageView;
+    }
+
+    private ImageView createLogo() {
+        // Insert path into Picasso to download image
+        ImageView imageView = new ImageView(getContext());
+            com.squareup.picasso.Picasso.with(this.getContext())
+                    .load(com.twitter.sdk.android.R.drawable.tw__ic_logo_blue).into(imageView);
+            imageView.setScaleType(ImageView.ScaleType.FIT_END);
+            imageView.setPadding(20, 20, 10, 20);
+
         return imageView;
     }
 
