@@ -22,8 +22,6 @@ package com.dash.Fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -39,15 +37,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.dash.Activities.DashboardActivity;
 import com.dash.DashApp;
 import com.dash.R;
+import com.dash.Utils.GenericParser;
 import com.securepreferences.SecurePreferences;
 import com.squareup.picasso.Picasso;
 
@@ -60,6 +53,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 public class RedditFragment extends Fragment {
@@ -353,7 +352,7 @@ public class RedditFragment extends Fragment {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         RelativeLayout relativeLayout = new RelativeLayout(getContext());
-        relativeLayout.setPadding(15,10,0,10);
+        relativeLayout.setPadding(15, 10, 0, 10);
         relativeLayout.addView(createLogo());
         relativeLayout.addView(createAuthor(submission));
 
@@ -393,8 +392,12 @@ public class RedditFragment extends Fragment {
         // Set onClickListener and add custom animation
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
-        cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("https://www.reddit.com" + submission.getPermalink()))));
+        cardView.setOnClickListener(view -> {
+            String url = "https://www.reddit.com" + submission.getPermalink();
+            if (GenericParser.isSecureUrl(url)) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            }
+        });
         cardView.addView(createCardLayout(submission));
         return cardView;
     }
