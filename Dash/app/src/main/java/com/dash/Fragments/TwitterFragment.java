@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TextView.*;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dash.Activities.TwitterRepositoryActivity;
 import com.dash.R;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.dash.Utils.GenericParser;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.text.ParseException;
@@ -35,6 +27,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class TwitterFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -76,7 +74,7 @@ public class TwitterFragment extends Fragment {
     public void createHomeTimelineView(List<Tweet> tweets) {
         // Make sure the rest of the methods are only called it there are tweets
         mCardList.clear();
-        if (tweets == null){
+        if (tweets == null) {
             Toast.makeText(getContext(), "Unable to retrieve tweets", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -116,17 +114,18 @@ public class TwitterFragment extends Fragment {
         cardView.setRadius(15);
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> {
-            String url;
             // Check if the url is in the media or urls List
             if (tweet.id != 0 && tweet.user.screenName != null) {
-                url = "https://twitter.com/" + tweet.user.screenName + "/status/" + tweet.id;
+                String url = "https://www.twitter.com/" + tweet.user.screenName + "/status/" + tweet.id;
+                if (GenericParser.isSecureUrl(url)) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(browserIntent);
+                } else {
+                    Toast.makeText(getContext(), "Unsecured URL", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(getContext(), "Unable to open tweet", Toast.LENGTH_SHORT).show();
-                return;
             }
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(browserIntent);
-
         });
         cardLayout.setOrientation(LinearLayout.VERTICAL);
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) cardView.getLayoutParams();
@@ -221,10 +220,10 @@ public class TwitterFragment extends Fragment {
     private ImageView createLogo() {
         // Insert path into Picasso to download image
         ImageView imageView = new ImageView(getContext());
-            com.squareup.picasso.Picasso.with(this.getContext())
-                    .load(com.twitter.sdk.android.R.drawable.tw__ic_logo_blue).into(imageView);
-            imageView.setScaleType(ImageView.ScaleType.FIT_END);
-            imageView.setPadding(20, 20, 10, 20);
+        com.squareup.picasso.Picasso.with(this.getContext())
+                .load(com.twitter.sdk.android.R.drawable.tw__ic_logo_blue).into(imageView);
+        imageView.setScaleType(ImageView.ScaleType.FIT_END);
+        imageView.setPadding(20, 20, 10, 20);
 
         return imageView;
     }
@@ -245,7 +244,7 @@ public class TwitterFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(bool);
     }
 
-    public void clearUI(){
+    public void clearUI() {
         mCardList.clear();
         if (mLinearLayout.getChildCount() > 0) {
             mLinearLayout.removeAllViews();

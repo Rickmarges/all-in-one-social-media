@@ -20,7 +20,6 @@
 
 package com.dash.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -40,14 +39,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.dash.Activities.DashboardActivity;
 import com.dash.R;
+import com.dash.Utils.GenericParser;
 import com.dash.Utils.RssItem;
 import com.securepreferences.SecurePreferences;
 
@@ -69,6 +63,12 @@ import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class TrendsFragment extends Fragment {
     private String mCountryCode;
@@ -133,30 +133,34 @@ public class TrendsFragment extends Fragment {
          */
         @Override
         public List<RssItem> doInBackground(String... params) {
-            List<RssItem> rssItems;
-            Node node;
-            NodeList nodes;
-            try {
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
+            String urlString = mBaseUrl + mCountryCode;
+            if (GenericParser.isSecureUrl(urlString)) {
+                List<RssItem> rssItems;
+                Node node;
+                NodeList nodes;
+                try {
+                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder builder = factory.newDocumentBuilder();
 
-                URL url = new URL(mBaseUrl + mCountryCode);
-                Document document = builder.parse(url.openStream());
-                document.getDocumentElement().normalize();
+                    URL url = new URL(urlString);
+                    Document document = builder.parse(url.openStream());
+                    document.getDocumentElement().normalize();
 
-                Element root = document.getDocumentElement();
+                    Element root = document.getDocumentElement();
 
-                // channel node
-                node = root.getFirstChild().getNextSibling();
-                nodes = node.getChildNodes();
+                    // channel node
+                    node = root.getFirstChild().getNextSibling();
+                    nodes = node.getChildNodes();
 
-                rssItems = createRssItems(nodes);
-            } catch (ParserConfigurationException | IOException | SAXException e) {
-                rssItems = null;
-                Log.w(Objects.requireNonNull(getContext()).toString(),
-                        "Unable to parse RSS: " + e.getMessage());
+                    rssItems = createRssItems(nodes);
+                } catch (ParserConfigurationException | IOException | SAXException e) {
+                    rssItems = null;
+                    Log.w(Objects.requireNonNull(getContext()).toString(),
+                            "Unable to parse RSS: " + e.getMessage());
+                }
+                return rssItems;
             }
-            return rssItems;
+            return null;
         }
 
         /**
@@ -202,7 +206,7 @@ public class TrendsFragment extends Fragment {
      */
     private Bitmap getImageBitmap(String imageUrl) {
         Bitmap bitmap;
-        if (!imageUrl.matches("https://t[0-9].gstatic.com/images\\?q=tbn:[a-zA-Z0-9-_]{80,85}")) {
+        if (!imageUrl.matches("https://t[0-9].gstatic.com/images\\?q=tbn:[a-zA-Z0-9-_]{80,85}") || !GenericParser.isValidUrl(imageUrl)) {
             return setDefault();
         }
         try {
@@ -271,7 +275,10 @@ public class TrendsFragment extends Fragment {
                             // Retrieve the URL and set it to Link in RssItem
                             if (newsNode.getNodeName().equals("ht:news_item_url")
                                     && rssItem.getLink().equals("")) {
-                                rssItem.setLink(newsNode.getFirstChild().getNodeValue());
+                                String url = newsNode.getFirstChild().getNodeValue();
+                                if (GenericParser.isValidUrl(url)) {
+                                    rssItem.setLink(url);
+                                }
                             }
                             newsNode = newsNode.getNextSibling();
                         }
@@ -385,8 +392,12 @@ public class TrendsFragment extends Fragment {
         // Set onClickListener and add custom animation
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
-        cardView.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse(link))));
+        cardView.setOnClickListener(view -> {
+
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(link)));
+        });
+
         return cardView;
     }
 }
