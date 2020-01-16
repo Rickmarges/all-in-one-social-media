@@ -20,7 +20,12 @@
 
 package com.dash.Fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +37,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.dash.Activities.LoginActivity;
 import com.dash.R;
 
 import java.util.ArrayList;
@@ -67,6 +73,8 @@ public class DashFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_dash, container, false);
 
+        checkConnection();
+
         mSwipeRefreshLayout = rootView.findViewById(R.id.swipe);
         mSwipeRefreshLayout.setOnRefreshListener(this::updateCards);
 
@@ -89,10 +97,29 @@ public class DashFragment extends Fragment {
         updateCards();
     }
 
+    boolean checkConnection() {
+        try {
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager)
+                    .getActiveNetworkInfo();
+            if (networkInfo == null) {
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                return false;
+            }
+        } catch (NullPointerException npe) {
+            Log.w("Warning", "Unable to check connectivity: " + npe.getMessage());
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Update the instances of both Reddit and Twitter fragments
      */
     private void updateCards() {
+        checkConnection();
+
         mRedditCardList.clear();
         mTwitterCardList.clear();
 

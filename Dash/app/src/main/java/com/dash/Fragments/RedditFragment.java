@@ -112,6 +112,9 @@ public class RedditFragment extends Fragment {
      * Executes an async task to refresh Reddit Frontpage
      */
     void updateReddit() {
+        if (!DashFragment.getInstance().checkConnection()) {
+            return;
+        }
         if (DashApp.getAccountHelper().isAuthenticated()) {
             new GetRedditFrontpage().execute();
         } else {

@@ -40,6 +40,7 @@ import com.dash.R;
 import com.securepreferences.SecurePreferences;
 
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
@@ -103,8 +104,9 @@ public class AddRedditAccountActivity extends AppCompatActivity {
             try {
                 mStatefulAuthHelper.onUserChallenge(urls[0]);
                 return true;
-            } catch (OAuthException e) {
+            } catch (OAuthException | NetworkException e) {
                 // Report failure if an OAuthException occurs
+                Log.w("Warning", "Unable to authenticate: " + e.getMessage());
                 return false;
             }
         }

@@ -20,7 +20,10 @@
 
 package com.dash.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -64,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
+        checkConnection();
+
         // Obtain the Firebase Authentication instance
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -93,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        checkConnection();
         // Initialize the UI
         init();
     }
@@ -120,6 +126,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mBackCounter = 0;
+    }
+
+    private void checkConnection() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager)
+                .getActiveNetworkInfo();
+        if (networkInfo == null) {
+            Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     /**

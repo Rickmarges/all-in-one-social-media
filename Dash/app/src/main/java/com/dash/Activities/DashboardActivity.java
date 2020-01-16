@@ -21,8 +21,11 @@
 package com.dash.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -79,6 +82,8 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
+        checkConnection();
+
         checkLoggedIn();
 
         init();
@@ -95,6 +100,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        checkConnection();
         checkLoggedIn();
         checkReddit();
         checkTwitter();
@@ -113,6 +119,18 @@ public class DashboardActivity extends AppCompatActivity {
         } else {
             mBackCounter = 0;
             finishAffinity();
+        }
+    }
+
+    private void checkConnection() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager)
+                .getActiveNetworkInfo();
+        if (networkInfo == null) {
+            mFirebaseUser = null;
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 
@@ -320,7 +338,11 @@ public class DashboardActivity extends AppCompatActivity {
     private static class ReauthenticationTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... usernames) {
-            DashApp.getAccountHelper().switchToUser(usernames[0]);
+            try {
+                DashApp.getAccountHelper().switchToUser(usernames[0]);
+            } catch (IllegalStateException ise) {
+                Log.w("Warning", "Unable to switch user: " + ise.getMessage());
+            }
             return null;
         }
     }
