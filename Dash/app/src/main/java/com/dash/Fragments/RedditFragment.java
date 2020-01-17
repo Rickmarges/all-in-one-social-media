@@ -165,7 +165,7 @@ public class RedditFragment extends Fragment {
                         .build();
 
                 return frontPage.next();
-            } catch (NullPointerException | IllegalStateException npe) {
+            } catch (Exception npe) {
                 // Report failure if an Exception occurs
                 if (Build.VERSION.SDK_INT >= 26) {
                     Log.w("Reddit warning", "Unable to retrieve frontpage: " + npe.getMessage() + " " + LocalDateTime.now());
@@ -329,15 +329,13 @@ public class RedditFragment extends Fragment {
     /**
      * Create Logo holding the image of Reddit
      *
-     * @param submission The post retrieved from the Reddit Frontpage
      * @return the ImageView
      */
     private ImageView createLogo() {
-        // Insert path into Picasso to download image
+        // Create ImageView holding logo
         ImageView imageView = new ImageView(getContext());
-        //Picasso.with(this.getContext()).load(R.drawable.ic_iconmonstr_reddit_1).into(imageView);
         // Style ImageView
-        Drawable background = getResources().getDrawable(R.drawable.ic_iconmonstr_reddit_1);
+        Drawable background = getResources().getDrawable(R.drawable.ic_iconmonstr_reddit_1, null);
         imageView.setBackground(background);
         imageView.setVisibility(View.VISIBLE);
         imageView.setScaleX(0.8f);
