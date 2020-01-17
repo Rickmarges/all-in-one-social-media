@@ -130,7 +130,7 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
         StatusesService statusesService = twitterApiClient.getStatusesService();
 
         //For some reason a call with count 20 will get 18 results. So 22 is 20.
-        Call<List<Tweet>> call = statusesService.homeTimeline(amount + 2, null, null, null, false, null, null);
+        Call<List<Tweet>> call = statusesService.homeTimeline(amount + 2, null, null, null, true, null, null);
         call.enqueue(new Callback<List<Tweet>>() {
             /**
              * Fills fragment with the result of the call

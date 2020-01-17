@@ -163,7 +163,7 @@ public class RedditFragment extends Fragment {
                         .build();
 
                 return frontPage.next();
-            } catch (NullPointerException | IllegalStateException npe) {
+            } catch (Exception npe) {
                 // Report failure if an Exception occurs
                 if (Build.VERSION.SDK_INT >= 26) {
                     Log.w("Reddit warning", "Unable to retrieve frontpage: " + npe.getMessage() + " " + LocalDateTime.now());
