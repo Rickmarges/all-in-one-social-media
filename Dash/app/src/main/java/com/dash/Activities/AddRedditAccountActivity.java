@@ -36,6 +36,8 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.DashApp;
+import com.dash.Fragments.DashFragment;
+import com.dash.Fragments.RedditFragment;
 import com.dash.R;
 import com.securepreferences.SecurePreferences;
 
@@ -124,6 +126,9 @@ public class AddRedditAccountActivity extends AppCompatActivity {
 
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
+
+            RedditFragment.getInstance().updateReddit();
+            DashFragment.getInstance().updateCards();
 
             // Finish the activity if it's still running
             Activity activity = this.mWeakReference.get();
