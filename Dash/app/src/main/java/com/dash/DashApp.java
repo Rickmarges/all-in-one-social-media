@@ -23,12 +23,17 @@ package com.dash;
 import android.app.Application;
 
 import net.dean.jraw.android.AndroidHelper;
+import net.dean.jraw.android.AppInfo;
 import net.dean.jraw.android.AppInfoProvider;
 import net.dean.jraw.android.ManifestAppInfoProvider;
 import net.dean.jraw.android.SharedPreferencesTokenStore;
 import net.dean.jraw.http.NoopHttpLogger;
+import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.oauth.AccountHelper;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 import java.util.UUID;
 
 public final class DashApp extends Application {
@@ -40,7 +45,7 @@ public final class DashApp extends Application {
         super.onCreate();
 
         // Get UserAgent and OAuth2 data from AndroidManifest.xml
-        AppInfoProvider appInfoProvider = new ManifestAppInfoProvider(getApplicationContext());
+        AppInfoProvider appInfoProvider = () -> new AppInfo(BuildConfig.REDDIT_CLIENT_ID, BuildConfig.REDDIT_REDIRECT_URL, new UserAgent(BuildConfig.REDDIT_USERNAME));
 
         // Ideally, this should be unique to every device
         UUID deviceUuid = UUID.randomUUID();

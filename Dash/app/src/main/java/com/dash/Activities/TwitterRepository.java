@@ -61,10 +61,10 @@ import retrofit2.Call;
 /**
  * Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki
  */
-public class TwitterRepositoryActivity extends AppCompatActivity {
-    public static TwitterRepositoryActivity twitterSingleton = null;
+public class TwitterRepository {
+    public static TwitterRepository twitterSingleton = null;
 
-    public TwitterRepositoryActivity() {
+    public TwitterRepository() {
     }
 
     /**
@@ -72,11 +72,11 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
      *
      * @return a twitterSingleton
      */
-    public static TwitterRepositoryActivity GetSingleton() {
+    public static TwitterRepository GetSingleton() {
         //twitterSingleton = new TwitterRepositoryActivity();
         if (twitterSingleton == null) {
-            synchronized (TwitterRepositoryActivity.class) {
-                twitterSingleton = new TwitterRepositoryActivity();
+            synchronized (TwitterRepository.class) {
+                twitterSingleton = new TwitterRepository();
             }
         }
         return twitterSingleton;
@@ -86,11 +86,11 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
      * Saves the Twitter token so a new session can be made when the apps starts again
      * @param twitterSession The Twittersession created when Twitter is linked to the app
      */
-    private void savePreferences(TwitterSession twitterSession) {
+    public void savePreferences(TwitterSession twitterSession, Context context, String ID) {
         try {
             // Retrieve the Secure Preference file for the current user
-            SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
-                    "", DashboardActivity.getFilename());
+            SharedPreferences sharedPreferences = new SecurePreferences(context,
+                    "", ID);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             // Add strings to the Secure Preferences
@@ -130,7 +130,7 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
         StatusesService statusesService = twitterApiClient.getStatusesService();
 
         //For some reason a call with count 20 will get 18 results. So 22 is 20.
-        Call<List<Tweet>> call = statusesService.homeTimeline(amount + 2, null, null, null, false, null, null);
+        Call<List<Tweet>> call = statusesService.homeTimeline(amount + 2, null, null, null, true, null, null);
         call.enqueue(new Callback<List<Tweet>>() {
             /**
              * Fills fragment with the result of the call
@@ -200,7 +200,7 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
                 ((Activity) context).finish();
 
                 //creates the instance
-                TwitterSession session = TwitterRepositoryActivity.GetSingleton().getActiveSession();
+                TwitterSession session = TwitterRepository.GetSingleton().getActiveSession();
 
                 textView.setText(session.getUserName());
 
@@ -209,7 +209,10 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
                 CookieManager.getInstance().flush();
 
                 // Save the current Twitter user tokens
-                TwitterRepositoryActivity.GetSingleton().savePreferences(result.data);
+                TwitterRepository.GetSingleton().savePreferences(result.data, context, DashboardActivity.getFilename());
+
+                TwitterRepository.GetSingleton().GetHomeTimeline(25);
+                DashFragment.getInstance().updateCards();
             }
 
             /**
@@ -221,7 +224,7 @@ public class TwitterRepositoryActivity extends AppCompatActivity {
             public void failure(TwitterException te) {
                 //clears the session
                 Toast.makeText(context, "Authentication failed try again...", Toast.LENGTH_SHORT).show();
-                TwitterRepositoryActivity.GetSingleton().clearSession();
+                TwitterRepository.GetSingleton().clearSession();
             }
         });
     }

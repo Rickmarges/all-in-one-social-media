@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.dash.Activities.TwitterRepositoryActivity;
+import com.securepreferences.SecurePreferences;
 import com.twitter.sdk.android.core.SessionManager;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterAuthToken;
@@ -21,6 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Objects;
 
 import okhttp3.HttpUrl;
@@ -28,9 +30,6 @@ import retrofit2.Retrofit;
 
 import static com.twitter.sdk.android.core.TwitterCore.getInstance;
 import static org.junit.Assert.assertTrue;
-
-//import androidx.test.ext.junit.runners.AndroidJUnit4;
-//import androidx.test.platform.app.InstrumentationRegistry;
 
 
 /**
@@ -42,11 +41,12 @@ import static org.junit.Assert.assertTrue;
 public class TwitterBasedTest {
     private SessionManager<TwitterSession> session = null;
     private TwitterSession twitterSession = null;
+    private Context test_context = null;
 
     @Before
     public void setUp() {
         //Creates a twitter kit instance
-        Context test_context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        test_context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         TwitterRepositoryActivity.InitializeTwitter(test_context);
         TwitterAuthToken twitterAuthToken = new TwitterAuthToken("Token_Test", "Secret_Test");
         //Creating a session to use for the tests
@@ -86,6 +86,36 @@ public class TwitterBasedTest {
         assertTrue(b);
         assertTrue(activeSession.contains("Token_Test"));
         assertTrue(activeSession.contains("Secret_Test"));
+    }
+
+
+    /***
+     *  Tests to check if the sensitive twitter data is encrypted in the sharedprefences.
+     */
+    @Test
+    public void SecureSharedPreference(){
+        TwitterRepositoryActivity.GetSingleton().savePreferences(twitterSession, test_context,"123");
+        SharedPreferences sharedPreferences = new SecurePreferences(InstrumentationRegistry.getInstrumentation().getTargetContext(),"", "123");
+        String authTokenDecrypted = sharedPreferences.getString("Twitter token", null);
+        String authSecretDecrypted = sharedPreferences.getString("Twitter secret", null);
+
+        SharedPreferences sp = (SharedPreferences) UnitTestExtension.getField(sharedPreferences, "sharedPreferences");
+        HashMap<String, String> dataList = (HashMap<String, String>) UnitTestExtension.getField(sp, "mMap");
+
+        //Encrypted versions of token and secret of Token_Test and Secret_Test
+        String authTokenIDEncrypted = "d0rdgqYOfXrCYhAHJWhMKMpu2CMdmREvlE025TSc9DU=";
+        String authSecretIDEncrypted = "ziVrCeqgdqsLS+3D3rLTtygvoKikCqj6SKSSS6OAHF4=";
+
+        //Getting the secret from the encrypted token and secret key/value
+        Object authTokenEncrypted1 = dataList.get(authTokenIDEncrypted);
+        Object authSecretEncrypted1 = dataList.get(authSecretIDEncrypted);
+
+        //Tests if the sharedpreference gives the correct data back
+        Assert.assertEquals(authTokenDecrypted,"Token_Test");
+        Assert.assertEquals(authSecretDecrypted, "Secret_Test");
+        //Tests if the data in the sharedpreference is actually encrypted
+        Assert.assertNotEquals(authTokenEncrypted1, authTokenDecrypted);
+        Assert.assertNotEquals(authSecretEncrypted1, authSecretDecrypted);
     }
 
     //Tests if the connection to the api is https

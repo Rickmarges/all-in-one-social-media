@@ -12,7 +12,7 @@ public class GenericParser {
     static public boolean isValidUrl(String url) {
 
         // Check if URL is includes https protocol and fits the regex of a regular url
-        if (!url.matches("^(https:)//(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_+.~#?&//=]*)")) {
+        if (!url.matches("https://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_+.~#?&/=]*)")) {
             return false;
         }
 
