@@ -24,6 +24,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "TWITTER_CONSUMER_ACCESS_TOKEN", keystoreProperties["TWITTER_CONSUMER_ACCESS_TOKEN"]
         buildConfigField "String", "TWITTER_CONSUMER_SECRET", keystoreProperties["TWITTER_CONSUMER_SECRET"]
+        buildConfigField "String", "REDDIT_USERNAME", keystoreProperties["REDDIT_USERNAME"]
+        buildConfigField "String", "REDDIT_CLIENT_ID", keystoreProperties["REDDIT_CLIENT_ID"]
+        buildConfigField "String", "REDDIT_REDIRECT_URL", keystoreProperties["REDDIT_REDIRECT_URL"]
     }
     buildTypes {
         release {
