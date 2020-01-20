@@ -27,12 +27,13 @@ android {
     }
     buildTypes {
         release {
-            // Enables code shrinking, obfuscation, and optimization for only
-            // your project's release build type.
+            // Disables Debugging
+            debuggable false
+
+            // Enables code shrinking, obfuscation, and optimization for project's release build type.
             minifyEnabled true
 
-            // Enables resource shrinking, which is performed by the
-            // Android Gradle plugin.
+            // Enables resource shrinking, which is performed by the Android Gradle plugin.
             shrinkResources true
 
             // Includes the default ProGuard rules files that are packaged with
