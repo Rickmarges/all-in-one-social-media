@@ -229,7 +229,7 @@ public class DashboardActivity extends AppCompatActivity {
         DashApp.getAccountHelper().logout();
 
         // Logs the currently authenticated TwitterUser out.
-        TwitterRepositoryActivity.GetSingleton().getSession().getSessionManager().clearActiveSession();
+        TwitterRepository.GetSingleton().getSession().getSessionManager().clearActiveSession();
 
         // Sets current tab in the Dashboard tablayout to the leftmost tab to reset
         Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
@@ -316,7 +316,7 @@ public class DashboardActivity extends AppCompatActivity {
                 TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken, authSecret);
 
                 // Initialize Twitter before making a new session
-                TwitterRepositoryActivity.InitializeTwitter(this);
+                TwitterRepository.InitializeTwitter(this);
 
                 // Make a new Twitter session
                 TwitterSession twitterSession = new TwitterSession(twitterAuthToken, twitterId, twitterUsername);

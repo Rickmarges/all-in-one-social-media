@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dash.Activities.TwitterRepositoryActivity;
+import com.dash.Activities.TwitterRepository;
 import com.dash.R;
 import com.dash.Utils.GenericParser;
 import com.twitter.sdk.android.core.models.Tweet;
@@ -69,6 +69,14 @@ public class TwitterFragment extends Fragment {
         sInstance = this;
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mCardList.size() <= 0){
+            TwitterRepository.GetSingleton().GetHomeTimeline(25);
+        }
     }
 
     public void createHomeTimelineView(List<Tweet> tweets) {
@@ -236,8 +244,8 @@ public class TwitterFragment extends Fragment {
         if (!DashFragment.getInstance().checkConnection()) {
             return;
         }
-        TwitterRepositoryActivity.InitializeTwitter(context);
-        TwitterRepositoryActivity.GetSingleton().GetHomeTimeline(25);
+        TwitterRepository.InitializeTwitter(context);
+        TwitterRepository.GetSingleton().GetHomeTimeline(25);
     }
 
     public void setRefreshing(boolean bool) {

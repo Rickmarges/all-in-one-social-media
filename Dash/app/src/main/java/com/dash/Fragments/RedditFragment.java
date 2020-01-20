@@ -105,13 +105,15 @@ public class RedditFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateReddit();
+        if(mCardViewList.size() <= 0){
+            updateReddit();
+        }
     }
 
     /**
      * Executes an async task to refresh Reddit Frontpage
      */
-    void updateReddit() {
+    public void updateReddit() {
         if (!DashFragment.getInstance().checkConnection()) {
             return;
         }

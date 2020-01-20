@@ -94,7 +94,9 @@ public class DashFragment extends Fragment {
     public void onResume() {
         super.onResume();
         sInstance = this;
-        updateCards();
+        if(mRedditCardList.size() <= 0 || mTwitterCardList.size() <= 0){
+            updateCards();
+        }
     }
 
     boolean checkConnection() {
@@ -117,7 +119,7 @@ public class DashFragment extends Fragment {
     /**
      * Update the instances of both Reddit and Twitter fragments
      */
-    private void updateCards() {
+    public void updateCards() {
         checkConnection();
 
         mRedditCardList.clear();
