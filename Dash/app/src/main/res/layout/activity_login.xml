@@ -43,6 +43,7 @@
         android:backgroundTint="@color/colorPrimary"
         android:hint="@string/password"
         android:inputType="textPassword"
+        android:maxLength="100"
         android:selectAllOnFocus="true"
         android:textColor="@color/colorPrimary"
         android:textColorHighlight="@color/colorBackgroundSecondary"

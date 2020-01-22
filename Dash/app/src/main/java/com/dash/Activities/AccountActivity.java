@@ -23,8 +23,6 @@ package com.dash.Activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -78,7 +76,7 @@ public class AccountActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         // Initialize Twitter so we can retrieve twitter data
-        TwitterRepository.InitializeTwitter(getApplicationContext());
+        TwitterRepositoryActivity.InitializeTwitter(getApplicationContext());
 
         // Initialize UI elements
         init();
@@ -232,8 +230,8 @@ public class AccountActivity extends AppCompatActivity {
                 editor.remove("Twitter username");
                 editor.remove("Twitter id");
                 editor.apply();
-                TwitterRepository.twitterSingleton.clearSession();
-                TwitterRepository.setTwitterCallback(this, mAddTwitterBtn);
+                TwitterRepositoryActivity.twitterSingleton.clearSession();
+                TwitterRepositoryActivity.setTwitterCallback(this, mAddTwitterBtn);
 
                 // Clear the UI and make the right items visible
                 TwitterFragment.getInstance().clearUI();
@@ -246,7 +244,7 @@ public class AccountActivity extends AppCompatActivity {
             // If there is not an active session set the right visibility to the buttons
             mAddTwitterBtn.setVisibility(View.VISIBLE);
             mRemoveTwitterBtn.setVisibility(View.INVISIBLE);
-            TwitterRepository.setTwitterCallback(this, mAddTwitterBtn);
+            TwitterRepositoryActivity.setTwitterCallback(this, mAddTwitterBtn);
         }
     }
 

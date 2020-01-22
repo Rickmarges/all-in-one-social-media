@@ -30,8 +30,6 @@ import android.webkit.CookieManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.dash.BuildConfig;
 import com.dash.Fragments.DashFragment;
 import com.dash.Fragments.TwitterFragment;
@@ -61,10 +59,10 @@ import retrofit2.Call;
 /**
  * Twitter API Docs: https://github.com/twitter-archive/twitter-kit-android/wiki
  */
-public class TwitterRepository {
-    public static TwitterRepository twitterSingleton = null;
+public class TwitterRepositoryActivity {
+    static TwitterRepositoryActivity twitterSingleton = null;
 
-    public TwitterRepository() {
+    private TwitterRepositoryActivity() {
     }
 
     /**
@@ -72,11 +70,11 @@ public class TwitterRepository {
      *
      * @return a twitterSingleton
      */
-    public static TwitterRepository GetSingleton() {
+    public static TwitterRepositoryActivity GetSingleton() {
         //twitterSingleton = new TwitterRepositoryActivity();
         if (twitterSingleton == null) {
-            synchronized (TwitterRepository.class) {
-                twitterSingleton = new TwitterRepository();
+            synchronized (TwitterRepositoryActivity.class) {
+                twitterSingleton = new TwitterRepositoryActivity();
             }
         }
         return twitterSingleton;
@@ -84,6 +82,7 @@ public class TwitterRepository {
 
     /**
      * Saves the Twitter token so a new session can be made when the apps starts again
+     *
      * @param twitterSession The Twittersession created when Twitter is linked to the app
      */
     public void savePreferences(TwitterSession twitterSession, Context context, String ID) {
@@ -104,14 +103,14 @@ public class TwitterRepository {
         }
     }
 
-    public TwitterCore getSession() {
+    TwitterCore getSession() {
         return TwitterCore.getInstance();
     }
 
     /**
      * Clears the currenctly active session
      */
-    public void clearSession() {
+    void clearSession() {
         TwitterCore.getInstance().getSessionManager().clearActiveSession();
     }
 
@@ -122,7 +121,7 @@ public class TwitterRepository {
     /**
      * Retrieves the hometimeline of the currenctly authenticated WwitterUser
      *
-     * @param amount   the amount of tweets to be retrieved
+     * @param amount the amount of tweets to be retrieved
      */
     public void GetHomeTimeline(int amount) {
         //Gets the twitter api and calls the api to get the hometimeline
@@ -164,6 +163,7 @@ public class TwitterRepository {
 
     /**
      * Initializes Twitter
+     *
      * @param context The current context from where the method is called
      */
     static public void InitializeTwitter(Context context) {
@@ -184,7 +184,7 @@ public class TwitterRepository {
      * @param context    the view
      * @param twitterBtn the button used to authenticate
      */
-    static public void setTwitterCallback(Context context, TwitterLoginButton twitterBtn) {
+    static void setTwitterCallback(Context context, TwitterLoginButton twitterBtn) {
         twitterBtn.setCallback(new Callback<TwitterSession>() {
             /**
              *Reports if authentication was succesfull
@@ -200,7 +200,7 @@ public class TwitterRepository {
                 ((Activity) context).finish();
 
                 //creates the instance
-                TwitterSession session = TwitterRepository.GetSingleton().getActiveSession();
+                TwitterSession session = TwitterRepositoryActivity.GetSingleton().getActiveSession();
 
                 textView.setText(session.getUserName());
 
@@ -209,9 +209,9 @@ public class TwitterRepository {
                 CookieManager.getInstance().flush();
 
                 // Save the current Twitter user tokens
-                TwitterRepository.GetSingleton().savePreferences(result.data, context, DashboardActivity.getFilename());
+                TwitterRepositoryActivity.GetSingleton().savePreferences(result.data, context, DashboardActivity.getFilename());
 
-                TwitterRepository.GetSingleton().GetHomeTimeline(25);
+                TwitterRepositoryActivity.GetSingleton().GetHomeTimeline(25);
                 DashFragment.getInstance().updateCards();
             }
 
@@ -224,7 +224,7 @@ public class TwitterRepository {
             public void failure(TwitterException te) {
                 //clears the session
                 Toast.makeText(context, "Authentication failed try again...", Toast.LENGTH_SHORT).show();
-                TwitterRepository.GetSingleton().clearSession();
+                TwitterRepositoryActivity.GetSingleton().clearSession();
             }
         });
     }

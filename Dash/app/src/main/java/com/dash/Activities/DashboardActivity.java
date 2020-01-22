@@ -229,7 +229,7 @@ public class DashboardActivity extends AppCompatActivity {
         DashApp.getAccountHelper().logout();
 
         // Logs the currently authenticated TwitterUser out.
-        TwitterRepository.GetSingleton().getSession().getSessionManager().clearActiveSession();
+        TwitterRepositoryActivity.GetSingleton().getSession().getSessionManager().clearActiveSession();
 
         // Sets current tab in the Dashboard tablayout to the leftmost tab to reset
         Objects.requireNonNull(mTabLayout.getTabAt(0)).select();
@@ -280,19 +280,19 @@ public class DashboardActivity extends AppCompatActivity {
      * executes ReauthenticationTask
      */
     private void checkReddit() {
+        String redditUsername = "";
         try {
             // Retrieve the Secure Preference file and read the Reddit username
             SharedPreferences sharedPreferences = new SecurePreferences(getApplicationContext(),
                     "", getFilename());
-            String redditUsername = sharedPreferences.getString("Reddit", "");
-
-            // If the username is not empty, reauthenticate the user
-            if (!redditUsername.equals("")) {
-                new ReauthenticationTask().execute(redditUsername);
-            }
+             redditUsername = sharedPreferences.getString("Reddit", "");
         } catch (NullPointerException npe) {
             Log.w(getApplicationContext().toString(),
                     "No such user found." + npe.getMessage());
+        }
+        // If the username is not empty, reauthenticate the user
+        if (!redditUsername.equals("")) {
+            new ReauthenticationTask().execute(redditUsername);
         }
     }
 
@@ -316,7 +316,7 @@ public class DashboardActivity extends AppCompatActivity {
                 TwitterAuthToken twitterAuthToken = new TwitterAuthToken(authToken, authSecret);
 
                 // Initialize Twitter before making a new session
-                TwitterRepository.InitializeTwitter(this);
+                TwitterRepositoryActivity.InitializeTwitter(this);
 
                 // Make a new Twitter session
                 TwitterSession twitterSession = new TwitterSession(twitterAuthToken, twitterId, twitterUsername);
