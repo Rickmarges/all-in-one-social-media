@@ -1,5 +1,7 @@
 package com.dash.Utils;
 
+import android.text.TextUtils;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -8,8 +10,16 @@ import java.net.URLConnection;
 
 public class GenericParser {
 
+    public static boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    public static boolean isValidPassword(String password) {
+        return password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}");
+    }
+
     // When outside URLs are used this method will check the string is a valid URL
-    static public boolean isValidUrl(String url) {
+    public static boolean isValidUrl(String url) {
 
         // Check if URL is includes https protocol and fits the regex of a regular url
         if (!url.matches("https://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_+.~#?&/=]*)")) {
@@ -30,7 +40,7 @@ public class GenericParser {
     }
 
     // When an URL is opened by the user this will check it's security
-    static public boolean isSecureUrl(String url) {
+    public static boolean isSecureUrl(String url) {
         try {
             URL u = new URL(url);
             // Check if an URLConnection can be opened
@@ -44,7 +54,7 @@ public class GenericParser {
         return true;
     }
 
-    static public boolean isValidImage() {
+    public static boolean isValidImage() {
         return false;
     }
 }

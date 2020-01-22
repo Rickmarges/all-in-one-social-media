@@ -34,6 +34,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.R;
+import com.dash.Utils.GenericParser;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
@@ -108,8 +109,25 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword = mPasswordET.getText().toString();
         mPasswordCheck = mPasswordCheckET.getText().toString();
 
-        if (checkValidFields()) {
-            mProgressBar.setVisibility(View.GONE);
+        if (!GenericParser.isValidEmail(mEmail)) {
+            Toast.makeText(getApplicationContext(), "Make sure you enter a valid email",
+                    Toast.LENGTH_SHORT).show();
+            mProgressBar.setVisibility(View.INVISIBLE);
+            return;
+        }
+        if (!GenericParser.isValidPassword(mPassword)) {
+            mPasswordET.requestFocus();
+            mPasswordET.setError("Password requirements: \n" +
+                    "- At least 8 characters \n" +
+                    "- At least 1 uppercase letter \n" +
+                    "- At least 1 lowercase letter \n" +
+                    "- At least 1 number");
+            mProgressBar.setVisibility(View.INVISIBLE);
+            return;
+        }
+        if (!mPassword.equals(mPasswordCheck)) {
+            mPasswordCheckET.setError("Make sure the passwords are the same");
+            mProgressBar.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -129,55 +147,6 @@ public class RegisterActivity extends AppCompatActivity {
                         mProgressBar.setVisibility(View.GONE);
                     }
                 });
-    }
-
-    /**
-     * Checks if the register fields are valid.
-     *
-     * @return Returns true if all the fields are valid and false if one of the fields does not
-     * meet the requirements.
-     */
-    private boolean checkValidFields() {
-        Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
-        //Check if the email field is not empty
-        if (TextUtils.isEmpty(mEmail)) {
-            mEmailET.setError("Required");
-            mEmailET.startAnimation(animShake);
-            return true;
-        }
-        //Check if the email contains an at sign and a dot
-        if (!mEmail.contains("@") && !mEmail.contains(".")) {
-            mEmailET.setError("Please enter a valid email");
-            mEmailET.startAnimation(animShake);
-            return true;
-        }
-        //Check if the password field is not empty
-        if (TextUtils.isEmpty(mPassword)) {
-            mPasswordET.setError("Required");
-            mPasswordET.startAnimation(animShake);
-            return true;
-        }
-        //Check if the password is more than six characters long
-        if (mPassword.length() < 6) {
-            mPasswordET.setError("Minimum password length is 6");
-            mPasswordET.startAnimation(animShake);
-            return true;
-        }
-        //Check if the password check field is not empty
-        if (TextUtils.isEmpty(mPasswordCheck)) {
-            mPasswordCheckET.setError("Required");
-            mPasswordCheckET.startAnimation(animShake);
-            return true;
-        }
-        //Check is the password check field is the same as the password field
-        if (!mPassword.equals(mPasswordCheck)) {
-            mPasswordET.setError("Doesn't match");
-            mPasswordCheckET.setError("Doesn't match");
-            mPasswordET.startAnimation(animShake);
-            mPasswordCheckET.startAnimation(animShake);
-            return true;
-        }
-        return false;
     }
 
     /**

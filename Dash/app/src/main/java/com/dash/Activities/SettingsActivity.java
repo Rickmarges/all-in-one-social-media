@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.R;
@@ -42,8 +43,20 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner mSortingSpinner, mCountrySpinner;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-    private ArrayAdapter<String> mCountryAdapter;
-    private static final String[] sCountries = new String[]{"US", "GB", "NL"};
+    private ArrayAdapter<mCountries> mCountryAdapter;
+    private enum mCountries {
+        US,
+        GB,
+        NL
+    }
+    private enum mSortings {
+        HOT,
+        TOP,
+        BEST,
+        CONTROVERSIAL,
+        NEW,
+        RISING
+    }
 
     /**
      * Creates the view in the activity.
@@ -79,20 +92,16 @@ public class SettingsActivity extends AppCompatActivity {
         // Retrieve the encrypted email from the currenctly authenticated FireBaseUser
         mSharedPreferences = new SecurePreferences(getApplicationContext(),
                 "", DashboardActivity.getFilename());
-        // Create an adapter for the spinners
-        mCountryAdapter = new ArrayAdapter<>(getApplicationContext(),
-                R.layout.spinner_item, sCountries);
         try {
             // Create the spinners
             createSpinners();
             // Retrieve the preference regarding the sorting of the Reddit Frontpage
-            int sortsSavedValue = mSharedPreferences.getInt("RedditSort", 0);
+            String sortsSavedValue = mSharedPreferences.getString("RedditSort", "BEST");
             // Retrieve the preference regarding the Country for Google Trends
             String countrySavedValue = mSharedPreferences.getString("Country", "NL");
             // Set spinner to the retrieved preference
-            int spinnerPosition = mCountryAdapter.getPosition(countrySavedValue);
-            mSortingSpinner.setSelection(sortsSavedValue);
-            mCountrySpinner.setSelection(spinnerPosition);
+            mSortingSpinner.setSelection(mSortings.valueOf(sortsSavedValue).ordinal());
+            mCountrySpinner.setSelection(mCountries.valueOf(countrySavedValue).ordinal());
         } catch (IllegalStateException ise) {
             // If preference could not be loaded set spinner to default selection and log warning
             mSortingSpinner.setSelection(0);
@@ -108,18 +117,9 @@ public class SettingsActivity extends AppCompatActivity {
     private void createSpinners() {
         // Open an editor to save to sharedpreferences
         mEditor = mSharedPreferences.edit();
-        // Array of different sorings for Reddit
-        String[] sortings = new String[]{
-                "Hot",
-                "Top",
-                "Best",
-                "Controversial",
-                "New",
-                "Rising"
-        };
         // Apply style and set the adapter to the Spinner
-        ArrayAdapter<String> sortingAdapter = new ArrayAdapter<>(getApplicationContext(),
-                R.layout.spinner_item, sortings);
+        ArrayAdapter<mSortings> sortingAdapter = new ArrayAdapter<>(getApplicationContext(),
+                R.layout.spinner_item, mSortings.values());
         sortingAdapter.setDropDownViewResource(R.layout.spinner_item);
         mSortingSpinner.setAdapter(sortingAdapter);
         mSortingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -134,7 +134,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    mEditor.putInt("RedditSort", mSortingSpinner.getSelectedItemPosition());
+                    mEditor.putString("RedditSort", parent.getSelectedItem().toString());
                     mEditor.apply();
                 } catch (NullPointerException npe) {
                     Log.w(getApplicationContext().toString(),
@@ -153,6 +153,9 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        // Create an adapter for the spinners
+        mCountryAdapter = new ArrayAdapter<>(getApplicationContext(),
+                R.layout.spinner_item, mCountries.values());
         // Apply style and set the adapter to the Spinner
         mCountryAdapter.setDropDownViewResource(R.layout.spinner_item);
         mCountrySpinner.setAdapter(mCountryAdapter);

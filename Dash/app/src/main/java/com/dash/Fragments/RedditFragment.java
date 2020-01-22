@@ -136,15 +136,6 @@ public class RedditFragment extends Fragment {
     class GetRedditFrontpage extends AsyncTask<Void, Void, List<Submission>> {
         final RedditClient redditClient = DashApp.getAccountHelper().getReddit();
 
-        final SubredditSort[] sorts = new SubredditSort[]{
-                SubredditSort.HOT,
-                SubredditSort.TOP,
-                SubredditSort.BEST,
-                SubredditSort.CONTROVERSIAL,
-                SubredditSort.NEW,
-                SubredditSort.RISING
-        };
-
         /**
          * Returns a paginated Reddit Frontpage
          *
@@ -156,11 +147,11 @@ public class RedditFragment extends Fragment {
             try {
                 SharedPreferences sharedPreferences = new SecurePreferences(getContext(),
                         "", DashboardActivity.getFilename());
-                int savedValue = sharedPreferences.getInt("RedditSort", 0);
+                String savedValue = sharedPreferences.getString("RedditSort", "BEST");
 
                 // frontPage() returns a Paginator.Builder
                 DefaultPaginator<Submission> frontPage = redditClient.frontPage()
-                        .sorting(sorts[savedValue])
+                        .sorting(SubredditSort.valueOf(savedValue))
                         .limit(25)
                         .build();
 

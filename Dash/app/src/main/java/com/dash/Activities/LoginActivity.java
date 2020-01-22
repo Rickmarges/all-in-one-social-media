@@ -37,6 +37,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.R;
+import com.dash.Utils.GenericParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -156,12 +157,12 @@ public class LoginActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.VISIBLE);
 
         // Set email and password from the input fields
-        String email, password;
-        email = mEmailET.getText().toString();
-        password = mPasswordET.getText().toString();
+        String email = mEmailET.getText().toString();
+        String password = mPasswordET.getText().toString();
 
         //Check if the fields are valid
-        if (checkValidFields(email, password)) {
+        if (!areCredentialsValid(email, password)) {
+            mProgressBar.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -176,24 +177,22 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Check if the user has verified his/her email account
                         if (checkVerified()) {
-                            // If
+                            // If the user is verified, redirect the user to the dashboard
                             startActivity(new Intent(this, DashboardActivity.class));
                         } else {
                             Objects.requireNonNull(mFirebaseAuth.getCurrentUser())
                                     .sendEmailVerification();
                             Toast.makeText(getApplicationContext(), "Email is not verified",
-                                    Toast.LENGTH_LONG)
-                                    .show();
+                                    Toast.LENGTH_LONG).show();
                             mFirebaseAuth.signOut();
                             showButtons();
                         }
                     } else {
                         showButtons();
                         Toast.makeText(getApplicationContext(), "Login failed! Please try again",
-                                Toast.LENGTH_LONG)
-                                .show();
-                        Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
-                        mLoginBtn.startAnimation(animShake);
+                                Toast.LENGTH_LONG).show();
+                        mLoginBtn.startAnimation(AnimationUtils
+                                .loadAnimation(this, R.anim.hshake));
                     }
                 });
     }
@@ -214,32 +213,18 @@ public class LoginActivity extends AppCompatActivity {
      * @param password The password which the user wants to login with
      * @return Returns the boolean true if the fields are valid and false if the fields are not correct
      */
-    private boolean checkValidFields(String email, String password) {
-        //Checks if the email field is not left empty
-        if (TextUtils.isEmpty(email)) {
-            mEmailET.setError("Required");
-            Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
-            mEmailET.startAnimation(animShake);
-            mProgressBar.setVisibility(View.GONE);
-            return true;
+    private boolean areCredentialsValid(String email, String password) {
+        if (!GenericParser.isValidEmail(email)) {
+            Toast.makeText(getApplicationContext(), "Make sure you enter a valid email",
+                    Toast.LENGTH_SHORT).show();
+            return false;
         }
-        //Checks if the email contains an at sign and if it contains a dot
-        if (!email.contains("@") && !email.contains(".")) {
-            mEmailET.setError("Please enter a valid email");
-            Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
-            mEmailET.startAnimation(animShake);
-            mProgressBar.setVisibility(View.GONE);
-            return true;
-        }
-        //Checks if the password field is not left empty
-        if (TextUtils.isEmpty(password)) {
+        if (password.isEmpty()) {
+            mPasswordET.requestFocus();
             mPasswordET.setError("Required");
-            Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
-            mPasswordET.startAnimation(animShake);
-            mProgressBar.setVisibility(View.GONE);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
