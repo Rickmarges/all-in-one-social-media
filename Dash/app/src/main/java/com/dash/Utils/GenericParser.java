@@ -1,7 +1,11 @@
 package com.dash.Utils;
 
+import android.net.Uri;
+import android.os.StrictMode;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -34,54 +38,60 @@ public class GenericParser {
     /**
      * Checks if the String is a valid URL
      *
-     * @param url the String to check
-     * @return if it's a valid URL or not
+     * @param stringUrl the String to check
+     * @return the created URL or null if it isn't a valid url
      */
-    public static boolean isValidUrl(String url) {
+    static URL isValidUrl(String stringUrl) {
         // Check if URL is includes https protocol and fits the regex of a regular url
-        if (!url.matches("https://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_+.~#?&/=]*)")) {
-            return false;
+        if (!stringUrl.matches("https://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_+.~#?&/=]*)")) {
+            return null;
         }
 
         try {
             // Check if URL is malformed
-            URL u = new URL(url);
+            URL url = new URL(stringUrl);
 
             // Check if URL can be converted to an URI according to the RFC2396
-            u.toURI();
+            url.toURI();
+            return url;
         } catch (MalformedURLException | URISyntaxException e) {
-            return false;
+            return null;
         }
-        return true;
     }
 
     /**
      * Checks the security of an URL
      *
-     * @param url the URL to check
-     * @return if it's secure or not
+     * @param urlString the URL as String to check
+     * @return the checked URL
      */
-    public static boolean isSecureUrl(String url) {
+    public static Uri isSecureUrl(String urlString) {
+        URL url = isValidUrl(urlString);
+        StrictMode.ThreadPolicy threadPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(threadPolicy);
+        if (url == null) {
+            return null;
+        }
         try {
-            URL u = new URL(url);
             // Check if an URLConnection can be opened
-            URLConnection urlConnection = u.openConnection();
+            URLConnection urlConnection = url.openConnection();
             // Check if the input stream is correct (if not it isn't using the protocol it says
             urlConnection.getInputStream();
+            return Uri.parse(urlString);
         } catch (IOException e) {
-            return false;
+            return null;
         }
-        return true;
     }
 
     /**
      * Checks if an URL from an image is valid
-     * @param url the URL to check
+     *
+     * @param url    the URL to check
      * @param source the Fragment the URL comes from
      * @return if the URL is valid or not
      */
     public static boolean isValidImageUrl(String url, String source) {
-        if (!isValidUrl(url)) {
+        if (isSecureUrl(url) != null) {
             return false;
         }
         switch (source) {

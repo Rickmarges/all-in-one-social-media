@@ -391,10 +391,8 @@ public class RedditFragment extends Fragment {
         cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> {
-            String url = "https://www.reddit.com" + submission.getPermalink();
-            if (GenericParser.isSecureUrl(url)) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-            }
+            String urlString = "https://www.reddit.com" + submission.getPermalink();
+            startActivity(new Intent(Intent.ACTION_VIEW, GenericParser.isSecureUrl(urlString)));
         });
         cardView.addView(createCardLayout(submission));
         return cardView;

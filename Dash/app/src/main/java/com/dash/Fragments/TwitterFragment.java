@@ -120,14 +120,16 @@ public class TwitterFragment extends Fragment {
         cardView.setUseCompatPadding(true);
         cardView.setCardElevation(7);
         cardView.setRadius(15);
+        // Set onClickListener and add custom animation
+        cardView.setForeground(getResources().getDrawable(R.drawable.custom_ripple, null));
         cardView.setClickable(true);
         cardView.setOnClickListener(view -> {
             // Check if the url is in the media or urls List
             if (tweet.id != 0 && tweet.user.screenName != null) {
                 String url = "https://www.twitter.com/" + tweet.user.screenName + "/status/" + tweet.id;
-                if (GenericParser.isSecureUrl(url)) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(browserIntent);
+                Uri uri = GenericParser.isSecureUrl(url);
+                if (uri != null) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 } else {
                     Toast.makeText(getContext(), "Unsecured URL", Toast.LENGTH_SHORT).show();
                 }

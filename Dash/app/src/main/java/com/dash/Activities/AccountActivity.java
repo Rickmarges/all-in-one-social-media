@@ -62,6 +62,7 @@ public class AccountActivity extends AppCompatActivity {
     private TextView mEmailAccountTV;
     private ImageButton mRemoveRedditIB;
     private ImageButton mRemoveTwitterBtn;
+    private FirebaseAuth mFirebaseAuth;
 
     /**
      * Creates the view in the activity, fills textview with FirebaseUser email, and sets
@@ -81,11 +82,9 @@ public class AccountActivity extends AppCompatActivity {
         // Initialize UI elements
         init();
 
-        mSecondClick = false;
-
         // Get user email and encrypt that email so it can be used for storage
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        mEmailAccountTV.setText(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail());
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mEmailAccountTV.setText(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getEmail());
 
         // Add an OnClickListener to the Reddit imagebutton
         // If the button is pressed it will send the user to the AddRedditAccountActivity
@@ -93,34 +92,7 @@ public class AccountActivity extends AppCompatActivity {
                 AddRedditAccountActivity.class)));
 
         // Add an OnClickListener to the mResetBtn to send the user a reset password email and it shows a popup if it succeeds or fails
-        Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
-        mResetBtn.setOnClickListener(view -> {
-            if (!mSecondClick) {
-                mResetBtn.setText(R.string.confirm);
-                mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
-                        .getColor(this, R.color.tw__composer_red)));
-                mResetBtn.setAnimation(animShake);
-            }
-            if (mSecondClick) {
-                firebaseAuth.sendPasswordResetEmail(Objects.requireNonNull(firebaseAuth
-                        .getCurrentUser()
-                        .getEmail()))
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Sent reset email!",
-                                        Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Error sending email.",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                            mResetBtn.setText(R.string.reset_password);
-                            mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
-                                    .getColor(this, R.color.colorBackgroundSecondary)));
-                            mSecondClick = false;
-                        });
-            }
-            mSecondClick = true;
-        });
+        mResetBtn.setOnClickListener(view -> resetPassword());
     }
 
     /**
@@ -154,11 +126,41 @@ public class AccountActivity extends AppCompatActivity {
         mEmailAccountTV = findViewById(R.id.emailAccount);
         mResetBtn = findViewById(R.id.resetpwd);
         mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
-        mAddTwitterBtn.setPadding(16, 0,0,0);
+        mAddTwitterBtn.setPadding(16, 0, 0, 0);
 
         checkReddit();
 
         checkTwitter();
+    }
+
+    private void resetPassword() {
+        Animation animShake = AnimationUtils.loadAnimation(this, R.anim.hshake);
+        if (!mSecondClick) {
+            mResetBtn.setText(R.string.confirm);
+            mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                    .getColor(this, R.color.tw__composer_red)));
+            mResetBtn.setAnimation(animShake);
+        }
+        if (mSecondClick) {
+            mFirebaseAuth.sendPasswordResetEmail(Objects.requireNonNull(
+                    Objects.requireNonNull(mFirebaseAuth
+                            .getCurrentUser())
+                            .getEmail()))
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Sent reset email!",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error sending email.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        mResetBtn.setText(R.string.reset_password);
+                        mResetBtn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat
+                                .getColor(this, R.color.colorBackgroundSecondary)));
+                        mSecondClick = false;
+                    });
+        }
+        mSecondClick = true;
     }
 
     /**

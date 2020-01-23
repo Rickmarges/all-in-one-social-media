@@ -134,7 +134,7 @@ public class TrendsFragment extends Fragment {
         @Override
         public List<RssItem> doInBackground(String... params) {
             String urlString = mBaseUrl + mCountryCode;
-            if (GenericParser.isSecureUrl(urlString)) {
+        //    if (GenericParser.isSecureUrl(urlString)) {
                 List<RssItem> rssItems;
                 Node node;
                 NodeList nodes;
@@ -159,8 +159,7 @@ public class TrendsFragment extends Fragment {
                             "Unable to parse RSS: " + e.getMessage());
                 }
                 return rssItems;
-            }
-            return null;
+          //  }
         }
 
         /**
@@ -206,7 +205,7 @@ public class TrendsFragment extends Fragment {
      */
     private Bitmap getImageBitmap(String imageUrl) {
         Bitmap bitmap;
-        if (!GenericParser.isValidImageUrl(imageUrl, "trends") || !GenericParser.isValidUrl(imageUrl)) {
+        if (!GenericParser.isValidImageUrl(imageUrl, "trends")) {
             return setDefault();
         }
         try {
@@ -276,7 +275,7 @@ public class TrendsFragment extends Fragment {
                             if (newsNode.getNodeName().equals("ht:news_item_url")
                                     && rssItem.getLink().equals("")) {
                                 String url = newsNode.getFirstChild().getNodeValue();
-                                if (GenericParser.isValidUrl(url)) {
+                                if (GenericParser.isSecureUrl(url) != null) {
                                     rssItem.setLink(url);
                                 }
                             }
