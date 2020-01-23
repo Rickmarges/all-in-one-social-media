@@ -46,6 +46,7 @@
             android:noHistory="true" />
         <activity
             android:name=".Activities.DashboardActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity android:name=".Activities.AccountActivity" />
         <activity

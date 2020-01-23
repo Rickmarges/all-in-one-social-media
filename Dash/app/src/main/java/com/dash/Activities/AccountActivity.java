@@ -23,12 +23,15 @@ package com.dash.Activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +60,7 @@ import java.util.Objects;
 public class AccountActivity extends AppCompatActivity {
     private boolean mSecondClick;
     private Button mResetBtn;
+    private ScrollView mScrollView;
     private ImageButton mRedditIB;
     private TwitterLoginButton mAddTwitterBtn;
     private TextView mEmailAccountTV;
@@ -81,6 +85,29 @@ public class AccountActivity extends AppCompatActivity {
 
         // Initialize UI elements
         init();
+
+        new OrientationEventListener(getApplicationContext(), SensorManager.SENSOR_DELAY_UI) {
+            /**
+             * Called when the orientation of the device has changed.
+             * orientation parameter is in degrees, ranging from 0 to 359.
+             * orientation is 0 degrees when the device is oriented in its natural position,
+             * 90 degrees when its left side is at the top, 180 degrees when it is upside down,
+             * and 270 degrees when its right side is to the top.
+             * {@link #ORIENTATION_UNKNOWN} is returned when the device is close to flat
+             * and the orientation cannot be determined.
+             *
+             * @param orientation The new orientation of the device.
+             * @see #ORIENTATION_UNKNOWN
+             */
+            @Override
+            public void onOrientationChanged(int orientation) {
+                if (orientation < 60 || orientation > 300) {
+                    mScrollView.setEnabled(false);
+                } else {
+                    mScrollView.setEnabled(true);
+                }
+            }
+        }.enable();
 
         // Get user email and encrypt that email so it can be used for storage
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -127,6 +154,8 @@ public class AccountActivity extends AppCompatActivity {
         mResetBtn = findViewById(R.id.resetpwd);
         mAddTwitterBtn = findViewById(R.id.addtwitterbtn);
         mAddTwitterBtn.setPadding(16, 0, 0, 0);
+
+        mScrollView = findViewById(R.id.accountScroll);
 
         checkReddit();
 

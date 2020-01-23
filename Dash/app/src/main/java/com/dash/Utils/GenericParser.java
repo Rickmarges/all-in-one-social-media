@@ -91,7 +91,7 @@ public class GenericParser {
      * @return if the URL is valid or not
      */
     public static boolean isValidImageUrl(String url, String source) {
-        if (isSecureUrl(url) != null) {
+        if (isSecureUrl(url) == null) {
             return false;
         }
         switch (source) {
