@@ -308,8 +308,12 @@ public class RedditFragment extends Fragment {
         // Insert path into Picasso to download image
         ImageView imageView = new ImageView(getContext());
 
-        List<SubmissionPreview.Variation> resolutions = submission.getPreview().getImages().get(0).getResolutions();
-        Picasso.with(this.getContext()).load(resolutions.get(resolutions.size() - 1).getUrl()).into(imageView);
+        List<SubmissionPreview.Variation> resolutions = Objects.requireNonNull(
+                submission.getPreview()).getImages().get(0).getResolutions();
+        String url = resolutions.get(resolutions.size() - 1).getUrl();
+        if (GenericParser.isValidImageUrl(url, "reddit")) {
+            Picasso.with(this.getContext()).load(url).into(imageView);
+        }
         // Style ImageView
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setAdjustViewBounds(true);

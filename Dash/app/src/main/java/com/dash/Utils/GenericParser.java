@@ -10,10 +10,13 @@ public class GenericParser {
 
     /**
      * Check if a valid email is entered
+     * SuppressWarning because it makes more sense to return true if it's a valid email
+     * and do something when it's not a valid email
      *
      * @param email the email to check
      * @return if the email is valid or not
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
@@ -25,7 +28,7 @@ public class GenericParser {
      * @return if the password is valid or not
      */
     public static boolean isValidPassword(String password) {
-        return password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,100}");
+        return password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\s).{8,100}");
     }
 
     /**
@@ -71,7 +74,25 @@ public class GenericParser {
         return true;
     }
 
-    public static boolean isValidImage() {
-        return false;
+    /**
+     * Checks if an URL from an image is valid
+     * @param url the URL to check
+     * @param source the Fragment the URL comes from
+     * @return if the URL is valid or not
+     */
+    public static boolean isValidImageUrl(String url, String source) {
+        if (!isValidUrl(url)) {
+            return false;
+        }
+        switch (source) {
+            case "reddit":
+                return url.matches("https://(external-)?preview\\.redd\\.it/.*\\.(jpg|png)\\?.*");
+            case "twitter":
+                return url.matches("https://pbs\\.twimg\\.com/(media|ext_tw_video_thumb)/.*[.=](jpg|png).*");
+            case "trends":
+                return url.matches("https://t[0-9].gstatic.com/images\\?q=tbn:[a-zA-Z0-9-_]{80,85}");
+            default:
+                return false;
+        }
     }
 }

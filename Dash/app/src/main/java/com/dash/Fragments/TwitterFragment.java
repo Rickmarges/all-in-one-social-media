@@ -216,11 +216,14 @@ public class TwitterFragment extends Fragment {
         // Insert path into Picasso to download image
         ImageView imageView = new ImageView(getContext());
         if (tweet.entities.media.size() != 0) {
-            com.squareup.picasso.Picasso.with(this.getContext())
-                    .load(tweet.entities.media.get(0).mediaUrlHttps).into(imageView);
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            imageView.setAdjustViewBounds(true);
-            imageView.setPadding(10, 0, 10, 20);
+            String url = tweet.entities.media.get(0).mediaUrlHttps;
+            if (GenericParser.isValidImageUrl(url, "twitter")) {
+                com.squareup.picasso.Picasso.with(this.getContext())
+                        .load(url).into(imageView);
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                imageView.setAdjustViewBounds(true);
+                imageView.setPadding(10, 0, 10, 20);
+            }
         }
         return imageView;
     }
