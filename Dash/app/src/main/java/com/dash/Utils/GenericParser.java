@@ -14,6 +14,7 @@ public class GenericParser {
 
     /**
      * Check if a valid email is entered
+     * <p>
      * SuppressWarning because it makes more sense to return true if it's a valid email
      * and do something when it's not a valid email
      *

@@ -47,6 +47,9 @@ import net.dean.jraw.oauth.OAuthException;
 import net.dean.jraw.oauth.StatefulAuthHelper;
 
 import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
+
+import okhttp3.HttpUrl;
 
 /**
  * Adds a reddit account to your Dash account. It will open a new activity
@@ -189,15 +192,19 @@ public class AddRedditAccountActivity extends AppCompatActivity {
              */
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if (statefulAuthHelper.isFinalRedirectUrl(url)) {
-                    // No need to continue loading, we've already got all the required information
-                    mWebView.stopLoading();
-                    mWebView.setVisibility(View.GONE);
+                if (HttpUrl.parse(url) != null) {
+                    if (statefulAuthHelper.isFinalRedirectUrl(url)) {
+                        // No need to continue loading, we've already got all the required information
+                        mWebView.stopLoading();
+                        mWebView.setVisibility(View.GONE);
 
-                    // Try to authenticate the user
-                    new AuthenticateTask(AddRedditAccountActivity.this, statefulAuthHelper)
-                            .execute(url);
-                    mProgressBar.setVisibility(View.VISIBLE);
+                        // Try to authenticate the user
+                        new AuthenticateTask(AddRedditAccountActivity.this, statefulAuthHelper)
+                                .execute(url);
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    Log.w("Malformed URL", "Malformed Reddit URL: " + url);
                 }
             }
         });
