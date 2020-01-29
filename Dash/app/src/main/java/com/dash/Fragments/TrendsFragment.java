@@ -113,7 +113,7 @@ public class TrendsFragment extends Fragment {
         try {
             SharedPreferences sharedPreferences = new SecurePreferences(getActivity().getApplicationContext(),
                     "", DashboardActivity.getFilename());
-            mCountryCode = sharedPreferences.getString("Country", "US");
+            mCountryCode = sharedPreferences.getString("Country", "NL");
         } catch (NullPointerException npe) {
             Log.w(Objects.requireNonNull(getContext()).toString(),
                     "Couldn't load preferences: " + npe.getMessage());
