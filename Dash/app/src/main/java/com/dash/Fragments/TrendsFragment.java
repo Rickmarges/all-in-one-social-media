@@ -134,8 +134,8 @@ public class TrendsFragment extends Fragment {
         @Override
         public List<RssItem> doInBackground(String... params) {
             String urlString = mBaseUrl + mCountryCode;
-        //    if (GenericParser.isSecureUrl(urlString)) {
-                List<RssItem> rssItems;
+            List<RssItem> rssItems = new ArrayList<>();
+            if (GenericParser.isSecureUrl(urlString) != null) {
                 Node node;
                 NodeList nodes;
                 try {
@@ -158,8 +158,8 @@ public class TrendsFragment extends Fragment {
                     Log.w(Objects.requireNonNull(getContext()).toString(),
                             "Unable to parse RSS: " + e.getMessage());
                 }
-                return rssItems;
-          //  }
+            }
+            return rssItems;
         }
 
         /**
@@ -170,7 +170,9 @@ public class TrendsFragment extends Fragment {
         @Override
         protected void onPostExecute(List<RssItem> rssItems) {
             try {
-                createCardUI(rssItems);
+                if (rssItems.size() > 0) {
+                    createCardUI(rssItems);
+                }
             } catch (NullPointerException npe) {
                 Log.w(Objects.requireNonNull(getContext()).toString(),
                         "Error creating UI: " + npe.getMessage());
