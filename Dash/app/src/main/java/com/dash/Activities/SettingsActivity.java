@@ -20,19 +20,27 @@
 
 package com.dash.Activities;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dash.R;
 import com.securepreferences.SecurePreferences;
+
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
 
 /**
  * This activity is for showing the current settings of the account and for changing these settings.
@@ -136,6 +144,8 @@ public class SettingsActivity extends AppCompatActivity {
                 try {
                     mEditor.putString("RedditSort", parent.getSelectedItem().toString());
                     mEditor.apply();
+                    Toast.makeText(getApplicationContext(),
+                            "Saved Reddit sort preference!", LENGTH_SHORT).show();
                 } catch (NullPointerException npe) {
                     Log.w(getApplicationContext().toString(),
                             "Couldn't save preference: " + npe.getMessage());
@@ -173,6 +183,8 @@ public class SettingsActivity extends AppCompatActivity {
                 try {
                     mEditor.putString("Country", parent.getSelectedItem().toString());
                     mEditor.apply();
+                    Toast.makeText(getApplicationContext(),
+                            "Saved language preference!", LENGTH_SHORT).show();
                 } catch (NullPointerException npe) {
                     Log.w(getApplicationContext().toString(),
                             "Couldn't save preference: " + npe);

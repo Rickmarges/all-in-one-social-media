@@ -277,7 +277,7 @@ public class RedditFragment extends Fragment {
         // Add text to bottom right of post instead of filling the card with all text
         textView.setText(R.string.read_more);
         // Style TextView
-        textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark, null));
+        textView.setTextColor(getResources().getColor(R.color.colorTextPrimary, null));
         textView.setPadding(25, 5, 150, 5);
         textView.setGravity(800005);
         return textView;
@@ -294,7 +294,7 @@ public class RedditFragment extends Fragment {
         // Style View
         view.setLayoutParams(new LinearLayout
                 .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 5));
-        view.setBackgroundResource(R.color.colorTextPrimary);
+        view.setBackgroundResource(R.color.colorPrimary);
         return view;
     }
 

@@ -31,7 +31,11 @@
     <string name="reset_password">Reset Password</string>
     <string name="confirm">Confirm</string>
 
-    <!-- String only related to reddit -->
+    <!-- String only related to Reddit -->
     <string name="read_more">Read More..</string>
     <string name="redditUsername">Reddit username:</string>
+
+    <!-- String only related to settings -->
+    <string name="redditSortText">Reddit sort:</string>
+    <string name="trendsLanguageText">Trends language:</string>
 </resources>

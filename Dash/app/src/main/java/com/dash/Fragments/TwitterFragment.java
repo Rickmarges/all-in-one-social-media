@@ -189,7 +189,7 @@ public class TwitterFragment extends Fragment {
         // Style end enable divider
         divider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 5));
-        divider.setBackgroundResource(R.color.colorTextPrimary);
+        divider.setBackgroundResource(R.color.colorPrimary);
         return divider;
     }
 
