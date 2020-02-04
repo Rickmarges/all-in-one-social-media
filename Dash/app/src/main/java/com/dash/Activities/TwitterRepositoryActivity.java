@@ -62,7 +62,7 @@ import retrofit2.Call;
 public class TwitterRepositoryActivity {
     static TwitterRepositoryActivity twitterSingleton = null;
 
-    private TwitterRepositoryActivity() {
+    public TwitterRepositoryActivity() {
     }
 
     /**
